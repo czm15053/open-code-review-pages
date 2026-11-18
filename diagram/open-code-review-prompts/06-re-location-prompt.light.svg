@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 950">
+  <style>
+    :root {
+      --paper: #f5f7fc;
+      --grid-minor: #e4eaf5;
+      --grid-major: #dfe6f2;
+      --ink: #21374d;
+      --ink-soft: #5a6f88;
+      --card: #ffffff;
+      --card-edge: #9db2c4;
+      --card-shadow: rgba(30,50,70,0.07);
+      --green: #059669;
+      --red: #dc2626;
+      --orange: #d97706;
+      --theme: #be123c;
+      --theme-stroke: #e11d48;
+      --theme-fill: rgba(225,29,72,0.10);
+      --note-bar: #fffdf4;
+      --code-bg: #f2f7f4;
+      --code-edge: #b9d6c8;
+    }
+    text { font-family: 'JetBrains Mono', 'SF Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--ink); }
+    .title { font-size: 30px; font-weight: 800; }
+    .subtitle { font-size: 15px; fill: var(--ink-soft); }
+    .h { font-size: 16px; font-weight: 700; }
+    .body { font-size: 13px; }
+    .small { font-size: 12px; }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .card-title { font-size: 12px; font-weight: 600; fill: var(--ink-soft); }
+    .footer { font-size: 11px; fill: var(--ink-soft); }
+  </style>
+  <defs>
+    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 40 0 L 20 0 M 60 0 L 40 0 M 80 0 L 60 0 M 100 0 L 80 0" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 0 40 L 0 20 M 0 60 L 0 40 M 0 80 L 0 60 M 0 100 L 0 80" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <rect x="60" y="60" width="20" height="20" fill="none" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="var(--grid-major)" stroke-width="1"/>
+    </pattern>
+    <filter id="rough" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4"/>
+    </filter>
+    <filter id="rough-soft" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="12" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="950" fill="var(--paper)"/>
+  <rect width="1600" height="950" fill="url(#grid)"/>
+  <text x="60" y="76" class="title">提示词全览 <tspan fill="var(--theme)">06 / 06</tspan> · RE_LOCATION 锚点修复</text>
+  <text x="60" y="110" class="subtitle">从 diff 里逐字抄一段代码出来——修评论锚点，不裁决评论 —— system 182 B · user 680 B</text>
+  <g>
+    <rect x="64" y="176" width="600" height="540" rx="14" fill="var(--card-shadow)" filter="url(#rough)"/>
+    <rect x="60" y="170" width="600" height="540" rx="14" fill="var(--card)" stroke="var(--card-edge)" stroke-width="1.8" filter="url(#rough)"/>
+    <circle cx="92" cy="200" r="7" fill="#ff5f57"/>
+    <circle cx="116" cy="200" r="7" fill="#febc2e"/>
+    <circle cx="140" cy="200" r="7" fill="#28c840"/>
+    <rect x="190.0" y="187" width="340" height="27" rx="13" fill="#f3f6f9" stroke="var(--card-edge)" stroke-width="1.2" filter="url(#rough-soft)"/>
+    <text x="360.0" y="205" class="card-title mono" text-anchor="middle">re_location_task_system.md</text>
+  </g>
+  <text x="88" y="252" class="h" fill="var(--theme)">## 全文 · 就这么短</text>
+  <text x="88" y="284" class="body" font-size="13">你是代码定位助手。给定 unified diff 和一条</text>
+  <text x="88" y="308" class="body" font-size="13"><tspan font-size="13">审查评论，唯一任务：从 diff 中</tspan><tspan fill="var(--theme)" font-weight="700" font-size="13">逐字提取</tspan></text>
+  <text x="88" y="332" class="body" font-size="13">评论所指向的确切代码片段。</text>
+  <rect x="88" y="360" width="130" height="32" rx="16" fill="var(--theme-fill)" stroke="var(--theme-stroke)" stroke-width="1.4" filter="url(#rough-soft)"/>
+  <text x="153" y="381" class="mono" font-size="13" font-weight="700" fill="var(--theme)" text-anchor="middle">/no_think</text>
+  <text x="88" y="422" class="small">关掉思考链，直接干活 —— 纯提取任务</text>
+  <text x="88" y="476" class="h" fill="var(--theme)">## 触发前提 · 缺一不可</text>
+  <line x1="88" y1="500" x2="106" y2="500" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="504" class="body" font-size="13">评论的原 path 在 diff 里仍存在</text>
+  <line x1="88" y1="528" x2="106" y2="528" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="532" class="body" font-size="13"><tspan fill="#4338ca" font-weight="700" font-size="13">RE_LOCATION_TASK</tspan><tspan font-size="13"> 已启用</tspan></text>
+  <text x="88" y="564" class="small">由评论 worker 按需触发（流程图 06/07）</text>
+  <g>
+    <rect x="704" y="176" width="840" height="540" rx="14" fill="var(--card-shadow)" filter="url(#rough)"/>
+    <rect x="700" y="170" width="840" height="540" rx="14" fill="var(--card)" stroke="var(--card-edge)" stroke-width="1.8" filter="url(#rough)"/>
+    <circle cx="732" cy="200" r="7" fill="#ff5f57"/>
+    <circle cx="756" cy="200" r="7" fill="#febc2e"/>
+    <circle cx="780" cy="200" r="7" fill="#28c840"/>
+    <rect x="950.0" y="187" width="340" height="27" rx="13" fill="#f3f6f9" stroke="var(--card-edge)" stroke-width="1.2" filter="url(#rough-soft)"/>
+    <text x="1120.0" y="205" class="card-title mono" text-anchor="middle">re_location_task_user.md</text>
+  </g>
+  <text x="728" y="252" class="h" fill="var(--theme)">## 五条规则</text>
+  <line x1="728" y1="276" x2="746" y2="276" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="758" y="280" class="body" font-size="13"><tspan fill="var(--theme)" font-weight="700" font-size="13">逐字复制</tspan><tspan font-size="13"> diff 中的行 —— </tspan><tspan fill="#dc2626" font-weight="700" font-size="13">不改写、不格式化、不加任何东西</tspan></text>
+  <line x1="728" y1="304" x2="746" y2="304" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="758" y="308" class="body" font-size="13">输出前剥掉行首 diff 标记（+、-、空格）</text>
+  <line x1="728" y1="332" x2="746" y2="332" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="758" y="336" class="body" font-size="13">只保留与问题直接相关的行，不带周围上下文</text>
+  <line x1="728" y1="360" x2="746" y2="360" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="758" y="364" class="body" font-size="13"><tspan font-size="13">多处不连续 → 只取</tspan><tspan fill="#d97706" font-weight="700" font-size="13">最相关的一处</tspan></text>
+  <line x1="728" y1="388" x2="746" y2="388" stroke="#059669" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="758" y="392" class="body" font-size="13"><tspan font-size="13">只输出一个围栏代码块：</tspan><tspan fill="#059669" font-weight="700" font-size="13">零解释、零评论</tspan></text>
+  <text x="728" y="448" class="h" fill="var(--theme)">## 输入 · 程序注入三样</text>
+  <text x="728" y="478" class="body" font-size="13"><tspan font-size="13">① unified diff（</tspan><tspan fill="var(--theme)" font-weight="700" font-size="13">唯一信息源</tspan><tspan font-size="13">）</tspan></text>
+  <rect x="728" y="492" width="110" height="30" rx="15" fill="rgba(217,119,6,0.14)" stroke="var(--orange)" stroke-width="1.4" filter="url(#rough-soft)"/>
+  <text x="783.0" y="512" class="mono" font-size="13" font-weight="700" fill="var(--orange)" text-anchor="middle">{diff}</text>
+  <text x="728" y="548" class="body" font-size="13">② 上次匹配失败的旧片段（作废换新）</text>
+  <rect x="728" y="562" width="170" height="30" rx="15" fill="rgba(217,119,6,0.14)" stroke="var(--orange)" stroke-width="1.4" filter="url(#rough-soft)"/>
+  <text x="813.0" y="582" class="mono" font-size="13" font-weight="700" fill="var(--orange)" text-anchor="middle">{existing_code}</text>
+  <text x="728" y="618" class="body" font-size="13">③ 评论原文</text>
+  <rect x="728" y="632" width="220" height="30" rx="15" fill="rgba(217,119,6,0.14)" stroke="var(--orange)" stroke-width="1.4" filter="url(#rough-soft)"/>
+  <text x="838.0" y="652" class="mono" font-size="13" font-weight="700" fill="var(--orange)" text-anchor="middle">{suggestion_content}</text>
+  <g transform="rotate(-0.4 800 838)">
+    <rect x="60" y="810" width="1480" height="56" rx="14" fill="var(--note-bar)" stroke="var(--theme-stroke)" stroke-width="1.8" filter="url(#rough)"/>
+    <text x="800" y="844" class="body" font-size="15" text-anchor="middle"><tspan>成功 → 临时替换 existing_code 再匹配 · 失败 → 恢复 </tspan><tspan fill="var(--theme)" font-weight="700">start_line / end_line</tspan><tspan> 原值 · 评论永不丢弃</tspan></text>
+  </g>
+  <text x="1540" y="920" class="footer mono" text-anchor="end">alibaba/open-code-review · internal/config/template/prompts/</text>
+</svg>

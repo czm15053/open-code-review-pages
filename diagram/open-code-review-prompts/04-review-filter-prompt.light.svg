@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100">
+  <style>
+    :root {
+      --paper: #f5f7fc;
+      --grid-minor: #e4eaf5;
+      --grid-major: #dfe6f2;
+      --ink: #21374d;
+      --ink-soft: #5a6f88;
+      --card: #ffffff;
+      --card-edge: #9db2c4;
+      --card-shadow: rgba(30,50,70,0.07);
+      --green: #059669;
+      --red: #dc2626;
+      --orange: #d97706;
+      --theme: #b45309;
+      --theme-stroke: #d97706;
+      --theme-fill: rgba(217,119,6,0.10);
+      --note-bar: #fffdf4;
+      --code-bg: #f2f7f4;
+      --code-edge: #b9d6c8;
+    }
+    text { font-family: 'JetBrains Mono', 'SF Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--ink); }
+    .title { font-size: 30px; font-weight: 800; }
+    .subtitle { font-size: 15px; fill: var(--ink-soft); }
+    .h { font-size: 16px; font-weight: 700; }
+    .body { font-size: 13px; }
+    .small { font-size: 12px; }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .card-title { font-size: 12px; font-weight: 600; fill: var(--ink-soft); }
+    .footer { font-size: 11px; fill: var(--ink-soft); }
+  </style>
+  <defs>
+    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 40 0 L 20 0 M 60 0 L 40 0 M 80 0 L 60 0 M 100 0 L 80 0" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 0 40 L 0 20 M 0 60 L 0 40 M 0 80 L 0 60 M 0 100 L 0 80" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <rect x="60" y="60" width="20" height="20" fill="none" stroke="var(--grid-minor)" stroke-width="0.6"/>
+      <path d="M 100 0 L 0 0 0 100" fill="none" stroke="var(--grid-major)" stroke-width="1"/>
+    </pattern>
+    <filter id="rough" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="4"/>
+    </filter>
+    <filter id="rough-soft" x="-4%" y="-4%" width="108%" height="108%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="12" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.5"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="1100" fill="var(--paper)"/>
+  <rect width="1600" height="1100" fill="url(#grid)"/>
+  <text x="60" y="76" class="title">提示词全览 <tspan fill="var(--theme)">04 / 06</tspan> · FILTER 误报过滤</text>
+  <text x="60" y="110" class="subtitle">只删除「diff 能证明事实错误」的评论；拿不准一律放行 —— system 905 B · user 6054 B</text>
+  <g>
+    <rect x="64" y="176" width="720" height="800" rx="14" fill="var(--card-shadow)" filter="url(#rough)"/>
+    <rect x="60" y="170" width="720" height="800" rx="14" fill="var(--card)" stroke="var(--card-edge)" stroke-width="1.8" filter="url(#rough)"/>
+    <circle cx="92" cy="200" r="7" fill="#ff5f57"/>
+    <circle cx="116" cy="200" r="7" fill="#febc2e"/>
+    <circle cx="140" cy="200" r="7" fill="#28c840"/>
+    <rect x="250.0" y="187" width="340" height="27" rx="13" fill="#f3f6f9" stroke="var(--card-edge)" stroke-width="1.2" filter="url(#rough-soft)"/>
+    <text x="420.0" y="205" class="card-title mono" text-anchor="middle">review_filter_task_system.md</text>
+  </g>
+  <text x="88" y="252" class="h" fill="var(--theme)">## 角色 · 事实核查员</text>
+  <text x="88" y="280" class="body">评论来自一个能读全库的 Agent；你只看得到</text>
+  <text x="88" y="304" class="body">它审的那组文件的 diff。它见过的，你没见过。</text>
+  <text x="88" y="356" class="h" fill="var(--theme)">## 任务边界 · 很窄</text>
+  <text x="88" y="384" class="body"><tspan>只删除 diff 能证明</tspan><tspan fill="var(--theme)" font-weight="700">「事实错误」</tspan><tspan>的评论。</tspan></text>
+  <text x="88" y="408" class="body">不评判有没有用、值不值得、优不优先。</text>
+  <text x="88" y="460" class="h" fill="var(--theme)">## 成本不对称 · 删错更贵</text>
+  <line x1="88" y1="484" x2="106" y2="484" stroke="var(--theme)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="488" class="body" font-size="13">留一条错评：浪费审查者几秒钟</text>
+  <line x1="88" y1="512" x2="106" y2="512" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="516" class="body" font-size="13"><tspan font-size="13">删一条对评：</tspan><tspan fill="#dc2626" font-weight="700" font-size="13">真正的发现被静默销毁</tspan><tspan font-size="13">，无人知晓、无人学习</tspan></text>
+  <text x="88" y="568" class="h" fill="var(--theme)">## 默认答案 · 全部批准</text>
+  <text x="88" y="596" class="body">「可疑」「无法验证」「价值低」「我觉得没问题」</text>
+  <text x="88" y="620" class="body"><tspan>—— 统统等于 </tspan><tspan fill="#059669" font-weight="700">approve</tspan><tspan>。</tspan></text>
+  <text x="88" y="672" class="h" fill="var(--theme)">## 证据标准 · 差一点也不行</text>
+  <text x="88" y="700" class="body"><tspan>指不出具体那行 diff 成立 → 就不是证明 → </tspan><tspan fill="#059669" font-weight="700">批准</tspan><tspan>。</tspan></text>
+  <text x="88" y="724" class="small">Step 4 需要超过一步推理才算出的「矛盾」= 不存在。</text>
+  <text x="88" y="776" class="h" fill="var(--theme)">## 不构成删除理由</text>
+  <line x1="88" y1="800" x2="106" y2="800" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="804" class="body" font-size="12">风格 / 格式 / 命名 / 空行 / 注释措辞（说的属实就行）</text>
+  <line x1="88" y1="826" x2="106" y2="826" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="830" class="body" font-size="12">运行期行为、业务语义、你看不到的文件里的代码</text>
+  <line x1="88" y1="852" x2="106" y2="852" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="856" class="body" font-size="12">你不同意它的建议，或觉得现状可以接受</text>
+  <line x1="88" y1="878" x2="106" y2="878" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="882" class="body" font-size="12">无法确认 —— unverifiable ≠ incorrect</text>
+  <line x1="88" y1="904" x2="106" y2="904" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="908" class="body" font-size="12">引错了行，但核心主张成立（评主张，不评引文）</text>
+  <line x1="88" y1="930" x2="106" y2="930" stroke="var(--ink-soft)" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="118" y="934" class="body" font-size="12">顺带提了一嘴不精确，核心主张仍成立</text>
+  <g>
+    <rect x="824" y="176" width="720" height="770" rx="14" fill="var(--card-shadow)" filter="url(#rough)"/>
+    <rect x="820" y="170" width="720" height="770" rx="14" fill="var(--card)" stroke="var(--card-edge)" stroke-width="1.8" filter="url(#rough)"/>
+    <circle cx="852" cy="200" r="7" fill="#ff5f57"/>
+    <circle cx="876" cy="200" r="7" fill="#febc2e"/>
+    <circle cx="900" cy="200" r="7" fill="#28c840"/>
+    <rect x="1010.0" y="187" width="340" height="27" rx="13" fill="#f3f6f9" stroke="var(--card-edge)" stroke-width="1.2" filter="url(#rough-soft)"/>
+    <text x="1180.0" y="205" class="card-title mono" text-anchor="middle">review_filter_task_user.md</text>
+  </g>
+  <text x="848" y="252" class="h" fill="var(--theme)">## 唯一的两个删除理由</text>
+  <text x="848" y="282" class="body" font-size="13"><tspan fill="var(--theme)" font-weight="700" font-size="13">Ground A</tspan><tspan font-size="13"> — 评论描述的代码，在它 path 所指文件的 diff 里</tspan><tspan fill="#dc2626" font-weight="700" font-size="13">根本不存在</tspan></text>
+  <text x="878" y="306" class="small">同组其他文件里有同样代码也不作数</text>
+  <text x="848" y="336" class="body" font-size="13"><tspan fill="var(--theme)" font-weight="700" font-size="13">Ground B</tspan><tspan font-size="13"> — 某行 diff </tspan><tspan fill="#dc2626" font-weight="700" font-size="13">字面反驳</tspan><tspan font-size="13">了评论的核心主张</tspan></text>
+  <text x="878" y="360" class="small">可在组内任何文件；必须一眼读懂，不能靠推理链</text>
+  <text x="848" y="412" class="h" fill="#dc2626">## 保护对象 · 一律放行</text>
+  <line x1="848" y1="436" x2="866" y2="436" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="878" y="440" class="body" font-size="13"><tspan fill="#dc2626" font-weight="700" font-size="13">内存安全</tspan><tspan font-size="13"> —— 分配大小 / 缓冲区 / 越界 / off-by-one / 空指针</tspan></text>
+  <line x1="848" y1="464" x2="866" y2="464" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="878" y="468" class="body" font-size="13"><tspan fill="#dc2626" font-weight="700" font-size="13">并发</tspan><tspan font-size="13"> —— 锁与锁模式 / 原子操作 / 数据竞争 / 同步约定</tspan></text>
+  <line x1="848" y1="492" x2="866" y2="492" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="878" y="496" class="body" font-size="13"><tspan fill="#dc2626" font-weight="700" font-size="13">链接与声明一致性</tspan><tspan font-size="13"> —— static / 声明与定义不符 / 缺 extern</tspan></text>
+  <line x1="848" y1="520" x2="866" y2="520" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="878" y="524" class="body" font-size="13"><tspan fill="#dc2626" font-weight="700" font-size="13">行为或兼容性变化</tspan><tspan font-size="13"> —— 消息 / 字段 / 默认值 / 错误路径变了</tspan></text>
+  <line x1="848" y1="548" x2="866" y2="548" stroke="#dc2626" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="878" y="552" class="body" font-size="13"><tspan fill="#dc2626" font-weight="700" font-size="13">收了却从不使用的参数</tspan></text>
+  <text x="878" y="580" class="body"><tspan>否决优先于 A/B：哪怕确信它错 —— 也</tspan><tspan fill="#059669" font-weight="700">批准</tspan><tspan>。</tspan></text>
+  <text x="848" y="632" class="h" fill="var(--theme)">## 五步流程 · 顺序执行，先到先停</text>
+  <text x="848" y="660" class="body" font-size="12"><tspan fill="var(--theme)" font-weight="700" font-size="12">S1　</tspan><tspan fill="#059669" font-size="12">保护否决 → 批准，停</tspan></text>
+  <text x="848" y="686" class="body" font-size="12"><tspan fill="var(--theme)" font-weight="700" font-size="12">S2　</tspan><tspan fill="#059669" font-size="12">价值否决 → 批准，停</tspan></text>
+  <text x="848" y="712" class="body" font-size="12"><tspan fill="var(--theme)" font-weight="700" font-size="12">S3　</tspan><tspan fill="#dc2626" font-size="12">Ground A → 删除</tspan></text>
+  <text x="848" y="738" class="body" font-size="12"><tspan fill="var(--theme)" font-weight="700" font-size="12">S4　</tspan><tspan fill="#dc2626" font-size="12">Ground B → 删除（先全组搜一遍它描述的东西）</tspan></text>
+  <text x="848" y="764" class="body" font-size="12"><tspan fill="var(--theme)" font-weight="700" font-size="12">S5　</tspan><tspan fill="#059669" font-size="12">其余 → 批准</tspan></text>
+  <text x="848" y="798" class="small"><tspan>Code Diff </tspan><tspan fill="#d97706" font-weight="700">{{diff}}</tspan><tspan> · Review Comments </tspan><tspan fill="#d97706" font-weight="700">{{comments}}</tspan></text>
+  <text x="848" y="838" class="h" fill="#059669">## 输出 · 恰好调用一个工具</text>
+  <text x="848" y="866" class="body" font-size="12"><tspan fill="#059669" font-weight="700" font-size="12">report_incorrect_comments</tspan><tspan font-size="12"> —— 仅 A/B，且能指出那行 diff</tspan></text>
+  <text x="848" y="890" class="body" font-size="12"><tspan fill="#059669" font-weight="700" font-size="12">approve_all_comments</tspan><tspan font-size="12"> —— 其余一切情况，包括看着可疑的</tspan></text>
+  <g transform="rotate(-0.4 800 988)">
+    <rect x="60" y="960" width="1480" height="56" rx="14" fill="var(--note-bar)" stroke="var(--theme-stroke)" stroke-width="1.8" filter="url(#rough)"/>
+    <text x="800" y="994" class="body" font-size="15" text-anchor="middle"><tspan>FILTER 的输入 = 本组 diff + 本轮新增评论 · </tspan><tspan fill="var(--theme)" font-weight="700">保护对象优先于一切</tspan><tspan> · R1 已确认的不重滤</tspan></text>
+  </g>
+  <text x="1540" y="1070" class="footer mono" text-anchor="end">alibaba/open-code-review · internal/config/template/prompts/</text>
+</svg>

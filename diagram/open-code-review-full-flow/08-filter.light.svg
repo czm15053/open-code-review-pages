@@ -1,0 +1,278 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+    --bg: #f5f7fc;
+    --bg-grid: #dfe6f2;
+    --mask: #f5f7fc;
+    --panel: #ffffff;
+    --panel-2: #edf2fb;
+    --text: #17213a;
+    --text-muted: var(--filter-text);
+    --arrow: #71809e;
+    --soft-line: #cbd5e5;
+    --color-primary-fill: rgba(8,145,178,0.10);
+    --color-primary-stroke: #0891b2;
+    --color-secondary-fill: rgba(5,150,105,0.10);
+    --color-secondary-stroke: #059669;
+    --color-tertiary-fill: rgba(147,51,234,0.09);
+    --color-tertiary-stroke: #9333ea;
+    --color-accent-fill: rgba(217,119,6,0.10);
+    --color-accent-stroke: #d97706;
+    --color-alert-fill: rgba(225,29,72,0.09);
+    --color-alert-stroke: #e11d48;
+    --color-connector-fill: rgba(234,88,12,0.10);
+    --color-connector-stroke: #ea580c;
+    --color-neutral-fill: rgba(100,116,139,0.09);
+    --color-neutral-stroke: #64748b;
+    --color-highlight-fill: rgba(59,130,246,0.10);
+    --color-highlight-stroke: #3b82f6;
+    --program-fill: rgba(71,85,105,0.08);
+    --program-stroke: #64748b;
+    --grouping-fill: rgba(147,51,234,0.10);
+    --grouping-stroke: #9333ea;
+    --plan-fill: rgba(37,99,235,0.10);
+    --plan-stroke: #2563eb;
+    --main-fill: rgba(8,145,178,0.10);
+    --main-stroke: #0891b2;
+    --filter-fill: rgba(217,119,6,0.11);
+    --filter-stroke: #d97706;
+    --compression-fill: rgba(219,39,119,0.09);
+    --compression-stroke: #db2777;
+    --relocation-fill: rgba(225,29,72,0.09);
+    --relocation-stroke: #e11d48;
+    --data-fill: rgba(5,150,105,0.10);
+    --data-stroke: #059669;
+    --success: #16a34a;
+    --danger: #e11d48;
+    --warning: #d97706;
+    --file-fill: rgba(79,70,229,0.09);
+    --file-stroke: #4f46e5;
+    --output-fill: rgba(234,88,12,0.10);
+    --output-stroke: #ea580c;
+    --white: #ffffff;
+    --color-primary-text: #0e7490;
+    --color-secondary-text: #047857;
+    --color-tertiary-text: #7e22ce;
+    --color-accent-text: #b45309;
+    --color-alert-text: #be123c;
+    --color-connector-text: #c2410c;
+    --color-neutral-text: #1f4e79;
+    --color-highlight-text: #1d4ed8;
+    --program-text: #1f4e79;
+    --grouping-text: #7e22ce;
+    --plan-text: #1d4ed8;
+    --main-text: #0e7490;
+    --filter-text: #b45309;
+    --compression-text: #be185d;
+    --relocation-text: #be123c;
+    --data-text: #047857;
+    --output-text: #c2410c;
+    --file-text: #4338ca;
+}
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+    .title, .kicker, .section { fill: var(--filter-text); }
+    .title { fill: var(--filter-stroke); }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Candidate pipeline -->
+  <path class="flow-main" d="M270 190 H320" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M570 190 H620" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M1020 190 H1130" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="1075" y="177" text-anchor="middle" fill="var(--filter-text)">复核</text>
+  <g>
+    <rect x="40" y="155" width="230" height="70" rx="8" fill="var(--mask)"/>
+    <rect x="40" y="155" width="230" height="70" rx="8" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+    <text class="node-title center" x="155" y="184" fill="var(--main-text)">MAIN + worker 已排空</text>
+    <text class="node-sub center" x="155" y="207" fill="var(--main-text)">本轮新增 3 条评论</text>
+  </g>
+  <g>
+    <rect x="320" y="155" width="250" height="70" rx="7" fill="var(--mask)"/>
+    <rect x="320" y="155" width="250" height="70" rx="7" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.5"/>
+    <text class="node-title center" x="445" y="184" fill="var(--program-text)">逐文件 baseline</text>
+    <text class="node-sub center" x="445" y="207" fill="var(--program-text)">只取 baseline 后的新候选</text>
+  </g>
+  <g>
+    <rect x="620" y="155" width="400" height="70" rx="8" fill="var(--mask)"/>
+    <rect x="620" y="155" width="400" height="70" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.5"/>
+    <text class="node-title center" x="820" y="184" fill="var(--file-text)">3 条候选 + 本组完整 diff</text>
+    <text class="node-sub center" x="820" y="207" fill="var(--file-text)">login.go + login_test.go</text>
+  </g>
+  <g>
+    <rect x="1130" y="155" width="380" height="70" rx="10" fill="var(--mask)"/>
+    <rect x="1130" y="155" width="380" height="70" rx="10" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="2"/>
+    <text class="node-title center" x="1320" y="184" fill="var(--filter-text)">FILTER</text>
+    <text class="node-sub center" x="1320" y="207" fill="var(--filter-text)">无评论或 --no-filter 时跳过</text>
+  </g>
+
+  <!-- Field visibility -->
+  <g>
+    <rect x="40" y="245" width="700" height="44" rx="8" fill="var(--mask)"/>
+    <rect x="40" y="245" width="700" height="44" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.2"/>
+    <text class="node-sub" x="60" y="273" fill="var(--data-text)">仅见：id / path / content / existing_code + 本组完整 diff</text>
+  </g>
+  <g>
+    <rect x="780" y="245" width="730" height="44" rx="8" fill="var(--mask)"/>
+    <rect x="780" y="245" width="730" height="44" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.2"/>
+    <text class="node-sub" x="800" y="273" fill="var(--filter-text)">不可见：severity / category / suggestion_code / thinking</text>
+  </g>
+
+  <!-- Evidence table -->
+  <rect class="region" x="40" y="315" width="1510" height="345" rx="12"/>
+  <text class="section" x="60" y="342" fill="var(--filter-text)">候选评论</text>
+  <text class="section" x="450" y="342" fill="var(--filter-text)">本组 diff 证据</text>
+  <text class="section" x="1170" y="342" fill="var(--filter-text)">结论</text>
+  <text class="tiny" x="1530" y="342" text-anchor="end" fill="var(--filter-text)">逐条对照，不凭严重级别删除</text>
+
+  <path class="flow" d="M410 400 H450" marker-end="url(#arrow)"/>
+  <path class="flow" d="M1130 400 H1170" marker-end="url(#arrow)"/>
+  <path class="flow" d="M410 500 H450" marker-end="url(#arrow)"/>
+  <path class="flow" d="M1130 500 H1170" marker-end="url(#arrow)"/>
+  <path class="flow" d="M410 600 H450" marker-end="url(#arrow)"/>
+  <path class="flow" d="M1130 600 H1170" marker-end="url(#arrow)"/>
+
+  <g>
+    <rect x="60" y="360" width="350" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="60" y="360" width="350" height="80" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.4"/>
+    <text class="node-title mono" x="80" y="389" fill="var(--file-text)">c-0 · login.go</text>
+    <text class="node-sub" x="80" y="416" fill="var(--file-text)">刷新路径没有检查会话是否过期</text>
+  </g>
+  <g>
+    <rect x="450" y="360" width="680" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="450" y="360" width="680" height="80" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.4"/>
+    <text class="node-title" x="470" y="389" fill="var(--data-text)">diff 没有直接反驳核心说法</text>
+    <text class="node-sub" x="470" y="416" fill="var(--data-text)">刷新与会话过期说法未被直接反驳</text>
+  </g>
+  <g>
+    <rect x="1170" y="360" width="340" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="1170" y="360" width="340" height="80" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.6"/>
+    <circle cx="1204" cy="400" r="15" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.5"/>
+    <path d="M1196 400 L1202 406 L1213 393" fill="none" stroke="var(--success)" stroke-width="2.8"/>
+    <text class="node-title" x="1232" y="394" fill="var(--data-text)">保留 c-0</text>
+    <text class="node-sub" x="1232" y="417" fill="var(--data-text)">不能证明为误报</text>
+  </g>
+
+  <g>
+    <rect x="60" y="460" width="350" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="60" y="460" width="350" height="80" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.4"/>
+    <text class="node-title mono" x="80" y="489" fill="var(--file-text)">c-1 · login.go</text>
+    <text class="node-sub" x="80" y="516" fill="var(--file-text)">login.go 新增 auth.yaml 配置项</text>
+  </g>
+  <g>
+    <rect x="450" y="460" width="680" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="450" y="460" width="680" height="80" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.4"/>
+    <text class="node-title" x="470" y="489" fill="var(--filter-text)">login.go diff 中没有该配置变化</text>
+    <text class="node-sub" x="470" y="516" fill="var(--filter-text)">评论描述的代码不在所属文件 diff</text>
+  </g>
+  <g>
+    <rect x="1170" y="460" width="340" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="1170" y="460" width="340" height="80" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.6"/>
+    <circle cx="1204" cy="500" r="15" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <path d="M1197 493 L1211 507 M1211 493 L1197 507" fill="none" stroke="var(--danger)" stroke-width="2.8"/>
+    <text class="node-title" x="1232" y="494" fill="var(--filter-text)">删除 c-1</text>
+    <text class="node-sub" x="1232" y="517" fill="var(--filter-text)">理由 A：代码不存在</text>
+  </g>
+
+  <g>
+    <rect x="60" y="560" width="350" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="60" y="560" width="350" height="80" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.4"/>
+    <text class="node-title mono" x="80" y="589" fill="var(--file-text)">c-2 · login.go</text>
+    <text class="node-sub" x="80" y="616" fill="var(--file-text)">retryCount 声明了两次</text>
+  </g>
+  <g>
+    <rect x="450" y="560" width="680" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="450" y="560" width="680" height="80" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.4"/>
+    <text class="node-title" x="470" y="589" fill="var(--filter-text)">diff 明明只有一次 retryCount 声明</text>
+    <text class="node-sub" x="470" y="616" fill="var(--filter-text)">具体 diff 行直接反驳评论核心说法</text>
+  </g>
+  <g>
+    <rect x="1170" y="560" width="340" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="1170" y="560" width="340" height="80" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.6"/>
+    <circle cx="1204" cy="600" r="15" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <path d="M1197 593 L1211 607 M1211 593 L1197 607" fill="none" stroke="var(--danger)" stroke-width="2.8"/>
+    <text class="node-title" x="1232" y="594" fill="var(--filter-text)">删除 c-2</text>
+    <text class="node-sub" x="1232" y="617" fill="var(--filter-text)">理由 B：diff 直接反驳</text>
+  </g>
+
+  <!-- Output choices and program action -->
+  <text class="section" x="40" y="694" fill="var(--filter-text)">FILTER 输出：模型必须二选一</text>
+  <path d="M540 742 H650" fill="none" stroke="var(--filter-stroke)" stroke-width="3" marker-end="url(#arrow-filter)"/>
+  <path d="M1000 770 H1100" fill="none" stroke="var(--data-stroke)" stroke-width="3" marker-end="url(#arrow-data)"/>
+  <g>
+    <rect x="40" y="710" width="500" height="65" rx="8" fill="var(--mask)"/>
+    <rect x="40" y="710" width="500" height="65" rx="8" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="1.8"/>
+    <text class="node-title mono" x="60" y="737" fill="var(--filter-text)">report_incorrect_comments</text>
+    <text class="node-sub mono" x="60" y="760" fill="var(--filter-text)">comment_ids: ["c-1", "c-2"]</text>
+  </g>
+  <g>
+    <rect x="40" y="790" width="500" height="60" rx="8" fill="var(--mask)"/>
+    <rect x="40" y="790" width="500" height="60" rx="8" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)" stroke-width="1.3"/>
+    <text class="node-title mono" x="60" y="816" fill="var(--filter-text)">approve_all_comments</text>
+    <text class="tiny" x="60" y="838" fill="var(--filter-text)">无明确误报时使用；不能传空 comment_ids 代替</text>
+  </g>
+  <g>
+    <rect x="650" y="720" width="350" height="100" rx="7" fill="var(--mask)"/>
+    <rect x="650" y="720" width="350" height="100" rx="7" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.6"/>
+    <text class="node-title center" x="825" y="750" fill="var(--program-text)">程序执行删除</text>
+    <text class="node-sub center" x="825" y="776" fill="var(--program-text)">c-1 / c-2 → 文件评论索引 → Collector</text>
+    <text class="tiny center" x="825" y="801" fill="var(--program-text)">FILTER 失败或无法解析：评论保留</text>
+  </g>
+  <g>
+    <rect x="1100" y="720" width="400" height="100" rx="9" fill="var(--mask)"/>
+    <rect x="1100" y="720" width="400" height="100" rx="9" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+    <circle cx="1140" cy="770" r="18" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.7"/>
+    <path d="M1131 770 L1138 777 L1150 762" fill="none" stroke="var(--success)" stroke-width="3"/>
+    <text class="node-title mono" x="1180" y="758" fill="var(--data-text)">c-0 → confirmed</text>
+    <text class="node-sub" x="1180" y="784" fill="var(--data-text)">供第 2 轮参考，不重复报告</text>
+    <text class="tiny" x="1180" y="805" fill="var(--data-text)">第 2 轮仍只过滤新增候选</text>
+  </g>
+
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700" fill="var(--filter-text)">08 / 13</text>
+  <text x="140" y="54" class="kicker" fill="var(--filter-text)">FILTER · EVIDENCE CHECK</text>
+  <text x="40" y="98" class="title" style="font-size:26px" fill="var(--filter-text)">FILTER：三条评论的 diff 证据对照</text>
+  <text x="40" y="121" class="subtitle" fill="var(--filter-text)">只删除本组 diff 能明确证明错误的本轮新增评论；模型给名单，程序执行删除。</text>
+  <g>
+    <rect x="1300" y="43" width="100" height="30" rx="15" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+    <text class="tiny center" x="1350" y="63" fill="var(--main-text)">MAIN</text>
+    <rect x="1415" y="43" width="125" height="30" rx="15" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+    <text class="tiny center" x="1477" y="63" fill="var(--filter-text)">FILTER</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="886" x2="1560" y2="886" stroke="var(--soft-line)" stroke-width="1"/>
+  <text x="40" y="920" font-size="13" font-weight="700" fill="var(--filter-text)">结果：c-0 保留并成为 confirmed；c-1、c-2 被 diff 反驳，由程序从 Collector 删除。</text>
+  <text x="40" y="944" class="tiny" fill="var(--filter-text)">内存安全 / 并发 / 链接声明 / 行为兼容 / 未用参数优先保留；不确定、风格或方案分歧不是删除理由。</text>
+  <text x="1540" y="940" class="kicker" text-anchor="end" fill="var(--filter-text)">08 / 13</text>
+</svg>

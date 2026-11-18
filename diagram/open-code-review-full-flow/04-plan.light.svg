@@ -1,0 +1,269 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+    --bg: #f5f7fc;
+    --bg-grid: #dfe6f2;
+    --mask: #f5f7fc;
+    --panel: #ffffff;
+    --panel-2: #edf2fb;
+    --text: #17213a;
+    --text-muted: var(--plan-text);
+    --arrow: #71809e;
+    --soft-line: #cbd5e5;
+    --color-primary-fill: rgba(8,145,178,0.10);
+    --color-primary-stroke: #0891b2;
+    --color-secondary-fill: rgba(5,150,105,0.10);
+    --color-secondary-stroke: #059669;
+    --color-tertiary-fill: rgba(147,51,234,0.09);
+    --color-tertiary-stroke: #9333ea;
+    --color-accent-fill: rgba(217,119,6,0.10);
+    --color-accent-stroke: #d97706;
+    --color-alert-fill: rgba(225,29,72,0.09);
+    --color-alert-stroke: #e11d48;
+    --color-connector-fill: rgba(234,88,12,0.10);
+    --color-connector-stroke: #ea580c;
+    --color-neutral-fill: rgba(100,116,139,0.09);
+    --color-neutral-stroke: #64748b;
+    --color-highlight-fill: rgba(59,130,246,0.10);
+    --color-highlight-stroke: #3b82f6;
+    --program-fill: rgba(71,85,105,0.08);
+    --program-stroke: #64748b;
+    --grouping-fill: rgba(147,51,234,0.10);
+    --grouping-stroke: #9333ea;
+    --plan-fill: rgba(37,99,235,0.10);
+    --plan-stroke: #2563eb;
+    --main-fill: rgba(8,145,178,0.10);
+    --main-stroke: #0891b2;
+    --filter-fill: rgba(217,119,6,0.11);
+    --filter-stroke: #d97706;
+    --compression-fill: rgba(219,39,119,0.09);
+    --compression-stroke: #db2777;
+    --relocation-fill: rgba(225,29,72,0.09);
+    --relocation-stroke: #e11d48;
+    --data-fill: rgba(5,150,105,0.10);
+    --data-stroke: #059669;
+    --success: #16a34a;
+    --danger: #e11d48;
+    --warning: #d97706;
+    --file-fill: rgba(79,70,229,0.09);
+    --file-stroke: #4f46e5;
+    --output-fill: rgba(234,88,12,0.10);
+    --output-stroke: #ea580c;
+    --white: #ffffff;
+    --color-primary-text: #0e7490;
+    --color-secondary-text: #047857;
+    --color-tertiary-text: #7e22ce;
+    --color-accent-text: #b45309;
+    --color-alert-text: #be123c;
+    --color-connector-text: #c2410c;
+    --color-neutral-text: #1f4e79;
+    --color-highlight-text: #1d4ed8;
+    --program-text: #1f4e79;
+    --grouping-text: #7e22ce;
+    --plan-text: #1d4ed8;
+    --main-text: #0e7490;
+    --filter-text: #b45309;
+    --compression-text: #be185d;
+    --relocation-text: #be123c;
+    --data-text: #047857;
+    --output-text: #c2410c;
+    --file-text: #4338ca;
+}
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+    .title, .kicker, .section { fill: var(--plan-text); }
+    .title { fill: var(--plan-stroke); }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700" fill="var(--plan-text)">04 / 13</text>
+  <text x="140" y="54" class="kicker" fill="var(--plan-text)">PLAN · TEXT GUIDANCE FOR ROUND 1 ONLY</text>
+  <text x="40" y="98" class="title" style="font-size:26px" fill="var(--plan-text)">PLAN：大改动先列“准备查什么”</text>
+  <text x="40" y="121" class="subtitle" fill="var(--plan-text)">PLAN 只生成检索计划文本；真正读文件与搜索仍由后续 MAIN 工具循环完成。</text>
+  <rect x="1260" y="38" width="130" height="38" rx="19" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+  <text x="1325" y="62" class="center" font-size="13" font-weight="700" fill="var(--plan-text)">PLAN</text>
+  <rect x="1410" y="38" width="130" height="38" rx="19" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <text x="1475" y="62" class="center" font-size="13" font-weight="700" fill="var(--main-text)">MAIN R1</text>
+
+  <rect x="40" y="145" width="1520" height="700" rx="16" class="region"/>
+
+  <!-- Trigger connectors -->
+  <path d="M530 225 H555" fill="none" stroke="var(--plan-stroke)" stroke-width="3" marker-end="url(#arrow-plan)"/>
+  <path d="M655 295 V405" fill="none" stroke="var(--plan-stroke)" stroke-width="3" marker-end="url(#arrow-plan)"/>
+  <path d="M450 520 H463" fill="none" stroke="var(--plan-stroke)" stroke-width="3" marker-end="url(#arrow-plan)"/>
+  <path d="M725 520 H748" fill="none" stroke="var(--plan-stroke)" stroke-width="3" marker-end="url(#arrow-plan)"/>
+  <path d="M1210 410 H1238" fill="none" stroke="var(--data-stroke)" stroke-width="3" marker-end="url(#arrow-data)"/>
+  <path d="M1395 470 V508" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1395 635 V678" class="flow" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <text x="1410" y="664" font-size="11" fill="var(--plan-text)">下一轮重新构造 Prompt</text>
+
+  <!-- Threshold band -->
+  <text x="60" y="171" class="kicker" fill="var(--plan-text)">触发条件 · 任一满足即调用</text>
+  <rect x="60" y="190" width="190" height="70" rx="12" fill="var(--mask)"/>
+  <rect x="60" y="190" width="190" height="70" rx="12" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.5"/>
+  <text x="155" y="219" class="center node-title" fill="var(--plan-text)">单文件改动</text>
+  <text x="155" y="246" class="center" font-size="18" font-weight="800" fill="var(--color-accent-text)">≥ 50 行</text>
+  <polygon points="285,194 323,225 285,256 247,225" fill="var(--mask)"/>
+  <polygon points="285,194 323,225 285,256 247,225" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+  <text x="285" y="230" class="center" font-size="12" font-weight="800" fill="var(--plan-text)">OR</text>
+  <rect x="335" y="190" width="195" height="70" rx="12" fill="var(--mask)"/>
+  <rect x="335" y="190" width="195" height="70" rx="12" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.5"/>
+  <text x="432" y="216" class="center" font-size="12" font-weight="700" fill="var(--plan-text)">组内 ≥ 2 文件</text>
+  <text x="432" y="244" class="center" font-size="16" font-weight="800" fill="var(--color-accent-text)">合计 ≥ 100 行</text>
+
+  <g>
+    <rect x="570" y="175" width="170" height="120" rx="12" fill="var(--mask)"/><rect x="570" y="175" width="170" height="120" rx="12" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="2"/>
+    <text x="590" y="202" font-size="12" font-weight="700" fill="var(--plan-text)">A · login flow</text><text x="590" y="229" font-size="11" fill="var(--plan-text)">login.go = 140 行</text>
+    <rect x="590" y="250" width="130" height="28" rx="14" fill="var(--plan-stroke)"/><text x="655" y="269" class="center" font-size="11" font-weight="800" fill="var(--bg)">触发 PLAN</text>
+  </g>
+  <g>
+    <rect x="760" y="175" width="170" height="120" rx="12" fill="var(--mask)"/><rect x="760" y="175" width="170" height="120" rx="12" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="2"/>
+    <text x="780" y="202" font-size="11" font-weight="700" fill="var(--plan-text)">B · session handling</text><text x="780" y="229" font-size="11" fill="var(--plan-text)">session.go = 55 行</text>
+    <rect x="780" y="250" width="130" height="28" rx="14" fill="var(--plan-stroke)"/><text x="845" y="269" class="center" font-size="11" font-weight="800" fill="var(--bg)">触发 PLAN</text>
+  </g>
+  <g>
+    <rect x="950" y="175" width="170" height="120" rx="12" fill="var(--mask)"/><rect x="950" y="175" width="170" height="120" rx="12" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2"/>
+    <text x="970" y="202" font-size="12" font-weight="700" fill="var(--program-text)">C · i18n messages</text><text x="970" y="229" font-size="11" fill="var(--program-text)">单文件 / 组内均未达阈值</text>
+    <text x="1035" y="269" class="center" font-size="11" fill="var(--program-text)">未达阈值 · 跳过</text>
+  </g>
+  <g>
+    <rect x="1140" y="175" width="170" height="120" rx="12" fill="var(--mask)"/><rect x="1140" y="175" width="170" height="120" rx="12" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2"/>
+    <text x="1160" y="202" font-size="12" font-weight="700" fill="var(--program-text)">D · auth config</text><text x="1160" y="229" font-size="11" fill="var(--program-text)">auth.yaml = 12 行</text>
+    <text x="1225" y="269" class="center" font-size="11" fill="var(--program-text)">未达阈值 · 跳过</text>
+  </g>
+  <g>
+    <rect x="1330" y="175" width="170" height="120" rx="12" fill="var(--mask)"/><rect x="1330" y="175" width="170" height="120" rx="12" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2"/>
+    <text x="1350" y="202" font-size="12" font-weight="700" fill="var(--program-text)">E · docs</text><text x="1350" y="229" font-size="11" fill="var(--program-text)">auth.md = 20 行</text>
+    <text x="1415" y="269" class="center" font-size="11" fill="var(--program-text)">未达阈值 · 跳过</text>
+  </g>
+
+  <text x="60" y="330" class="section" fill="var(--plan-text)">以 A 组 · login flow 为例</text>
+  <text x="1515" y="330" class="tiny" text-anchor="end" fill="var(--plan-text)">PLAN 是独立模型请求，不在 MAIN 对话中执行</text>
+
+  <!-- Input ingredient stack -->
+  <rect x="60" y="350" width="390" height="400" rx="12" fill="var(--mask)"/>
+  <rect x="60" y="350" width="390" height="400" rx="12" fill="var(--program-fill)" stroke="var(--soft-line)" stroke-width="1.2"/>
+  <text x="80" y="378" class="node-title" fill="var(--plan-text)">输入配料 · 5 类文本</text>
+  <g>
+    <rect x="80" y="390" width="350" height="52" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)"/>
+    <path d="M94 402 H113 L122 411 V431 H94 Z" fill="var(--panel-2)" stroke="var(--file-stroke)"/><path d="M113 402 V411 H122" fill="none" stroke="var(--file-stroke)"/>
+    <text x="136" y="411" font-size="11" font-weight="700" fill="var(--file-text)">本组完整 diff</text><text x="136" y="430" class="tiny" fill="var(--file-text)">login.go + login_test.go</text>
+  </g>
+  <g>
+    <rect x="80" y="450" width="350" height="64" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)"/>
+    <text x="96" y="471" font-size="11" font-weight="700" fill="var(--file-text)">本组以外的变更文件</text><text x="96" y="490" class="tiny" fill="var(--file-text)">session.go · session_test.go · i18n 文件</text><text x="96" y="506" class="tiny" fill="var(--file-text)">auth.yaml · auth.md</text>
+  </g>
+  <g>
+    <rect x="80" y="522" width="350" height="52" rx="8" fill="var(--color-tertiary-fill)" stroke="var(--color-tertiary-stroke)"/>
+    <text x="96" y="543" font-size="11" font-weight="700" fill="var(--plan-text)">需求背景</text><text x="96" y="562" class="tiny" fill="var(--plan-text)">给登录流程增加会话过期处理</text>
+  </g>
+  <g>
+    <rect x="80" y="582" width="350" height="52" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+    <path d="M96 598 l5 5 9 -10 M96 615 l5 5 9 -10" fill="none" stroke="var(--success)" stroke-width="1.5"/>
+    <text x="124" y="603" font-size="11" font-weight="700" fill="var(--data-text)">项目审查规则</text><text x="124" y="622" class="tiny" fill="var(--data-text)">随请求提供审查规则文本</text>
+  </g>
+  <g>
+    <rect x="80" y="642" width="350" height="64" rx="8" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)"/>
+    <text x="96" y="662" font-size="11" font-weight="700" fill="var(--plan-text)">可用工具的文本说明</text><text x="96" y="681" class="tiny mono" fill="var(--plan-text)">file_read · code_search</text><text x="96" y="698" class="tiny mono" fill="var(--plan-text)">file_read_diff · file_find</text>
+  </g>
+  <rect x="80" y="716" width="350" height="26" rx="13" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)"/>
+  <text x="255" y="734" class="center" font-size="11" font-weight="700" fill="var(--color-alert-text)">无真正 Tools 字段 · 不能实际读取或搜索</text>
+
+  <!-- PLAN model hexagon -->
+  <polygon points="535,420 665,420 725,520 665,620 535,620 475,520" fill="var(--mask)"/>
+  <polygon points="535,420 665,420 725,520 665,620 535,620 475,520" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="2.5"/>
+  <text x="600" y="474" class="center kicker" fill="var(--plan-text)">MODEL · NO TOOLS</text>
+  <text x="600" y="516" class="center" font-size="26" font-weight="800" fill="var(--plan-text)">PLAN</text>
+  <text x="600" y="545" class="center" font-size="12" font-weight="700" fill="var(--plan-text)">只写“准备查什么”</text>
+  <text x="600" y="570" class="center node-sub" fill="var(--plan-text)">输出纯文本 · 不是 JSON</text>
+  <text x="600" y="595" class="center tiny" fill="var(--plan-text)">允许 Issues: (none)</text>
+
+  <!-- Folded plan document -->
+  <path d="M760 350 H1150 L1210 410 V750 H760 Z" fill="var(--mask)"/>
+  <path d="M760 350 H1150 L1210 410 V750 H760 Z" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="2"/>
+  <path d="M1150 350 V410 H1210" fill="var(--panel-2)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+  <text x="785" y="383" class="node-title" fill="var(--plan-text)">PLAN 输出 · Review Plan</text>
+  <text x="785" y="409" class="mono" font-size="11" fill="var(--plan-text)">Summary: enforce session expiry on login + refresh</text>
+  <text x="785" y="434" font-size="11" font-weight="700" fill="var(--plan-text)">Issues · 3 个风险方向</text>
+
+  <rect x="785" y="455" width="400" height="75" rx="8" fill="var(--panel)" stroke="var(--color-alert-stroke)"/>
+  <text x="800" y="477" font-size="11" font-weight="700" fill="var(--plan-text)"><tspan fill="var(--color-alert-text)">1 [high]</tspan> 刷新路径未检查会话是否已过期</text>
+  <text x="800" y="499" class="mono" font-size="11" fill="var(--plan-text)">→ file_read internal/auth/session.go</text>
+  <text x="800" y="519" class="tiny" fill="var(--plan-text)">确认 TTL 检查位置</text>
+
+  <rect x="785" y="540" width="400" height="75" rx="8" fill="var(--panel)" stroke="var(--color-accent-stroke)"/>
+  <text x="800" y="562" font-size="11" font-weight="700" fill="var(--plan-text)"><tspan fill="var(--color-accent-text)">2 [medium]</tspan> 登录失败文案硬编码英文</text>
+  <text x="800" y="584" class="mono" font-size="11" fill="var(--plan-text)">→ file_read internal/i18n/messages_en.properties</text>
+  <text x="800" y="604" class="tiny" fill="var(--plan-text)">检查新 key 是否存在</text>
+
+  <rect x="785" y="625" width="400" height="75" rx="8" fill="var(--panel)" stroke="var(--data-stroke)"/>
+  <text x="800" y="647" font-size="11" font-weight="700" fill="var(--plan-text)"><tspan fill="var(--data-text)">3 [low]</tspan> 测试未覆盖过期会话分支</text>
+  <text x="800" y="669" class="mono" font-size="11" fill="var(--plan-text)">→ file_read internal/auth/login_test.go</text>
+  <text x="800" y="689" class="tiny" fill="var(--plan-text)">确认缺失用例</text>
+  <text x="985" y="728" class="center tiny" fill="var(--plan-text)">没有明显风险可答 (none) · 不硬凑问题</text>
+
+  <!-- planResult and one-round lifecycle -->
+  <path d="M1250 350 H1485 L1540 405 V470 H1250 Z" fill="var(--mask)"/>
+  <path d="M1250 350 H1485 L1540 405 V470 H1250 Z" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+  <path d="M1485 350 V405 H1540" fill="var(--panel-2)" stroke="var(--data-stroke)"/>
+  <text x="1272" y="383" class="node-title mono" fill="var(--plan-text)">planResult</text>
+  <text x="1272" y="410" font-size="11" font-weight="700" fill="var(--data-text)">原样保存 · 不解析 · 不执行</text>
+  <text x="1272" y="438" class="tiny" fill="var(--data-text)">计划中的工具调用不会真的发生</text>
+
+  <rect x="1250" y="520" width="290" height="115" rx="12" fill="var(--mask)"/>
+  <rect x="1250" y="520" width="290" height="115" rx="12" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="2.5"/>
+  <text x="1395" y="549" class="center" font-size="15" font-weight="800" fill="var(--main-text)">MAIN · 第 1 轮</text>
+  <text x="1395" y="576" class="center mono" font-size="11" fill="var(--main-text)">{{plan_guidance}}</text>
+  <text x="1395" y="600" class="center" font-size="11" font-weight="700" fill="var(--main-text)">### Review Plan</text>
+  <text x="1395" y="621" class="center tiny" fill="var(--main-text)">唯一注入点 · 只进 R1</text>
+
+  <rect x="1250" y="690" width="290" height="60" rx="10" fill="var(--mask)"/>
+  <rect x="1250" y="690" width="290" height="60" rx="10" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2" stroke-dasharray="6 5"/>
+  <path d="M1270 706 L1290 726 M1290 706 L1270 726" stroke="var(--danger)" stroke-width="2"/>
+  <text x="1310" y="715" font-size="11" font-weight="700" fill="var(--program-text)">MAIN R2+ · 整段移除</text>
+  <text x="1310" y="736" class="tiny" fill="var(--program-text)">不再携带 Review Plan</text>
+
+  <!-- Bottom lifecycle rail -->
+  <path d="M90 790 H1510" fill="none" stroke="var(--soft-line)" stroke-width="1.5"/>
+  <circle cx="90" cy="790" r="5" fill="var(--plan-stroke)"/>
+  <circle cx="1510" cy="790" r="5" fill="var(--main-stroke)"/>
+  <rect x="540" y="774" width="520" height="32" rx="16" fill="var(--mask)"/>
+  <text x="800" y="795" class="center" font-size="11" fill="var(--plan-text)">数据寿命：planResult 从 PLAN 输出存活到 MAIN R1 Prompt 构造，随后不再跨轮携带</text>
+
+  <!-- Footer -->
+  <line x1="40" y1="886" x2="1560" y2="886" stroke="var(--soft-line)" stroke-width="1"/>
+  <text x="40" y="920" font-size="13" font-weight="700" fill="var(--plan-text)">结论：A、B 两组触发 PLAN；planResult 原样保存且只进 MAIN R1，不解析、不执行，R2 起整段移除。</text>
+  <text x="40" y="944" class="tiny" fill="var(--plan-text)">蓝色粗线 = PLAN 主路径 · 灰色虚线 = 后续轮次移除</text>
+  <text x="1540" y="940" class="kicker" text-anchor="end" fill="var(--plan-text)">04 / 13</text>
+</svg>

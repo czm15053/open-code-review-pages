@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>拆解阿里 Open Code Review：六个 Prompt 串起的代码审查流水线</title>
+<meta name="description" content="结合 alibaba/open-code-review 源码，拆解 Go 程序如何调度 GROUPING、PLAN、MAIN、RE_LOCATION、FILTER、COMPRESSION 六个 Prompt 完成 PR 审查。">
+
+<!-- 字体 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* ============================================================
+   设计系统：高信噪比工程架构志（Clean Tech Architecture）
+   ============================================================ */
+:root{
+  --bg:#f4f6f9;
+  --bg-subtle:#eaeef4;
+  --surface:#ffffff;
+  --ink:#0f172a;
+  --ink-2:#334155;
+  --ink-3:#64748b;
+  --line:#e2e8f0;
+  --line-strong:#cbd5e1;
+  --accent:#2563eb;
+  --accent-soft:#eff6ff;
+  --ok:#059669;
+  --ok-soft:#ecfdf5;
+  --ok-bd:#a7f3d0;
+  --bad:#dc2626;
+  --bad-soft:#fef2f2;
+  --bad-bd:#fecaca;
+  --warn:#d97706;
+  --warn-soft:#fffbeb;
+  --warn-bd:#fde68a;
+  --info:#0284c7;
+  --info-soft:#f0f9ff;
+  --info-bd:#bae6fd;
+  --code-bg:#0d1117;
+  --code-header:#161b22;
+  --code-fg:#e6edf3;
+  --shadow-sm:0 1px 2px rgba(15,23,42,.04);
+  --shadow:0 4px 16px -2px rgba(15,23,42,.05), 0 1px 3px rgba(15,23,42,.03);
+  --shadow-hover:0 10px 28px -4px rgba(15,23,42,.09), 0 4px 10px rgba(15,23,42,.04);
+  --sans:"Inter","Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+  --mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+
+  /* 十站主题色 */
+  --s0:#475569; --s0-bg:#f1f5f9; --s0-bd:#cbd5e1;
+  --s1:#7c3aed; --s1-bg:#f5f3ff; --s1-bd:#ddd6fe;
+  --s2:#2563eb; --s2-bg:#eff6ff; --s2-bd:#bfdbfe;
+  --s3:#0d9488; --s3-bg:#f0fdfa; --s3-bd:#99f6e4;
+  --s4:#e11d48; --s4-bg:#fff1f2; --s4-bd:#fecdd3;
+  --s5:#d97706; --s5-bg:#fffbeb; --s5-bd:#fde68a;
+  --s6:#0284c7; --s6-bg:#f0f9ff; --s6-bd:#bae6fd;
+  --s7:#c026d3; --s7-bg:#fdf4ff; --s7-bd:#f5d0fe;
+  --s8:#ea580c; --s8-bg:#fff7ed; --s8-bd:#fed7aa;
+  --s9:#4f46e5; --s9-bg:#eef2ff; --s9-bd:#c7d2fe;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:74px}
+body{
+  margin:0;background-color:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-size:15.5px;line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#fff}
+
+/* ---------- 顶部进度条 ---------- */
+#progress-bar{
+  position:fixed;top:0;left:0;height:3px;width:0%;
+  background:linear-gradient(90deg,var(--s1),var(--s2),var(--s3),var(--s8));
+  z-index:1000;transition:width .1s linear;
+}
+
+/* ---------- 顶部导航 ---------- */
+.topnav{
+  position:sticky;top:0;z-index:900;
+  background:rgba(244,246,249,.88);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.topnav-inner{
+  max-width:1220px;margin:0 auto;padding:.65rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
+}
+.topnav .brand{
+  font-weight:700;font-size:.92rem;color:var(--ink);text-decoration:none;
+  display:flex;align-items:center;gap:.55rem;white-space:nowrap;
+}
+.topnav .brand .logo-badge{
+  width:24px;height:24px;border-radius:6px;background:var(--ink);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-family:var(--mono);
+}
+.stage-dots{display:flex;gap:.5rem;align-items:center;overflow-x:auto;scrollbar-width:none;padding:4px 6px}
+.stage-dots::-webkit-scrollbar{display:none}
+.stage-dot{
+  width:9px;height:9px;border-radius:50%;flex:none;
+  transition:transform .2s ease,box-shadow .2s ease;cursor:pointer;opacity:.7;
+}
+.stage-dot:hover{transform:scale(1.4);opacity:1}
+.stage-dot.active{transform:scale(1.4);opacity:1;box-shadow:0 0 0 2.5px var(--bg), 0 0 0 4.5px var(--ink)}
+.nav-links{display:flex;align-items:center;gap:1rem;font-size:.82rem}
+.nav-links a{color:var(--ink-2);text-decoration:none;font-weight:500;white-space:nowrap}
+.nav-links a:hover{color:var(--accent)}
+.nav-links .gh-btn{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--ink);color:#fff;padding:.35rem .85rem;border-radius:7px;font-size:.78rem;
+  transition:background .18s;
+}
+.nav-links .gh-btn:hover{background:var(--accent);color:#fff}
+
+/* ---------- Hero ---------- */
+.hero{
+  background:
+    radial-gradient(circle at 12% 10%, rgba(124,58,237,.07) 0%, transparent 40%),
+    radial-gradient(circle at 88% 15%, rgba(13,148,136,.07) 0%, transparent 40%),
+    linear-gradient(180deg, #ffffff 0%, var(--bg) 100%);
+  border-bottom:1px solid var(--line);
+}
+.hero-inner{max-width:980px;margin:0 auto;padding:3.6rem 1.5rem 1.6rem}
+.hero .kicker{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-family:var(--mono);font-size:.73rem;color:var(--accent);font-weight:600;
+  background:var(--accent-soft);border:1px solid #bfdbfe;
+  padding:.25rem .75rem;border-radius:6px;margin-bottom:1.1rem;
+}
+.hero h1{
+  font-weight:800;font-size:clamp(1.85rem,4.2vw,2.85rem);
+  line-height:1.22;margin:0 0 .85rem;letter-spacing:-.025em;color:var(--ink);
+}
+.hero h1 .em{
+  background:linear-gradient(120deg,#2563eb,#7c3aed,#0d9488);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero .subtitle{
+  font-size:1.05rem;line-height:1.6;color:var(--ink-2);
+  max-width:42rem;margin:0 0 1.3rem;
+}
+.hero-meta{display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;color:var(--ink-3);font-size:.82rem;margin-bottom:1rem}
+.hero-meta span{display:inline-flex;align-items:center;gap:.4rem}
+.hero-meta i{color:var(--accent)}
+.hero-meta a{color:var(--ink-2);text-decoration:none;border-bottom:1px solid var(--line-strong)}
+.hero-meta a:hover{color:var(--accent);border-color:var(--accent)}
+
+.hero-figure{max-width:1040px;margin:0 auto;padding:0 1.5rem 2.8rem}
+.hero-figure figcaption{
+  text-align:center;color:var(--ink-3);font-size:.8rem;margin-top:.75rem;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;flex-wrap:wrap;
+}
+
+/* ---------- 主体双栏：左侧目录 + 右侧内容 ---------- */
+.layout-wrap{
+  max-width:1220px;margin:0 auto;padding:0 1.5rem;
+  display:grid;grid-template-columns:210px minmax(0, 820px);gap:3rem;
+  align-items:start;justify-content:center;
+}
+@media (max-width:1080px){
+  .layout-wrap{grid-template-columns:minmax(0, 820px)}
+  .toc-sidebar{display:none}
+}
+
+/* ---------- 左侧目录 ---------- */
+.toc-sidebar{position:sticky;top:82px;padding:1rem 0;font-size:.81rem}
+.toc-title{
+  font-family:var(--mono);font-weight:700;font-size:.7rem;letter-spacing:.08em;
+  color:var(--ink-3);margin-bottom:.65rem;padding-left:.8rem;text-transform:uppercase;
+}
+.toc-list{list-style:none;padding:0;margin:0;border-left:2px solid var(--line)}
+.toc-list li{margin:2px 0}
+.toc-list a{
+  display:flex;align-items:center;gap:.45rem;
+  padding:.36rem .8rem;color:var(--ink-3);text-decoration:none;
+  border-left:2px solid transparent;margin-left:-2px;transition:all .15s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-radius:0 6px 6px 0;
+}
+.toc-list a .t-dot{width:6px;height:6px;border-radius:50%;flex:none}
+.toc-list a:hover{color:var(--ink);background:var(--bg-subtle)}
+.toc-list a.active{
+  color:var(--ink);font-weight:600;border-left-color:var(--accent);
+  background:#fff;box-shadow:var(--shadow-sm);
+}
+
+/* ---------- 正文通用 ---------- */
+.article{min-width:0}
+.article > section{padding-top:1rem}
+.article p{margin:.85rem 0;color:var(--ink-2)}
+.article strong{color:var(--ink);font-weight:600}
+.article a.inline-link{color:var(--accent);text-decoration:none;border-bottom:1px solid rgba(37,99,235,.35)}
+.article a.inline-link:hover{border-bottom-color:var(--accent)}
+
+h2.chapter{
+  font-weight:800;font-size:clamp(1.4rem,3vw,1.75rem);letter-spacing:-.02em;
+  line-height:1.3;margin:2.2rem 0 1rem;color:var(--ink);
+}
+h3{
+  font-weight:700;font-size:1.06rem;margin:1.6rem 0 .75rem;
+  display:flex;align-items:center;gap:.5rem;color:var(--ink);
+}
+h3 i{color:var(--accent);font-size:.88em}
+hr.sep{border:0;height:1px;background:var(--line);margin:2.8rem 0}
+
+/* ---------- 顶部三问题对比卡（柔和完整边框，无生硬切角） ---------- */
+.pain-grid{
+  display:grid;grid-template-columns:repeat(3, 1fr);gap:.9rem;margin:1.2rem 0;
+}
+@media (max-width:740px){.pain-grid{grid-template-columns:1fr}}
+.pain-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm);
+}
+.pain-card .p-tag{
+  font-family:var(--mono);font-size:.7rem;font-weight:700;color:var(--c);
+  background:var(--cbg);border:1px solid var(--cbd);
+  padding:2px 8px;border-radius:5px;
+  display:inline-flex;align-items:center;gap:.35rem;margin-bottom:.55rem;
+}
+.pain-card h4{margin:0 0 .35rem;font-size:.95rem;color:var(--ink)}
+.pain-card p{margin:0;font-size:.86rem;color:var(--ink-3);line-height:1.58}
+
+/* ---------- Benchmark 数据条 ---------- */
+.bench-bar{
+  display:grid;grid-template-columns:1fr auto auto;gap:1rem;align-items:center;
+  background:var(--surface);border:1px solid #c7d2fe;
+  background-image:linear-gradient(135deg, #f8faff 0%, #ffffff 70%);
+  border-radius:12px;padding:1.05rem 1.3rem;margin:1.2rem 0;box-shadow:var(--shadow-sm);
+}
+@media (max-width:680px){.bench-bar{grid-template-columns:1fr}}
+.bench-bar .b-text{font-size:.9rem;color:var(--ink-2);line-height:1.6}
+.bench-pill{
+  background:#eef2ff;border:1px solid #c7d2fe;border-radius:9px;
+  padding:.5rem .9rem;text-align:center;min-width:115px;
+}
+.bench-pill .v{font-family:var(--mono);font-weight:800;font-size:1.22rem;color:#4f46e5;line-height:1.15}
+.bench-pill .k{font-size:.72rem;color:var(--ink-3);margin-top:.15rem}
+
+/* ---------- 阶段卡片头 + I/O 规格条 ---------- */
+.st-0{--sc:var(--s0);--sbg:var(--s0-bg);--sbd:var(--s0-bd)}
+.st-1{--sc:var(--s1);--sbg:var(--s1-bg);--sbd:var(--s1-bd)}
+.st-2{--sc:var(--s2);--sbg:var(--s2-bg);--sbd:var(--s2-bd)}
+.st-3{--sc:var(--s3);--sbg:var(--s3-bg);--sbd:var(--s3-bd)}
+.st-4{--sc:var(--s4);--sbg:var(--s4-bg);--sbd:var(--s4-bd)}
+.st-5{--sc:var(--s5);--sbg:var(--s5-bg);--sbd:var(--s5-bd)}
+.st-6{--sc:var(--s6);--sbg:var(--s6-bg);--sbd:var(--s6-bd)}
+.st-7{--sc:var(--s7);--sbg:var(--s7-bg);--sbd:var(--s7-bd)}
+.st-8{--sc:var(--s8);--sbg:var(--s8-bg);--sbd:var(--s8-bd)}
+.st-9{--sc:var(--s9);--sbg:var(--s9-bg);--sbd:var(--s9-bd)}
+
+.stage-card{
+  border-radius:14px;overflow:hidden;margin:2.2rem 0 1.3rem;
+  background:var(--surface);border:1px solid var(--sbd);box-shadow:var(--shadow);
+}
+.stage-top{
+  position:relative;padding:1.3rem 1.5rem 1.15rem;
+  background:linear-gradient(135deg, var(--sbg) 0%, #ffffff 80%);
+  border-bottom:1px solid var(--line);
+}
+.stage-top::after{
+  content:attr(data-step);
+  position:absolute;right:1.2rem;top:50%;transform:translateY(-50%);
+  font-family:var(--mono);font-weight:800;font-size:3.6rem;line-height:1;
+  color:var(--sc);opacity:.08;pointer-events:none;
+}
+.stage-badge{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-family:var(--mono);font-size:.72rem;font-weight:700;color:var(--sc);
+  background:#fff;border:1px solid var(--sbd);
+  padding:.2rem .68rem;border-radius:6px;margin-bottom:.55rem;
+}
+.stage-badge .no{
+  width:17px;height:17px;border-radius:4px;background:var(--sc);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:.66rem;
+}
+.stage-top h2{
+  font-weight:800;font-size:clamp(1.28rem,2.6vw,1.58rem);letter-spacing:-.015em;
+  margin:0 0 .35rem;color:var(--ink);
+}
+.stage-top .q{
+  margin:0;font-size:.88rem;color:var(--ink-2);font-weight:500;
+}
+
+/* I/O 规格四宫格条 */
+.io-bar{
+  display:grid;grid-template-columns:repeat(4, 1fr);
+  background:#fafbfc;font-size:.8rem;
+}
+@media (max-width:720px){.io-bar{grid-template-columns:repeat(2, 1fr)}}
+.io-cell{
+  padding:.65rem 1rem;border-right:1px solid var(--line);
+}
+.io-cell:last-child{border-right:0}
+@media (max-width:720px){
+  .io-cell:nth-child(2){border-right:0}
+  .io-cell:nth-child(1),.io-cell:nth-child(2){border-bottom:1px solid var(--line)}
+}
+.io-cell .k{
+  font-family:var(--mono);font-size:.68rem;font-weight:600;color:var(--ink-3);
+  text-transform:uppercase;letter-spacing:.04em;margin-bottom:.2rem;
+}
+.io-cell .v{color:var(--ink);font-weight:600;line-height:1.4}
+.io-cell .v.mono{font-family:var(--mono);font-size:.76rem;color:var(--sc)}
+
+/* ---------- 新增组件 1：第 0 站四阶段流水线整合卡 ---------- */
+.prep-pipeline{
+  display:grid;grid-template-columns:repeat(4, 1fr);
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;margin:1.15rem 0;box-shadow:var(--shadow-sm);
+}
+@media (max-width:760px){.prep-pipeline{grid-template-columns:1fr}}
+.prep-step{
+  padding:1.05rem 1.1rem;border-right:1px solid var(--line);position:relative;
+}
+.prep-step:last-child{border-right:0}
+@media (max-width:760px){
+  .prep-step{border-right:0;border-bottom:1px solid var(--line)}
+  .prep-step:last-child{border-bottom:0}
+}
+.prep-step .ps-top{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:.45rem;
+}
+.prep-step .ps-idx{
+  font-family:var(--mono);font-size:.68rem;font-weight:700;
+  color:#475569;background:#f1f5f9;padding:1px 6px;border-radius:4px;
+}
+.prep-step h4{margin:0 0 .3rem;font-size:.9rem;color:var(--ink)}
+.prep-step p{margin:0;font-size:.82rem;color:var(--ink-3);line-height:1.55}
+
+/* ---------- 新增组件 2：第 4 站三级降级阶梯（Escalation Ladder） ---------- */
+.ladder{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;margin:1.15rem 0;box-shadow:var(--shadow-sm);
+}
+.ladder-row{
+  display:grid;grid-template-columns:130px 1fr auto;gap:1rem;align-items:center;
+  padding:.85rem 1.15rem;border-bottom:1px solid var(--line);
+}
+.ladder-row:last-child{border-bottom:0}
+@media (max-width:680px){.ladder-row{grid-template-columns:1fr;gap:.35rem}}
+.ladder-lvl{
+  font-family:var(--mono);font-size:.73rem;font-weight:700;
+  display:inline-flex;align-items:center;gap:.4rem;
+}
+.ladder-desc{font-size:.87rem;color:var(--ink-2)}
+.ladder-tag{
+  font-family:var(--mono);font-size:.71rem;font-weight:600;
+  padding:2px 8px;border-radius:999px;white-space:nowrap;
+}
+.ladder-tag.t-fail{background:#f1f5f9;color:#64748b}
+.ladder-tag.t-llm{background:#fff1f2;color:#e11d48;border:1px solid #fecdd3}
+
+/* ---------- 新增组件 3：第 8 站分组垂直时间轴（替代散装九宫格） ---------- */
+.finalize-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:14px;
+  padding:1.25rem 1.45rem;margin:1.2rem 0;box-shadow:var(--shadow-sm);
+}
+.fin-phase{
+  display:grid;grid-template-columns:135px 1fr;gap:1.2rem;
+  padding:1rem 0;border-bottom:1px dashed var(--line);
+}
+.fin-phase:first-child{padding-top:.2rem}
+.fin-phase:last-child{padding-bottom:.2rem;border-bottom:0}
+@media (max-width:680px){.fin-phase{grid-template-columns:1fr;gap:.5rem}}
+.fin-phase-label{
+  font-size:.78rem;font-weight:700;color:var(--ink-3);
+  display:flex;align-items:flex-start;gap:.45rem;padding-top:.15rem;
+}
+.fin-phase-label .dot{width:8px;height:8px;border-radius:50%;margin-top:.38rem;flex:none}
+.fin-steps{display:flex;flex-direction:column;gap:.65rem}
+.fin-step{
+  display:flex;align-items:baseline;gap:.65rem;font-size:.89rem;
+}
+.fin-step .num{
+  font-family:var(--mono);font-size:.72rem;font-weight:700;
+  color:var(--ink-3);background:var(--bg-subtle);
+  padding:1px 6px;border-radius:4px;flex:none;
+}
+.fin-step .title{font-weight:600;color:var(--ink)}
+.fin-step .desc{color:var(--ink-3);font-size:.84rem}
+.fin-step.highlight{
+  background:#fff7ed;border:1px solid #fed7aa;
+  padding:.5rem .75rem;border-radius:8px;margin-left:-.4rem;
+}
+.fin-step.highlight .num{background:#ea580c;color:#fff}
+
+/* ---------- 双栏对比卡片（统一完整浅色边框，无硬切线） ---------- */
+.bento-2{display:grid;grid-template-columns:1fr 1fr;gap:.95rem;margin:1.15rem 0}
+.bento-4{display:grid;grid-template-columns:repeat(2, 1fr);gap:.85rem;margin:1.15rem 0}
+@media (max-width:720px){
+  .bento-2,.bento-4{grid-template-columns:1fr}
+}
+.bcard{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:1.05rem 1.2rem;box-shadow:var(--shadow-sm);
+}
+.bcard .b-head{
+  display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.45rem;
+}
+.bcard .b-title{
+  font-weight:700;font-size:.92rem;color:var(--ink);display:flex;align-items:center;gap:.45rem;
+}
+.bcard .b-num{
+  font-family:var(--mono);font-size:.7rem;font-weight:600;
+  padding:2px 7px;border-radius:5px;background:var(--bg-subtle);color:var(--ink-2);
+}
+.bcard p{margin:0;font-size:.86rem;color:var(--ink-2);line-height:1.58}
+.bcard ul{margin:.4rem 0 0;padding-left:1.15rem;font-size:.86rem;color:var(--ink-2)}
+.bcard li{margin:.32rem 0}
+
+/* 柔和语义配色（全边框 + 极浅顶背景，告别硬切线） */
+.bcard.ok{border-color:var(--ok-bd);background:linear-gradient(180deg, #f6fdf9 0%, #ffffff 42px)}
+.bcard.ok .b-title i{color:var(--ok)}
+.bcard.bad{border-color:var(--bad-bd);background:linear-gradient(180deg, #fef7f7 0%, #ffffff 42px)}
+.bcard.bad .b-title i{color:var(--bad)}
+.bcard.warn{border-color:var(--warn-bd);background:linear-gradient(180deg, #fffcf3 0%, #ffffff 42px)}
+.bcard.warn .b-title i{color:var(--warn)}
+.bcard.info{border-color:var(--info-bd);background:linear-gradient(180deg, #f4faff 0%, #ffffff 42px)}
+.bcard.info .b-title i{color:var(--info)}
+
+/* 保护类别标签云 */
+.chip-cloud{display:flex;flex-wrap:wrap;gap:.4rem;margin:.55rem 0}
+.p-chip{
+  font-size:.78rem;font-weight:600;color:#065f46;
+  background:#ecfdf5;border:1px solid #a7f3d0;
+  padding:2px 9px;border-radius:6px;
+}
+
+/* ---------- 紧凑提示条 ---------- */
+.strip{
+  display:flex;align-items:center;gap:.7rem;
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:.78rem 1.05rem;margin:1.05rem 0;box-shadow:var(--shadow-sm);
+  font-size:.88rem;color:var(--ink-2);line-height:1.55;
+}
+.strip .s-icon{
+  width:26px;height:26px;border-radius:7px;flex:none;
+  display:inline-flex;align-items:center;justify-content:center;font-size:.8rem;
+}
+
+/* ---------- macOS 风格代码窗口 ---------- */
+code.inline{
+  font-family:var(--mono);font-size:.82em;
+  background:var(--bg-subtle);color:#0f172a;
+  padding:.12rem .38rem;border-radius:4px;border:1px solid var(--line);
+}
+.code-window{
+  margin:1.15rem 0;border-radius:11px;overflow:hidden;
+  background:var(--code-bg);border:1px solid #21262d;box-shadow:var(--shadow);
+}
+.code-bar{
+  background:var(--code-header);padding:.48rem .9rem;
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  border-bottom:1px solid #21262d;
+}
+.code-dots{
+  display:flex;gap:6px;align-items:center;
+  min-width:0;flex:1;
+}
+.code-dots .d-r,
+.code-dots .d-y,
+.code-dots .d-g{
+  width:10px;height:10px;border-radius:50%;display:inline-block;flex:none;
+}
+.code-dots .d-r{background:#ff5f56}
+.code-dots .d-y{background:#ffbd2e}
+.code-dots .d-g{background:#27c93f}
+.code-title{
+  font-family:var(--mono);font-size:.73rem;color:#8b949e;margin-left:.45rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.copy-btn{
+  background:rgba(255,255,255,.06);color:#8b949e;
+  border:1px solid rgba(255,255,255,.12);border-radius:5px;
+  padding:.15rem .5rem;font-size:.7rem;font-family:var(--sans);
+  cursor:pointer;transition:all .15s;flex:none;white-space:nowrap;
+}
+.copy-btn:hover{background:rgba(255,255,255,.15);color:#fff}
+pre.code{
+  margin:0;padding:1rem 1.2rem;overflow-x:auto;
+  font-family:var(--mono);font-size:.82rem;line-height:1.65;
+  color:var(--code-fg);white-space:pre;
+}
+
+/* ---------- 内存三区切分可视化条（第 7 站专属） ---------- */
+.mem-visual{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:1rem 1.15rem;margin:1.1rem 0;box-shadow:var(--shadow-sm);
+}
+.mem-track{
+  display:grid;grid-template-columns:22% 50% 28%;gap:5px;
+  border-radius:8px;overflow:hidden;margin-bottom:.75rem;
+}
+.mem-seg{
+  padding:.58rem .75rem;font-family:var(--mono);font-size:.75rem;font-weight:700;
+  display:flex;flex-direction:column;gap:2px;border-radius:6px;
+}
+.mem-seg span{font-family:var(--sans);font-size:.72rem;font-weight:400;opacity:.88}
+.mem-seg.m-frozen{background:#dbeafe;color:#1e40af}
+.mem-seg.m-comp{background:#fae8ff;color:#86198f}
+.mem-seg.m-active{background:#dcfce7;color:#166534}
+
+/* ---------- 表格 ---------- */
+.table-wrap{overflow-x:auto;margin:1.2rem 0;border-radius:11px;box-shadow:var(--shadow-sm);border:1px solid var(--line);background:var(--surface)}
+table.tb{width:100%;border-collapse:collapse;background:var(--surface);font-size:.88rem;min-width:580px}
+table.tb th{
+  background:#f8fafc;color:var(--ink);font-weight:600;
+  text-align:left;padding:.68rem .95rem;border-bottom:1px solid var(--line);white-space:nowrap;
+}
+table.tb td{padding:.62rem .95rem;border-bottom:1px solid var(--line);vertical-align:middle;color:var(--ink-2)}
+table.tb tr:last-child td{border-bottom:0}
+table.tb tr:hover td{background:#f8fafc}
+table.tb td:first-child{font-weight:600;color:var(--ink);white-space:nowrap}
+table.tb td.code{font-family:var(--mono);font-size:.81rem;white-space:nowrap;color:var(--ink)}
+table.tb .badge{
+  display:inline-block;font-size:.71rem;font-weight:600;border-radius:5px;
+  padding:2px 7px;white-space:nowrap;font-family:var(--mono);
+}
+.b-purple{background:#f3e8ff;color:#6b21a8;border:1px solid #e9d5ff}
+.b-blue{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe}
+.b-cyan{background:#ccfbf1;color:#115e59;border:1px solid #99f6e4}
+.b-amber{background:#fef3c7;color:#92400e;border:1px solid #fde68a}
+.b-pink{background:#fae8ff;color:#86198f;border:1px solid #f5d0fe}
+.b-red{background:#ffe4e6;color:#9f1239;border:1px solid #fecdd3}
+
+/* ---------- 插图容器 ---------- */
+figure.illus{margin:1.6rem 0}
+.img-frame{
+  position:relative;display:block;background:#ffffff;border-radius:12px;overflow:hidden;
+  border:1px solid var(--line);box-shadow:var(--shadow);cursor:zoom-in;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.img-frame:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-hover);
+  border-color:#93c5fd;
+}
+.img-frame img{width:100%;display:block}
+.zoom-pill{
+  position:absolute;right:10px;bottom:10px;
+  background:rgba(15,23,42,.8);backdrop-filter:blur(6px);
+  color:#fff;font-size:.72rem;font-weight:500;
+  padding:.26rem .65rem;border-radius:6px;
+  display:inline-flex;align-items:center;gap:.35rem;
+  opacity:0;transform:translateY(3px);
+  transition:opacity .2s ease, transform .2s ease;pointer-events:none;
+}
+.img-frame:hover .zoom-pill{opacity:1;transform:translateY(0)}
+@media (hover:none){.zoom-pill{opacity:.85;transform:none}}
+figure.illus figcaption{
+  text-align:center;color:var(--ink-3);font-size:.8rem;margin-top:.6rem;
+  display:flex;align-items:center;justify-content:center;gap:.5rem;flex-wrap:wrap;
+}
+figure.illus figcaption .k{
+  font-family:var(--mono);font-size:.66rem;font-weight:600;color:#fff;border-radius:4px;padding:1px 6px;
+}
+figure.illus figcaption .k.flow{background:#0284c7}
+figure.illus figcaption .k.prompt{background:#7c3aed}
+figure.illus figcaption a, .hero-figure figcaption a{
+  color:var(--accent);text-decoration:none;font-weight:500;
+}
+figure.illus figcaption a:hover, .hero-figure figcaption a:hover{text-decoration:underline}
+
+/* ---------- 流程链 ---------- */
+.flow-chain{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;
+  padding:1rem 1.2rem;margin:1.2rem 0;box-shadow:var(--shadow-sm);
+  display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;font-weight:600;
+}
+.flow-chain .node{
+  padding:.36rem .78rem;border-radius:7px;color:#fff;font-size:.82rem;white-space:nowrap;
+}
+.flow-chain .arrow{color:var(--ink-3);font-size:.75rem}
+
+/* ---------- 全屏大图蒙版（Lightbox） ---------- */
+.lightbox-modal{
+  position:fixed;inset:0;z-index:2000;
+  background:rgba(15,23,42,.9);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem;opacity:0;pointer-events:none;
+  transition:opacity .22s ease;cursor:zoom-out;
+}
+.lightbox-modal.open{opacity:1;pointer-events:auto}
+.lightbox-close{
+  position:fixed;top:1.2rem;right:1.4rem;z-index:2010;
+  width:38px;height:38px;border-radius:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  color:#fff;font-size:1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.lightbox-close:hover{background:var(--accent);border-color:var(--accent)}
+.lightbox-stage{
+  max-width:94vw;max-height:84vh;
+  display:flex;align-items:center;justify-content:center;
+  transform:scale(.96);transition:transform .24s ease;
+}
+.lightbox-modal.open .lightbox-stage{transform:scale(1)}
+.lightbox-stage img{
+  width:94vw;height:auto;max-width:94vw;max-height:82vh;
+  background:#fff;border-radius:10px;
+  box-shadow:0 24px 80px rgba(0,0,0,.55);
+  cursor:zoom-out;
+}
+.lightbox-caption{
+  margin-top:.8rem;color:#f1f5f9;font-size:.84rem;text-align:center;
+  display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;justify-content:center;
+}
+.lightbox-hint{
+  font-size:.73rem;color:#94a3b8;
+  background:rgba(255,255,255,.08);padding:.15rem .55rem;border-radius:4px;
+}
+
+/* ---------- 滚动显现 & 返回顶部 ---------- */
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+.reveal.visible{opacity:1;transform:none}
+
+#back-top{
+  position:fixed;right:1.4rem;bottom:1.5rem;z-index:900;
+  width:38px;height:38px;border-radius:8px;border:1px solid var(--line);
+  background:var(--surface);color:var(--ink-2);cursor:pointer;font-size:.88rem;
+  box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:all .2s;
+}
+#back-top.show{opacity:1;pointer-events:auto}
+#back-top:hover{color:var(--accent);border-color:var(--accent);transform:translateY(-2px)}
+
+footer{
+  margin-top:4rem;border-top:1px solid var(--line);background:var(--surface);
+  padding:2.2rem 1.5rem 2.6rem;text-align:center;color:var(--ink-3);font-size:.82rem;
+}
+footer .f-title{font-weight:700;font-size:.95rem;color:var(--ink);margin-bottom:.3rem}
+footer a{color:var(--accent);text-decoration:none}
+footer a:hover{text-decoration:underline}
+
+@media (max-width:640px){
+  .hero-inner{padding-top:2.6rem}
+  .stage-dots{display:none}
+  .stage-top::after{font-size:2.6rem}
+  .mem-track{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- 顶部导航 -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#top" class="brand"><span class="logo-badge">&lt;/&gt;</span>拆解 Open Code Review</a>
+    <div class="stage-dots" id="stage-dots">
+      <a class="stage-dot" href="#st-0" style="background:var(--s0)" title="0. 本地预处理"></a>
+      <a class="stage-dot" href="#st-1" style="background:var(--s1)" title="1. GROUPING 分组"></a>
+      <a class="stage-dot" href="#st-2" style="background:var(--s2)" title="2. PLAN 规划"></a>
+      <a class="stage-dot" href="#st-3" style="background:var(--s3)" title="3. MAIN 第 1 轮"></a>
+      <a class="stage-dot" href="#st-4" style="background:var(--s4)" title="4. RE_LOCATION 重定位"></a>
+      <a class="stage-dot" href="#st-5" style="background:var(--s5)" title="5. FILTER 过滤"></a>
+      <a class="stage-dot" href="#st-6" style="background:var(--s6)" title="6. MAIN 第 2 轮"></a>
+      <a class="stage-dot" href="#st-7" style="background:var(--s7)" title="7. COMPRESSION 压缩"></a>
+      <a class="stage-dot" href="#st-8" style="background:var(--s8)" title="8. 收尾落盘"></a>
+      <a class="stage-dot" href="#st-9" style="background:var(--s9)" title="9. 全景复盘"></a>
+    </div>
+    <div class="nav-links">
+      <a href="diagram/open-code-review-full-flow/index.html">流程图 13 页 →</a>
+      <a class="gh-btn" href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener"><i class="fa-brands fa-github"></i> 源码仓库</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div class="kicker"><i class="fa-solid fa-code-branch"></i> ALIBABA / OPEN-CODE-REVIEW · 核心流程源码拆解</div>
+    <h1>拆解阿里 Open Code Review：<br><span class="em">六个 Prompt</span> 串起的代码审查流水线</h1>
+    <p class="subtitle">以一个改动 8 个文件的 PR 为例，看 Go 主程序如何调度六个专用 Prompt 完成分组、查证、行号校准与误报剔除。</p>
+    <div class="hero-meta">
+      <span><i class="fa-brands fa-github"></i>仓库：<a href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener">alibaba/open-code-review</a></span>
+      <span><i class="fa-regular fa-clock"></i>阅读约 10 分钟</span>
+      <span><i class="fa-regular fa-images"></i>19 张 SVG 流程图与提示词图解（点击图片可放大）</span>
+    </div>
+  </div>
+  <figure class="hero-figure reveal">
+    <div class="img-frame" data-lightbox data-caption="总览：一次 PR 如何穿过六个 Prompt 变成落到具体行号的审查结果">
+      <img src="diagram/open-code-review-full-flow/01-overview.light.svg" alt="总览：一次 PR 如何变成审查结果">
+      <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+    </div>
+    <figcaption>
+      <span><i class="fa-regular fa-image"></i>总览：一次 PR 如何穿过六个 Prompt 变成落到具体行号的审查结果</span>
+      <a href="diagram/open-code-review-full-flow/01-overview.light.svg" target="_blank">新窗口原图 ↗</a>
+    </figcaption>
+  </figure>
+</header>
+
+<!-- ==================== 主体双栏 ==================== -->
+<div class="layout-wrap">
+
+  <!-- 左侧目录 -->
+  <aside class="toc-sidebar" aria-label="文章目录">
+    <div class="toc-title">Flow Stages</div>
+    <ul class="toc-list" id="toc-list">
+      <li><a href="#opening"><span class="t-dot" style="background:#64748b"></span>背景与示例 PR</a></li>
+      <li><a href="#st-0"><span class="t-dot" style="background:var(--s0)"></span>0. 预处理与 Manifest</a></li>
+      <li><a href="#st-1"><span class="t-dot" style="background:var(--s1)"></span>1. GROUPING 分组</a></li>
+      <li><a href="#st-2"><span class="t-dot" style="background:var(--s2)"></span>2. PLAN 审前规划</a></li>
+      <li><a href="#st-3"><span class="t-dot" style="background:var(--s3)"></span>3. MAIN R1 工具循环</a></li>
+      <li><a href="#st-4"><span class="t-dot" style="background:var(--s4)"></span>4. RE_LOCATION 修锚点</a></li>
+      <li><a href="#st-5"><span class="t-dot" style="background:var(--s5)"></span>5. FILTER 删误报</a></li>
+      <li><a href="#st-6"><span class="t-dot" style="background:var(--s6)"></span>6. MAIN R2 跨轮复查</a></li>
+      <li><a href="#st-7"><span class="t-dot" style="background:var(--s7)"></span>7. COMPRESSION 压缩</a></li>
+      <li><a href="#st-8"><span class="t-dot" style="background:var(--s8)"></span>8. 九步收尾落盘</a></li>
+      <li><a href="#st-9"><span class="t-dot" style="background:var(--s9)"></span>9. 全局复盘速查</a></li>
+    </ul>
+  </aside>
+
+  <!-- 右侧正文 -->
+  <main class="article">
+
+    <!-- ==================== 背景与示例 PR ==================== -->
+    <section id="opening">
+      <h2 class="chapter reveal">背景：为什么要把一次审查拆成六个 Prompt？</h2>
+      <p class="reveal">如果直接把整个 PR 的 <code class="inline">git diff</code> 塞进一个 Prompt 让大模型或通用 Agent 审，工程落地上通常会遇到三个具体问题：</p>
+
+      <div class="pain-grid reveal">
+        <div class="pain-card" style="--c:#7c3aed;--cbg:#f5f3ff;--cbd:#ddd6fe">
+          <div class="p-tag"><i class="fa-solid fa-layer-group"></i> PROBLEM 01</div>
+          <h4>多文件混杂容易漏看</h4>
+          <p>业务实现、单测、配置文件混在同一个长上下文里，模型注意力分散，经常漏审后面的文件。</p>
+        </div>
+        <div class="pain-card" style="--c:#d97706;--cbg:#fffbeb;--cbd:#fde68a">
+          <div class="p-tag"><i class="fa-solid fa-comment-slash"></i> PROBLEM 02</div>
+          <h4>只看 diff 片段导致误报</h4>
+          <p>不读完整源文件、不查函数调用方，模型靠猜上下文给建议，产生大量与实际代码不符的幻觉评论。</p>
+        </div>
+        <div class="pain-card" style="--c:#e11d48;--cbg:#fff1f2;--cbd:#fecdd3">
+          <div class="p-tag"><i class="fa-solid fa-location-dot"></i> PROBLEM 03</div>
+          <h4>引用代码被改写，行号算不出</h4>
+          <p>模型输出评论时常把引用的原代码写错几个字符，导致程序无法用文本匹配算出对应的 Git 行号。</p>
+        </div>
+      </div>
+
+      <div class="bench-bar reveal">
+        <div class="b-text">
+          <strong><a class="inline-link" href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener">alibaba/open-code-review</a> 的设计思路：</strong>用 Go 代码控制流程状态和本地文件读写，让 6 个职责单一的 Prompt 分工配合。在官方 200 个真实 PR 的评测集（AACR-Bench）上，这套架构比直接用通用 Coding Agent 准得多，且大幅省 Token。
+        </div>
+        <div class="bench-pill">
+          <div class="v">~1/9</div>
+          <div class="k">Token 消耗（省 89%）</div>
+        </div>
+        <div class="bench-pill">
+          <div class="v">6 Prompts</div>
+          <div class="k">流水线分工角色</div>
+        </div>
+      </div>
+
+      <div class="flow-chain reveal">
+        <span class="node" style="background:var(--s1)">1. GROUPING 分组</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="node" style="background:var(--s2)">2. PLAN 定计划</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="node" style="background:var(--s3)">3. MAIN 查代码</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="node" style="background:var(--s4)">4. RE_LOCATION 修锚点</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="node" style="background:var(--s5)">5. FILTER 删误报</span><span class="arrow"><i class="fa-solid fa-arrow-right"></i></span>
+        <span class="node" style="background:var(--s7)">6. COMPRESSION 压历史</span>
+      </div>
+
+      <h3 class="reveal"><i class="fa-solid fa-code-pull-request"></i>本文跟踪的示例 PR：给登录流程增加“会话过期”处理（改了 8 个文件）</h3>
+      <div class="table-wrap reveal">
+        <table class="tb">
+          <thead><tr><th>索引</th><th>文件路径</th><th>改动行数</th><th>变更内容</th></tr></thead>
+          <tbody>
+            <tr><td>0</td><td class="code">internal/auth/login.go</td><td>+120 / -20</td><td>登录主流程实现</td></tr>
+            <tr><td>1</td><td class="code">internal/auth/session.go</td><td>+45 / -10</td><td>会话过期判断逻辑</td></tr>
+            <tr><td>2</td><td class="code">internal/auth/login_test.go</td><td>+80</td><td>登录单元测试</td></tr>
+            <tr><td>3</td><td class="code">internal/auth/session_test.go</td><td>+30</td><td>会话单元测试</td></tr>
+            <tr><td>4</td><td class="code">internal/i18n/messages_en.properties</td><td>+3 / -1</td><td>英文报错文案</td></tr>
+            <tr><td>5</td><td class="code">internal/i18n/messages_zh.properties</td><td>+3 / -1</td><td>中文报错文案</td></tr>
+            <tr><td>6</td><td class="code">config/auth.yaml</td><td>+10 / -2</td><td>会话 TTL 配置项</td></tr>
+            <tr><td>7</td><td class="code">docs/auth.md</td><td>+20</td><td>鉴权文档说明</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 0 站：准备 ==================== -->
+    <section id="st-0" class="st-0">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="00">
+          <span class="stage-badge"><span class="no">0</span>PREPARE · 本地确定性预处理</span>
+          <h2>第 0 站：调模型前，Go 程序先筛文件并冻结清单</h2>
+          <p class="q">把不该审的文件踢掉，建好支持断点续跑的任务账本（Manifest）</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">执行主体</div><div class="v">Go 主程序（不调模型）</div></div>
+          <div class="io-cell"><div class="k">输入</div><div class="v">本地 Git Diff + 配置</div></div>
+          <div class="io-cell"><div class="k">输出</div><div class="v">冻结的 <code class="inline">manifest.selected</code></div></div>
+          <div class="io-cell"><div class="k">本例结果</div><div class="v mono">8 个文件留存 (8 ≥ 4 触发分组)</div></div>
+        </div>
+      </div>
+
+      <!-- 合并后的四阶段横向流水线卡 -->
+      <div class="prep-pipeline reveal">
+        <div class="prep-step">
+          <div class="ps-top"><span class="ps-idx">01 · 过滤</span><i class="fa-solid fa-filter" style="color:#64748b;font-size:.82rem"></i></div>
+          <h4>剔除噪音与超大文件</h4>
+          <p>过滤二进制、密钥、exclude 文件、不支持后缀，以及单文件 diff 超 80% <code class="inline">MAX_TOKENS</code> 的文件。</p>
+        </div>
+        <div class="prep-step">
+          <div class="ps-top"><span class="ps-idx">02 · 建账</span><i class="fa-solid fa-lock" style="color:#64748b;font-size:.82rem"></i></div>
+          <h4>冻结审查清单</h4>
+          <p>写入 <code class="inline">manifest.selected</code> 锁定覆盖范围，后续逐文件记录完成或失败状态。</p>
+        </div>
+        <div class="prep-step">
+          <div class="ps-top"><span class="ps-idx">03 · 续传</span><i class="fa-solid fa-rotate-right" style="color:#64748b;font-size:.82rem"></i></div>
+          <h4>复用历史（--resume）</h4>
+          <p>带上 <code class="inline">--resume</code> 参数时，直接复用上次账本中已完成的结果，仅补跑未完成部分。</p>
+        </div>
+        <div class="prep-step">
+          <div class="ps-top"><span class="ps-idx">04 · 分发</span><i class="fa-solid fa-share-nodes" style="color:#64748b;font-size:.82rem"></i></div>
+          <h4>跳过纯删除并判阈值</h4>
+          <p>剔除纯删除文件；剩余文件数 <code class="inline">8 ≥ 4</code>，达到分组阈值，进入 GROUPING。</p>
+        </div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="第 0 步：读 diff、筛选过滤、冻结审查清单">
+          <img src="diagram/open-code-review-full-flow/02-prepare.light.svg" alt="准备：冻结审查清单" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>第 0 步：读 diff、筛选过滤、冻结审查清单
+          <a href="diagram/open-code-review-full-flow/index.html#02" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 1 站 GROUPING ==================== -->
+    <section id="st-1" class="st-1">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="01">
+          <span class="stage-badge"><span class="no">1</span>GROUPING_TASK · 按关联度分堆</span>
+          <h2>第 1 站 GROUPING：把相关文件配成组，组间并发审</h2>
+          <p class="q">把业务代码和对应的单测放在同一组，避免单审时误报“缺少测试”</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">触发条件</div><div class="v">待审文件数 ≥ 4</div></div>
+          <div class="io-cell"><div class="k">模型看到的输入</div><div class="v">仅文件编号、路径与行数（无 diff）</div></div>
+          <div class="io-cell"><div class="k">模型输出</div><div class="v">JSON 分组数组（每组 ≤ 10 文件）</div></div>
+          <div class="io-cell"><div class="k">源码位置</div><div class="v mono">internal/agent/grouping.go</div></div>
+        </div>
+      </div>
+
+      <div class="bento-2 reveal">
+        <div class="code-window" style="margin:0">
+          <div class="code-bar">
+            <div class="code-dots">
+              <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+              <span class="code-title">输入：{{file_list}}（不传具体 diff）</span>
+            </div>
+            <button class="copy-btn" type="button">复制</button>
+          </div>
+<pre class="code">[0] MODIFIED internal/auth/login.go (+120/-20)
+[1] MODIFIED internal/auth/session.go (+45/-10)
+[2] MODIFIED internal/auth/login_test.go (+80/-0)
+[3] MODIFIED internal/auth/session_test.go (+30/-0)
+[4] MODIFIED internal/i18n/messages_en.properties (+3/-1)
+[5] MODIFIED internal/i18n/messages_zh.properties (+3/-1)
+[6] MODIFIED config/auth.yaml (+10/-2)
+[7] MODIFIED docs/auth.md (+20/-0)</pre>
+        </div>
+
+        <div class="code-window" style="margin:0">
+          <div class="code-bar">
+            <div class="code-dots">
+              <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+              <span class="code-title">输出：JSON 分组结果（共 5 组）</span>
+            </div>
+            <button class="copy-btn" type="button">复制</button>
+          </div>
+<pre class="code">[
+  {"label": "login flow",       "files": [0, 2]},
+  {"label": "session handling", "files": [1, 3]},
+  {"label": "i18n messages",    "files": [4, 5]},
+  {"label": "auth config",      "files": [6]},
+  {"label": "docs",             "files": [7]}
+]</pre>
+        </div>
+      </div>
+
+      <div class="bento-2 reveal">
+        <div class="bcard warn">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-shield-halved"></i> Go 程序的四条校验兜底</span></div>
+          <p>prompt 另有三条输出约束：<strong>用索引引用文件</strong>（不重复完整路径）、<strong>每个文件只进一个组</strong>、<strong>只输出 JSON 数组</strong>。模型不守约时由程序纠偏：</p>
+          <ul>
+            <li>模型漏分的文件 → 自动补成单文件组；</li>
+            <li>单组超过 10 个文件（<code class="inline">maxFilesPerGroup</code>）→ 自动拆开；</li>
+            <li>组内合并 diff 超过 Token 预算 → 拆回单文件组；</li>
+            <li>JSON 解析失败 → 降级为所有文件逐个单审。</li>
+          </ul>
+        </div>
+        <div class="bcard info">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-bolt"></i> 并发子任务与对话隔离</span></div>
+          <p>还原索引后，5 个审查组作为独立 goroutine 并发执行（默认并发度 8，可通过 <code class="inline">--concurrency</code> 修改）。</p>
+          <p style="margin-top:.45rem"><strong>注意：</strong>GROUPING 只决定谁和谁一起审，后续的 PLAN、MAIN、FILTER 都是各自重新发起的独立模型请求。</p>
+        </div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="GROUPING：8 个文件分出 5 个独立审查组，组间并行">
+          <img src="diagram/open-code-review-full-flow/03-grouping.light.svg" alt="GROUPING：8 个文件到 5 组" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>GROUPING：8 个文件 → 5 个审查组，组间并行
+          <a href="diagram/open-code-review-full-flow/index.html#03" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="GROUPING 提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/01-grouping-prompt.light.svg" alt="GROUPING 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>GROUPING 提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#01" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 2 站 PLAN ==================== -->
+    <section id="st-2" class="st-2">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="02">
+          <span class="stage-badge"><span class="no">2</span>PLAN_TASK · 审前检索规划</span>
+          <h2>第 2 站 PLAN：改动行数达标时，先列一份排查提纲</h2>
+          <p class="q">不挂载真实工具，快速扫一遍 diff 列出高风险怀疑点和待查文件</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">触发条件（满足其一）</div><div class="v">单文件 ≥ 50 行 / 组 ≥ 2 文件且 ≥ 100 行</div></div>
+          <div class="io-cell"><div class="k">模型看到的输入</div><div class="v">组外文件清单 + 本组 diff + 背景 + 规则 + 工具文本说明</div></div>
+          <div class="io-cell"><div class="k">挂载 Tools 字段</div><div class="v">无（防止在规划阶段调工具死循环）</div></div>
+          <div class="io-cell"><div class="k">工具说明清单</div><div class="v mono">file_read / code_search / file_read_diff / file_find</div></div>
+          <div class="io-cell"><div class="k">本例触发情况</div><div class="v mono">login / session 组触发，其余跳过</div></div>
+        </div>
+      </div>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">PLAN 输出示例：纯文本排查计划（允许回答 Issues (none)）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">Summary: Add session expiry enforcement to login and refresh flows.
+
+Issues
+1. [high] Refresh path does not check whether the session already expired
+   → file_read internal/auth/session.go — confirm TTL check location
+2. [medium] Login failure message is hardcoded English
+   → file_read internal/i18n/messages_en.properties — check new key exists
+3. [low] Test does not cover expired-session branch
+   → file_read internal/auth/login_test.go — confirm missing case</pre>
+      </div>
+
+      <!-- 双栏生命周期对比：第 1 轮注入 vs 第 2 轮销毁 -->
+      <div class="bento-2 reveal">
+        <div class="bcard ok">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-arrow-right-to-bracket"></i> 第 1 轮 MAIN：原样注入作参考</span></div>
+          <p>程序把这段文本原样存为 <code class="inline">planResult</code>（不做结构化解析，也不自动跑工具），通过 <code class="inline">{{plan_guidance}}</code> 塞进第 1 轮 MAIN 帮助快速聚焦重点。</p>
+        </div>
+        <div class="bcard bad">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-ban"></i> 第 2 轮 MAIN：整段移除防锚定</span></div>
+          <p>第 2 轮开始时整段删掉这段计划——避免模型产生路径依赖，第二轮还只盯着老计划里的几个怀疑点看。</p>
+        </div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="PLAN：只服务第 1 轮的检索计划，第 2 轮即移除">
+          <img src="diagram/open-code-review-full-flow/04-plan.light.svg" alt="PLAN：只服务第 1 轮的检索计划" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>PLAN：给第 1 轮 MAIN 的检索计划，第 2 轮即移除
+          <a href="diagram/open-code-review-full-flow/index.html#04" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="PLAN 提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/02-plan-prompt.light.svg" alt="PLAN 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>PLAN 提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#02" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 3 站 MAIN R1 ==================== -->
+    <section id="st-3" class="st-3">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="03">
+          <span class="stage-badge"><span class="no">3</span>MAIN_TASK · 第 1 轮主审查</span>
+          <h2>第 3 站 MAIN 第 1 轮：调工具查仓库上下文，提交代码评论</h2>
+          <p class="q">在多轮 Tool Loop 中读取源文件、搜索调用方，通过 code_comment 提交发现的问题</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">触发条件</div><div class="v">每个审查组必跑</div></div>
+          <div class="io-cell"><div class="k">输入上下文</div><div class="v">本组 diff + 规则 + PLAN 计划</div></div>
+          <div class="io-cell"><div class="k">单轮工具上限</div><div class="v">默认最多 100 次工具调用</div></div>
+          <div class="io-cell"><div class="k">评论处理方式</div><div class="v mono">后台 Worker 异步算行号</div></div>
+        </div>
+      </div>
+
+      <div class="bento-4 reveal">
+        <div class="bcard info">
+          <div class="b-head"><span class="b-title"><code class="inline">file_read</code></span><span class="b-num">参数: file_path</span></div>
+          <p>读取仓库中的完整源文件，补齐 diff 片段之外的上下文逻辑。</p>
+        </div>
+        <div class="bcard info">
+          <div class="b-head"><span class="b-title"><code class="inline">code_search</code></span><span class="b-num">参数: search_text</span></div>
+          <p>全局搜索函数定义或调用方，确认改动是否破坏上下游调用。</p>
+        </div>
+        <div class="bcard ok">
+          <div class="b-head"><span class="b-title"><code class="inline">code_comment</code></span><span class="b-num">path / existing_code / content</span></div>
+          <p>提交一条审查评论。调用后立即向模型返回成功，定位任务交由后台 Worker 异步执行。</p>
+        </div>
+        <div class="bcard">
+          <div class="b-head"><span class="b-title"><code class="inline">task_done</code></span><span class="b-num">结束信号</span></div>
+          <p>宣告本组审查完成。程序随后调用 <code class="inline">AwaitKey(groupKey)</code> 等待后台评论 Worker 排空。</p>
+        </div>
+      </div>
+
+      <div class="strip reveal">
+        <span class="s-icon" style="background:#fef3c7;color:#d97706"><i class="fa-solid fa-triangle-exclamation"></i></span>
+        <div><strong>本例第 1 轮产出：</strong><code class="inline">login flow</code> 组共提交 3 条评论。其中 1 条的 <code class="inline">existing_code</code> 与 diff 原文不完全一致，后台 Worker 文本匹配失败，触发第 4 站重定位。</div>
+      </div>
+
+      <h3 class="reveal"><i class="fa-solid fa-comments"></i> 这 3 条评论分别说了什么？</h3>
+      <p class="reveal">模型通过 <code class="inline">code_comment</code> 提交评论，每条带 <code class="inline">path / content / existing_code / category / severity</code>。本例 3 条的最终去向：</p>
+      <div class="table-wrap reveal">
+        <table class="tb">
+          <thead><tr><th>ID</th><th>文件</th><th>评论内容</th><th>级别</th><th>去向</th></tr></thead>
+          <tbody>
+            <tr><td>c-0</td><td><code class="inline">login.go</code></td><td>刷新路径没有检查会话是否已过期，过期会话仍能续期。</td><td><span class="badge b-red">bug · high</span></td><td>FILTER 保留 → 成为 confirmed</td></tr>
+            <tr><td>c-1</td><td><code class="inline">login.go</code></td><td>讨论的 <code class="inline">auth.yaml</code> 配置项变化不在本文件 diff 中</td><td>—</td><td>FILTER 删除（理由 A：代码不存在）</td></tr>
+            <tr><td>c-2</td><td><code class="inline">login.go</code></td><td>称 <code class="inline">retryCount</code> 声明了两次</td><td>—</td><td>FILTER 删除（理由 B：diff 直接反驳）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">模型提交 c-0 时的 tool_calls（请求 3）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">{
+  "tool_calls": [
+    {
+      "name": "code_comment",
+      "arguments": {
+        "comments": [
+          {
+            "path": "internal/auth/login.go",
+            "content": "刷新路径没有检查会话是否已过期，过期会话仍能续期。",
+            "existing_code": "if refreshed, err := refreshSession(token); err == nil {",
+            "category": "bug",
+            "severity": "high"
+          }
+        ]
+      }
+    }
+  ]
+}</pre>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="MAIN 第 1 轮：工具循环 + code_comment 闸门 + task_done">
+          <img src="diagram/open-code-review-full-flow/05-main-round-1.light.svg" alt="MAIN 第 1 轮：工具循环与评论闸门" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>MAIN R1：工具循环 + code_comment 闸门 + task_done
+          <a href="diagram/open-code-review-full-flow/index.html#05" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="评论定位：本文件匹配、跨文件唯一命中与行号确定">
+          <img src="diagram/open-code-review-full-flow/06-comment-location.light.svg" alt="评论定位：path 匹配与跨文件命中" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>评论定位：本文件匹配、跨文件唯一命中、行号确定
+          <a href="diagram/open-code-review-full-flow/index.html#06" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="MAIN 主审查提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/03-main-prompt.light.svg" alt="MAIN 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>MAIN 主审查提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#03" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 4 站 RE_LOCATION ==================== -->
+    <section id="st-4" class="st-4">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="04">
+          <span class="stage-badge"><span class="no">4</span>RE_LOCATION_TASK · 修复评论代码锚点</span>
+          <h2>第 4 站 RE_LOCATION：代码片段匹配不上时，从 diff 里重新抠原文</h2>
+          <p class="q">解决模型凭记忆改写代码片段导致算不出 Git 行号的问题</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">触发时机</div><div class="v">后台评论 Worker 处理单条评论时</div></div>
+          <div class="io-cell"><div class="k">前置条件</div><div class="v">本文件与跨文件匹配均失败，且原 path 有 diff</div></div>
+          <div class="io-cell"><div class="k">模型输出</div><div class="v">从 diff 逐字复制的代码块</div></div>
+          <div class="io-cell"><div class="k">源码位置</div><div class="v mono">internal/diff/relocation.go</div></div>
+        </div>
+      </div>
+
+      <!-- 三级降级阶梯（Escalation Ladder） -->
+      <div class="ladder reveal">
+        <div class="ladder-row">
+          <div class="ladder-lvl" style="color:#475569"><i class="fa-solid fa-1"></i> 本地文件匹配</div>
+          <div class="ladder-desc">先在原文件 <code class="inline">login.go</code> 的 diff 中直接检索代码片段</div>
+          <span class="ladder-tag t-fail">本例失败 → 降级</span>
+        </div>
+        <div class="ladder-row">
+          <div class="ladder-lvl" style="color:#475569"><i class="fa-solid fa-2"></i> 跨文件全库搜</div>
+          <div class="ladder-desc">在本次 PR 其他文件 diff 中搜索，仅当<strong>全局唯一命中</strong>时才自动迁移 path</div>
+          <span class="ladder-tag t-fail">本例未命中 → 降级</span>
+        </div>
+        <div class="ladder-row" style="background:#fffafa">
+          <div class="ladder-lvl" style="color:#e11d48"><i class="fa-solid fa-3"></i> RE_LOCATION</div>
+          <div class="ladder-desc">把 unified diff、匹配失败的片段和评论正文发给轻量模型，逐字复制原代码</div>
+          <span class="ladder-tag t-llm">调用 LLM 修复锚点</span>
+        </div>
+      </div>
+
+      <div class="bento-2 reveal">
+        <div class="code-window" style="margin:0">
+          <div class="code-bar">
+            <div class="code-dots">
+              <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+              <span class="code-title">MAIN 提交的片段（被模型改写，匹配失败）</span>
+            </div>
+          </div>
+<pre class="code">if user == nil {
+    return errors.New("invalid credentials")
+}</pre>
+        </div>
+        <div class="code-window" style="margin:0">
+          <div class="code-bar">
+            <div class="code-dots">
+              <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+              <span class="code-title">RE_LOCATION 从 diff 逐字提取的片段（匹配成功）</span>
+            </div>
+          </div>
+<pre class="code">if user == nil {
+    return nil, ErrInvalidCredentials
+}</pre>
+        </div>
+      </div>
+
+      <div class="bcard skill reveal" style="margin:1.15rem 0">
+        <div class="b-head"><span class="b-title"><i class="fa-solid fa-list-check"></i> 提示词对输出的四条硬要求</span></div>
+        <ul style="margin-bottom:0">
+          <li>从 diff 中<strong>逐字复制</strong>，不改写、不重排；</li>
+          <li>去掉行首的 <code class="inline">+</code> / <code class="inline">-</code> 或空格；</li>
+          <li>只保留与问题直接相关的代码；</li>
+          <li>只输出代码块，不多说一句。</li>
+        </ul>
+      </div>
+
+      <div class="strip reveal">
+        <span class="s-icon" style="background:#fff1f2;color:#e11d48"><i class="fa-solid fa-location-crosshairs"></i></span>
+        <div><strong>后续处理：</strong>替换片段后重新执行行号匹配。就算依然匹配不上，评论也<strong>不会被丢弃</strong>，而是记为 <code class="inline">start_line: 0, end_line: 0</code> 保留在结果集中。RE_LOCATION 只找位置，不判断评论对错。</div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="RE_LOCATION：重写代码片段 → 重匹配 → 成败都有归宿">
+          <img src="diagram/open-code-review-full-flow/07-relocation.light.svg" alt="RE_LOCATION：修锚点不裁决" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>RE_LOCATION：重写代码片段 → 重匹配 → 成败都有归宿
+          <a href="diagram/open-code-review-full-flow/index.html#07" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="RE_LOCATION 提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/06-re-location-prompt.light.svg" alt="RE_LOCATION 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>RE_LOCATION 提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#06" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 5 站 FILTER ==================== -->
+    <section id="st-5" class="st-5">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="05">
+          <span class="stage-badge"><span class="no">5</span>REVIEW_FILTER_TASK · 误报过滤</span>
+          <h2>第 5 站 FILTER：对照本组 diff，删掉能被事实证伪的评论</h2>
+          <p class="q">用 baseline 切片只审本轮新增评论，屏蔽原模型的 severity 和 thinking 防带偏</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">触发条件</div><div class="v">本轮有新评论且未加 <code class="inline">--no-filter</code></div></div>
+          <div class="io-cell"><div class="k">可见字段</div><div class="v"><code class="inline">id / path / content / existing_code</code> + diff</div></div>
+          <div class="io-cell"><div class="k">屏蔽字段</div><div class="v"><code class="inline">severity / category / thinking</code></div></div>
+          <div class="io-cell"><div class="k">工具二选一</div><div class="v mono">report_incorrect / approve_all</div></div>
+        </div>
+      </div>
+
+      <div class="bento-2 reveal">
+        <div class="bcard bad">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-trash-can"></i> 仅在两种情况下允许删除</span></div>
+          <ul>
+            <li><strong>理由 A（代码不存在）</strong>：评论描述的代码在所属文件 diff 里不存在（本例 c-1 在 <code class="inline">login.go</code> 下讨论 <code class="inline">auth.yaml</code> 配置，被删）。</li>
+            <li><strong>理由 B（diff 直接反驳）</strong>：某行 diff 直接证伪评论说法（本例 c-2 称 <code class="inline">retryCount</code> 声明了两次，实际 diff 只有一次，被删）。</li>
+          </ul>
+        </div>
+        <div class="bcard ok">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-shield-heart"></i> 五类问题优先保留（免删保护）</span></div>
+          <div class="chip-cloud">
+            <span class="p-chip">内存安全</span>
+            <span class="p-chip">并发竞态</span>
+            <span class="p-chip">链接与声明一致性</span>
+            <span class="p-chip">行为/兼容性变更</span>
+            <span class="p-chip">未使用参数</span>
+          </div>
+          <p>“无法确认、价值不高、代码风格建议”均不是删除理由。本例 <strong>c-0（刷新路径未校验过期）</strong> 保留并标记为 <code class="inline">confirmed</code>。</p>
+        </div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="FILTER：拿 diff 当证据，只删能证明错误的评论">
+          <img src="diagram/open-code-review-full-flow/08-filter.light.svg" alt="FILTER：diff 证据对照" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>FILTER：拿 diff 当证据，只删能证明错误的评论
+          <a href="diagram/open-code-review-full-flow/index.html#08" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="FILTER 提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/04-review-filter-prompt.light.svg" alt="FILTER 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>FILTER 提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#04" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 6 站 MAIN R2 ==================== -->
+    <section id="st-6" class="st-6">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="06">
+          <span class="stage-badge"><span class="no">6</span>MAIN_TASK · 第 2 轮复查</span>
+          <h2>第 6 站 MAIN 第 2 轮：新开对话，带上已确认结论再查一遍</h2>
+          <p class="q">不继承第 1 轮聊天记录、移除 PLAN 引导，避免重复报告已知问题</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">轮数上限（--effort）</div><div class="v">low: 1 轮 / medium: 2 轮 / high: 3 轮</div></div>
+          <div class="io-cell"><div class="k">Prompt 变化 1</div><div class="v">移除 <code class="inline">{{plan_guidance}}</code></div></div>
+          <div class="io-cell"><div class="k">Prompt 变化 2</div><div class="v">注入 <code class="inline">{{confirmed_comments}}</code></div></div>
+          <div class="io-cell"><div class="k">本轮新发现</div><div class="v mono">login_test.go 缺少过期测试分支</div></div>
+        </div>
+      </div>
+
+      <div class="bento-2 reveal">
+        <div class="bcard info">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-rotate"></i> 跨轮次如何传递状态？</span></div>
+          <p>第 2 轮是一个全新的 MAIN 对话，不带第 1 轮读文件、搜代码的历史消息。只把前序存活的评论摘要塞进 <code class="inline">Previously Confirmed Findings</code>（代码限 200 字符、正文限 300 字符、最多 30 条），提示模型不要重复报告。</p>
+        </div>
+        <div class="bcard warn">
+          <div class="b-head"><span class="b-title"><i class="fa-solid fa-stopwatch"></i> 停止条件与 Grace Round</span></div>
+          <ul>
+            <li>达到最大轮数 / 本轮无新增存活评论 / confirmed 满 30 条；</li>
+            <li>连续 3 轮无有效工具结果（<code class="inline">maxConsecutiveEmptyRounds = 3</code>）；</li>
+            <li>若因工具次数或 Token 预算耗尽中断，会先进入 <strong>Grace Round</strong>（只准调 <code class="inline">code_comment</code> 和 <code class="inline">task_done</code> 补交已发现的问题）。</li>
+          </ul>
+        </div>
+      </div>
+
+      <h3 class="reveal"><i class="fa-solid fa-comment-dots"></i> 第 2 轮的新发现</h3>
+      <p class="reveal">不再受 PLAN 引导后，模型在测试文件里找到了一个新问题——第 1 轮计划里提过、但当时没提交：</p>
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">第 2 轮 code_comment（FILTER 返回 approve_all 后保留）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">{
+  "tool_calls": [
+    {
+      "name": "code_comment",
+      "arguments": {
+        "comments": [
+          {
+            "path": "internal/auth/login_test.go",
+            "content": "缺少过期会话的测试分支。",
+            "existing_code": "func TestLoginSuccess(t *testing.T) {",
+            "category": "test",
+            "severity": "low"
+          }
+        ]
+      }
+    }
+  ]
+}</pre>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="MAIN 第 2 轮：重新开对话，带 confirmed，不带 PLAN">
+          <img src="diagram/open-code-review-full-flow/09-main-round-2.light.svg" alt="MAIN 第 2 轮：继承结论不继承对话" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>MAIN R2：重新开对话，带 confirmed，不带 PLAN
+          <a href="diagram/open-code-review-full-flow/index.html#09" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="轮次控制：六个停止条件与 grace round">
+          <img src="diagram/open-code-review-full-flow/10-round-control.light.svg" alt="轮次控制：六个停止条件" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>轮次控制：六个停止条件与 grace round
+          <a href="diagram/open-code-review-full-flow/index.html#10" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 7 站 COMPRESSION ==================== -->
+    <section id="st-7" class="st-7">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="07">
+          <span class="stage-badge"><span class="no">7</span>MEMORY_COMPRESSION_TASK · 单轮上下文压缩</span>
+          <h2>第 7 站 COMPRESSION：单轮工具调用太多时，压缩中间旧轮次</h2>
+          <p class="q">保留开头指令和最近几轮交互，把中间读文件/搜代码的历史压成 5 维摘要</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">60% ~ 80% 水位</div><div class="v">后台异步压缩，主循环继续</div></div>
+          <div class="io-cell"><div class="k">≥ 80% 水位</div><div class="v">同步阻塞压缩（压完仍 ≥ 80% 则停本轮）</div></div>
+          <div class="io-cell"><div class="k">摘要作用范围</div><div class="v">仅限当前轮次内有效（不跨轮）</div></div>
+          <div class="io-cell"><div class="k">源码位置</div><div class="v mono">internal/llmloop/compression.go</div></div>
+        </div>
+      </div>
+
+      <!-- 内存三区切分可视化条 -->
+      <div class="mem-visual reveal">
+        <div class="mem-track">
+          <div class="mem-seg m-frozen">1. frozen 区<span>system + 初始 user（保留）</span></div>
+          <div class="mem-seg m-comp">2. compress 区<span>较早的完整工具轮次 → 提炼为 &lt;previous_review_summary&gt;</span></div>
+          <div class="mem-seg m-active">3. active 区<span>最近几轮工具交互（原样保留）</span></div>
+        </div>
+        <div style="font-size:.83rem;color:var(--ink-3)">重组方式：<code class="inline">frozen</code> + 追加在初始 user 末尾的摘要标签 + <code class="inline">active</code> 区；若压缩失败或摘要为空则保留原消息。</div>
+      </div>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">COMPRESSION 摘要输出示例（五个固定维度，空维度可省略）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">### Identified Code Issues
+- [HIGH] session.go:45 — 过期会话仍可能被刷新
+### Tool Call Conclusions
+- file_read(session.go): 确认 Refresh 方法没有检查过期时间
+### Completed Tasks
+- 已检查 session.go 的刷新实现
+### Pending Tasks
+- 还需要确认 session_test.go 是否覆盖该分支
+### Current Focus
+- 正在确认过期会话是否能通过刷新继续有效。</pre>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="COMPRESSION：frozen / compress / active 三区重组">
+          <img src="diagram/open-code-review-full-flow/11-compression.light.svg" alt="COMPRESSION：压缩旧历史" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>COMPRESSION：frozen / compress / active 三区重组
+          <a href="diagram/open-code-review-full-flow/index.html#11" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="COMPRESSION 提示词完整结构图解">
+          <img src="diagram/open-code-review-prompts/05-memory-compression-prompt.light.svg" alt="COMPRESSION 提示词全量" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k prompt">提示词</span>COMPRESSION 提示词全量图解
+          <a href="diagram/open-code-review-prompts/index.html#05" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 8 站：收尾（重构为三阶段分组时间轴） ==================== -->
+    <section id="st-8" class="st-8">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="08">
+          <span class="stage-badge"><span class="no">8</span>FINALIZE · 全局九步收尾</span>
+          <h2>第 8 站 收尾：等待并发任务、落盘日志并渲染报告</h2>
+          <p class="q">所有组完成后按固定顺序执行 9 步收尾，产出 manifest 与 session JSONL</p>
+        </div>
+        <div class="io-bar">
+          <div class="io-cell"><div class="k">执行主体</div><div class="v">Go 主程序</div></div>
+          <div class="io-cell"><div class="k">状态文件 1</div><div class="v"><code class="inline">manifest.json</code>（文件级完成状态）</div></div>
+          <div class="io-cell"><div class="k">状态文件 2</div><div class="v"><code class="inline">session.jsonl</code>（全量请求与事件轨迹）</div></div>
+          <div class="io-cell"><div class="k">报告输出格式</div><div class="v mono">text / JSON / SARIF</div></div>
+        </div>
+      </div>
+
+      <!-- 统一的三阶段垂直时间轴卡（替代散装九宫格） -->
+      <div class="finalize-card reveal">
+        <div class="fin-phase">
+          <div class="fin-phase-label"><span class="dot" style="background:#64748b"></span>阶段一：并发汇聚</div>
+          <div class="fin-steps">
+            <div class="fin-step"><span class="num">01</span><span class="title">等所有审查组完成</span><span class="desc">—— 汇合全部并发 goroutine</span></div>
+            <div class="fin-step"><span class="num">02</span><span class="title">等评论 Worker 排空</span><span class="desc">—— 确保后台定位队列全部处理完</span></div>
+            <div class="fin-step"><span class="num">03</span><span class="title">收尾后台压缩任务</span><span class="desc">—— 清理未结束的异步压缩协程</span></div>
+          </div>
+        </div>
+
+        <div class="fin-phase">
+          <div class="fin-phase-label"><span class="dot" style="background:#2563eb"></span>阶段二：状态落盘</div>
+          <div class="fin-steps">
+            <div class="fin-step"><span class="num">04</span><span class="title">生成最终 manifest</span><span class="desc">—— 记录选中、完成、复用、失败与排除文件</span></div>
+            <div class="fin-step"><span class="num">05</span><span class="title">写入 session_end</span><span class="desc">—— 调用 <code class="inline">session.Finalize</code> 封存全量运行轨迹</span></div>
+            <div class="fin-step"><span class="num">06</span><span class="title">Agent.Run 返回</span><span class="desc">—— 核心审查调度引擎退出</span></div>
+            <div class="fin-step"><span class="num">07</span><span class="title">冻结 Retry Report</span><span class="desc">—— 固定失败重试信息，供 <code class="inline">--resume</code> 使用</span></div>
+          </div>
+        </div>
+
+        <div class="fin-phase">
+          <div class="fin-phase-label"><span class="dot" style="background:#ea580c"></span>阶段三：校准输出</div>
+          <div class="fin-steps">
+            <div class="fin-step highlight"><span class="num">08</span><span class="title">兜底全量行号解析</span><span class="desc">—— 在落盘之后、渲染之前，对仍未定位的评论再试一次行号解析</span></div>
+            <div class="fin-step highlight"><span class="num">09</span><span class="title">渲染输出最终报告</span><span class="desc">—— 写出 text / JSON / SARIF 格式结果</span></div>
+          </div>
+        </div>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="收尾：等待、manifest、Finalize、最终行号解析、渲染输出">
+          <img src="diagram/open-code-review-full-flow/12-finalize.light.svg" alt="收尾：严格九步" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>收尾：等待、manifest、Finalize、最终行号解析、渲染输出
+          <a href="diagram/open-code-review-full-flow/index.html#12" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+      <h3 class="reveal"><i class="fa-solid fa-file-export"></i> 最终报告长什么样？</h3>
+      <p class="reveal">两轮 MAIN、两轮 FILTER 之后，本例存活 2 条评论：c-0（bug · high）和第 2 轮新增的测试缺失（test · low）。第 09 步把它们渲染成三种格式，text 按文件分节、带定位行号：</p>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">text 输出示例（review.txt）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">─── internal/auth/login.go:31-33 ───
+[bug · high] 刷新路径没有检查会话是否已过期，过期会话仍能续期。
+
+─── internal/auth/login_test.go:12-14 ───
+[test · low] 缺少过期会话的测试分支。</pre>
+      </div>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">JSON 输出节选（review.json）</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">{
+  "status": "success",
+  "comments": [
+    {
+      "path": "internal/auth/login.go",
+      "content": "刷新路径没有检查会话是否已过期，过期会话仍能续期。",
+      "existing_code": "if refreshed, err := refreshSession(token); err == nil {",
+      "start_line": 31,
+      "end_line": 33,
+      "category": "bug",
+      "severity": "high"
+    }
+  ],
+  "manifest": {
+    "terminal_state": "complete"
+  }
+}</pre>
+      </div>
+
+      <div class="strip reveal">
+        <span class="s-icon" style="background:#e8f5ec;color:#15803d"><i class="fa-solid fa-circle-info"></i></span>
+        <div><strong>真实结果还会带：</strong>模型与 provider 信息、分组信息、token 与工具调用统计、warnings、session_id、resume 信息、retry report。manifest 回答"计划审什么、完成了什么、复用了什么、失败了什么"；session JSONL 记录每次模型请求、工具调用、评论和事件的完整经过。</div>
+      </div>
+    </section>
+
+    <hr class="sep">
+
+    <!-- ==================== 第 9 站：复盘 ==================== -->
+    <section id="st-9" class="st-9">
+      <div class="stage-card reveal">
+        <div class="stage-top" data-step="09">
+          <span class="stage-badge"><span class="no">9</span>RECAP · 全流程速查</span>
+          <h2>第 9 站 复盘：主干数据流与六个 Prompt 速查表</h2>
+          <p class="q">一张调用链 + 一张对照表，看完即可对应到仓库源码</p>
+        </div>
+      </div>
+
+      <div class="code-window reveal">
+        <div class="code-bar">
+          <div class="code-dots">
+            <span class="d-r"></span><span class="d-y"></span><span class="d-g"></span>
+            <span class="code-title">open-code-review 主流程调用链</span>
+          </div>
+          <button class="copy-btn" type="button">复制</button>
+        </div>
+<pre class="code">8 个变更文件
+   │  [Go 程序] 读 diff、筛选文件、冻结 manifest.selected
+   ▼
+GROUPING_TASK（文件元数据 → JSON 分组）
+   │  [Go 程序] 拆出 5 个审查组，组间并行
+   ▼
+PLAN_TASK（大改动触发：本组 diff + 规则 + 工具文本说明 → 纯文本计划）
+   ▼
+MAIN_TASK 第 1 轮（带工具对话：file_read / code_search … → code_comment → task_done）
+   │  ├─ [评论 Worker] 本文件匹配 → 跨文件唯一命中 → 失败时调 RE_LOCATION_TASK
+   │  └─ [上下文监控] 超过 60%/80% 阈值时调 MEMORY_COMPRESSION_TASK 压缩旧轮次
+   ▼
+等本组评论 Worker 排空 → REVIEW_FILTER_TASK 第 1 轮（本组 diff + 本轮新评论 → 删误报或放行）
+   │  存活评论标记为 confirmed
+   ▼
+MAIN_TASK 第 2 轮（同一组 diff + 规则 + confirmed；移除 PLAN，不继承第 1 轮对话历史）
+   ▼
+REVIEW_FILTER_TASK 第 2 轮（只过滤第 2 轮新增评论）
+   ▼
+[Go 程序九步收尾] 等所有组/Worker/压缩 → manifest → session_end → retry report
+   → 最终行号解析 → 输出 text / JSON / SARIF</pre>
+      </div>
+
+      <div class="table-wrap reveal">
+        <table class="tb">
+          <thead><tr><th>Prompt（源码常量）</th><th>触发条件</th><th>只负责什么</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge b-purple">GROUPING_TASK</span></td><td>待审文件数 ≥ 4</td><td>决定哪些文件放在同一组一起审</td></tr>
+            <tr><td><span class="badge b-blue">PLAN_TASK</span></td><td>单文件 ≥ 50 行，或组 ≥ 2 文件且合计 ≥ 100 行</td><td>给第 1 轮 MAIN 提供排查路线图</td></tr>
+            <tr><td><span class="badge b-cyan">MAIN_TASK</span></td><td>每组、每轮必跑</td><td>读代码、调工具查上下文、提交评论</td></tr>
+            <tr><td><span class="badge b-amber">REVIEW_FILTER_TASK</span></td><td>本轮有新评论，且未加 <code class="inline">--no-filter</code></td><td>只删除能被 diff 事实证伪的本轮新增评论</td></tr>
+            <tr><td><span class="badge b-pink">MEMORY_COMPRESSION_TASK</span></td><td>单轮 MAIN 对话超过 60% / 80% 阈值</td><td>保留头尾，把中间较早的工具轮次压成摘要</td></tr>
+            <tr><td><span class="badge b-red">RE_LOCATION_TASK</span></td><td>评论未定位、跨文件未命中，且原 path 有 diff</td><td>从 diff 原文中逐字提取代码片段以匹配行号</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <figure class="illus reveal">
+        <div class="img-frame" data-lightbox data-caption="复盘：主链、六 Prompt 出场条件与数据寿命">
+          <img src="diagram/open-code-review-full-flow/13-recap.light.svg" alt="复盘：主链、六 Prompt 与数据寿命" loading="lazy">
+          <span class="zoom-pill"><i class="fa-solid fa-magnifying-glass-plus"></i> 点击放大</span>
+        </div>
+        <figcaption>
+          <span class="k flow">流程</span>复盘：主链、六 Prompt 出场条件与数据寿命
+          <a href="diagram/open-code-review-full-flow/index.html#13" target="_blank">单页打开 →</a>
+        </figcaption>
+      </figure>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="f-title">拆解阿里 Open Code Review：六个 Prompt 串起的代码审查流水线</div>
+  <div>基于 <a href="https://github.com/alibaba/open-code-review" target="_blank" rel="noopener">alibaba/open-code-review</a> 源码解析 · 19 张 SVG 矢量图点击可放大</div>
+  <div style="margin-top:.75rem;display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap">
+    <a href="diagram/open-code-review-full-flow/index.html">流程图完整版（13 页）</a>
+    <a href="diagram/open-code-review-prompts/index.html">提示词图解版（6 页）</a>
+    <a href="#top">回到顶部 ↑</a>
+  </div>
+</footer>
+
+<button id="back-top" aria-label="回到顶部" title="回到顶部"><i class="fa-solid fa-arrow-up"></i></button>
+
+<!-- ==================== 全局图片大图蒙版灯箱 ==================== -->
+<div class="lightbox-modal" id="lightbox" role="dialog" aria-modal="true" aria-label="图片大图预览">
+  <button class="lightbox-close" id="lightbox-close" aria-label="关闭大图预览" title="关闭 (ESC)">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+  <div class="lightbox-stage">
+    <img id="lightbox-img" src="" alt="大图预览">
+  </div>
+  <div class="lightbox-caption">
+    <span id="lightbox-text"></span>
+    <span class="lightbox-hint">点击任意位置或按 ESC 收起</span>
+  </div>
+</div>
+
+<script>
+/* 阅读进度条 */
+const bar = document.getElementById('progress-bar');
+addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const max = h.scrollHeight - h.clientHeight;
+  if (max > 0) bar.style.width = (h.scrollTop / max * 100) + '%';
+}, { passive: true });
+
+/* 滚动显现 */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+}), { threshold: .05 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* 顶部圆点与左侧目录同步高亮 */
+const dots = [...document.querySelectorAll('.stage-dot')];
+const tocLinks = [...document.querySelectorAll('#toc-list a')];
+const allSections = tocLinks.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+
+addEventListener('scroll', () => {
+  let activeId = '';
+  for (const sec of allSections) {
+    if (sec.getBoundingClientRect().top <= 150) {
+      activeId = sec.id;
+    }
+  }
+  tocLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + activeId);
+  });
+  dots.forEach(d => {
+    d.classList.toggle('active', d.getAttribute('href') === '#' + activeId);
+  });
+}, { passive: true });
+
+/* 返回顶部 */
+const topBtn = document.getElementById('back-top');
+addEventListener('scroll', () => topBtn.classList.toggle('show', scrollY > 500), { passive: true });
+topBtn.onclick = () => scrollTo({ top: 0, behavior: 'smooth' });
+
+/* 代码块一键复制 */
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const win = btn.closest('.code-window');
+    const pre = win ? win.querySelector('pre') : null;
+    if (!pre) return;
+    navigator.clipboard.writeText(pre.textContent).then(() => {
+      const old = btn.textContent;
+      btn.textContent = '已复制 ✓';
+      setTimeout(() => { btn.textContent = old; }, 1500);
+    });
+  });
+});
+
+/* 全屏蒙版图片灯箱 */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxText = document.getElementById('lightbox-text');
+
+function openLightbox(src, alt, caption) {
+  lightboxImg.src = src;
+  lightboxImg.alt = alt || caption || '大图预览';
+  lightboxText.textContent = caption || alt || '';
+  lightbox.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  if (!lightbox.classList.contains('open')) return;
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.querySelectorAll('[data-lightbox]').forEach(frame => {
+  frame.addEventListener('click', () => {
+    const img = frame.querySelector('img');
+    if (!img) return;
+    openLightbox(img.src, img.alt, frame.getAttribute('data-caption'));
+  });
+});
+
+lightbox.addEventListener('click', closeLightbox);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+</script>
+
+</body>
+</html>

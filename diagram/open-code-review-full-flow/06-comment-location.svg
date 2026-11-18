@@ -1,0 +1,207 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Region and connectors -->
+  <rect class="region" x="40" y="150" width="1510" height="440" rx="12"/>
+  <text class="section" x="56" y="174">评论定位主路径</text>
+  <text class="tiny" x="1530" y="174" text-anchor="end">先原 path，后跨文件；成功与未定位都收集</text>
+
+  <path class="async" d="M315 325 H375" marker-end="url(#arrow-open)"/>
+  <text class="tiny" x="345" y="310" text-anchor="middle">默认异步</text>
+  <path class="flow-main" d="M595 330 H650" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M840 330 H930" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="885" y="312" text-anchor="middle">未匹配</text>
+
+  <path class="flow-main" d="M745 395 V455" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="763" y="426">命中</text>
+  <path class="flow-main" d="M1040 265 V240" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="1055" y="258">唯一命中</text>
+  <path class="exception" d="M1040 395 V455" marker-end="url(#arrow-relocation)"/>
+  <text class="tiny" x="1055" y="426">无唯一命中</text>
+
+  <path d="M1160 205 H1430 V300" fill="none" stroke="var(--data-stroke)" stroke-width="2.2" marker-end="url(#arrow-data)"/>
+  <path d="M745 530 V560 H1400 V430" fill="none" stroke="var(--data-stroke)" stroke-width="2.2" marker-end="url(#arrow-data)"/>
+  <path class="exception" d="M1040 530 V560"/>
+
+  <path class="flow" d="M190 410 V455 H375" marker-end="url(#arrow)"/>
+  <text class="tiny" x="280" y="443" text-anchor="middle">无 worker 时</text>
+  <path class="flow" d="M595 490 H610 V330 H650" marker-end="url(#arrow)"/>
+
+  <!-- Comment card -->
+  <g>
+    <path d="M65 260 H285 L315 290 V410 H65 Z" fill="var(--mask)"/>
+    <path d="M65 260 H285 L315 290 V410 H65 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.6"/>
+    <path d="M285 260 V290 H315" fill="var(--panel)" stroke="var(--file-stroke)" stroke-width="1.3"/>
+    <text class="node-title" x="82" y="292">待定位评论</text>
+    <text class="node-sub mono" x="82" y="322">path = internal/auth/login.go</text>
+    <text class="tiny" x="82" y="347">content + existing_code</text>
+    <rect x="82" y="366" width="190" height="8" rx="4" fill="var(--file-stroke)" opacity="0.45"/>
+    <rect x="82" y="384" width="145" height="8" rx="4" fill="var(--file-stroke)" opacity="0.3"/>
+  </g>
+
+  <!-- Worker and decisions -->
+  <g>
+    <rect x="375" y="285" width="220" height="80" rx="8" fill="var(--mask)"/>
+    <rect x="375" y="285" width="220" height="80" rx="8" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="485" y="316">评论 worker</text>
+    <text class="node-sub center" x="485" y="340">逐条处理评论锚点</text>
+  </g>
+  <g>
+    <polygon points="745,265 840,330 745,395 650,330" fill="var(--mask)"/>
+    <polygon points="745,265 840,330 745,395 650,330" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="745" y="323">原 path diff</text>
+    <text class="node-sub center" x="745" y="347">中匹配？</text>
+  </g>
+  <g>
+    <polygon points="1040,265 1150,330 1040,395 930,330" fill="var(--mask)"/>
+    <polygon points="1040,265 1150,330 1040,395 930,330" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="1040" y="323">跨文件搜索</text>
+    <text class="node-sub center" x="1040" y="347">唯一命中？</text>
+  </g>
+
+  <!-- Location outcomes -->
+  <g>
+    <rect x="920" y="170" width="240" height="70" rx="8" fill="var(--mask)"/>
+    <rect x="920" y="170" width="240" height="70" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.8"/>
+    <circle cx="946" cy="204" r="13" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.5"/>
+    <path d="M939 204 L944 209 L953 198" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+    <text class="node-title" x="970" y="199">仅唯一命中才改锚点</text>
+    <text class="node-sub" x="970" y="221">同时修改 path + 行号</text>
+  </g>
+  <g>
+    <rect x="630" y="455" width="230" height="75" rx="8" fill="var(--mask)"/>
+    <rect x="630" y="455" width="230" height="75" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.8"/>
+    <circle cx="656" cy="492" r="13" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.5"/>
+    <path d="M649 492 L654 497 L663 486" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+    <text class="node-title" x="680" y="486">原 path 匹配成功</text>
+    <text class="node-sub" x="680" y="510">保留 path + 匹配行号</text>
+  </g>
+  <g>
+    <rect x="930" y="455" width="220" height="75" rx="8" fill="var(--mask)"/>
+    <rect x="930" y="455" width="220" height="75" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.8"/>
+    <circle cx="956" cy="492" r="13" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <path d="M950 486 L962 498 M962 486 L950 498" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+    <text class="node-title" x="980" y="486">仍未定位</text>
+    <text class="node-sub" x="980" y="510">进入 RE_LOCATION 条件检查</text>
+  </g>
+  <g>
+    <rect x="375" y="455" width="220" height="70" rx="8" fill="var(--mask)"/>
+    <rect x="375" y="455" width="220" height="70" rx="8" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.4"/>
+    <text class="node-title center" x="485" y="484">同步处理分支</text>
+    <text class="node-sub center" x="485" y="507">仅在没有配置 worker 时</text>
+  </g>
+  <g>
+    <rect x="1320" y="300" width="210" height="130" rx="9" fill="var(--mask)"/>
+    <rect x="1320" y="300" width="210" height="130" rx="9" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+    <ellipse cx="1425" cy="323" rx="42" ry="11" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.4"/>
+    <path d="M1383 323 V339 C1383 354 1467 354 1467 339 V323" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.4"/>
+    <text class="node-title center" x="1425" y="375">Collector</text>
+    <text class="node-sub center" x="1425" y="397">成功或未定位都进入</text>
+    <text class="tiny center" x="1425" y="416">评论仍然保留</text>
+  </g>
+
+  <!-- Evidence example -->
+  <text class="section" x="40" y="626">为什么需要重定位：模型片段与 diff 原文不完全一致</text>
+  <g>
+    <rect x="65" y="650" width="430" height="150" rx="8" fill="var(--mask)"/>
+    <rect x="65" y="650" width="430" height="150" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.5"/>
+    <text class="node-title" x="85" y="680">模型给出的 existing_code</text>
+    <text class="node-sub mono" x="85" y="716">if user == nil {</text>
+    <text class="node-sub mono" x="105" y="742">return errors.New("invalid credentials")</text>
+  </g>
+  <g>
+    <circle cx="530" cy="725" r="20" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.6"/>
+    <path d="M521 716 L539 734 M539 716 L521 734" fill="none" stroke="var(--danger)" stroke-width="3"/>
+  </g>
+  <g>
+    <rect x="565" y="650" width="430" height="150" rx="8" fill="var(--mask)"/>
+    <rect x="565" y="650" width="430" height="150" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.5"/>
+    <text class="node-title" x="585" y="680">login.go diff 中的实际代码</text>
+    <text class="node-sub mono" x="585" y="716">if user == nil {</text>
+    <text class="node-sub mono" x="605" y="742">return nil, ErrInvalidCredentials</text>
+  </g>
+  <g>
+    <rect x="1065" y="650" width="430" height="150" rx="8" fill="var(--mask)"/>
+    <rect x="1065" y="650" width="430" height="150" rx="8" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)" stroke-width="1.5"/>
+    <text class="node-title" x="1090" y="684">本例跨文件没有唯一命中</text>
+    <text class="node-sub" x="1090" y="716">不会直接修改评论的 path 和行号</text>
+    <text class="tiny" x="1090" y="742">下一步：检查 RE_LOCATION 调用条件</text>
+    <path d="M1090 765 H1455" stroke="var(--soft-line)" stroke-width="1"/>
+    <text class="tiny" x="1090" y="786">最终无论定位与否，评论都进入 Collector</text>
+  </g>
+
+  <!-- Header -->
+  <rect x="40" y="38" width="58" height="34" rx="8" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="1.5"/>
+  <text class="node-title center mono" x="69" y="61">06</text>
+  <text class="kicker" x="116" y="60">COMMENT LOCATION</text>
+  <text class="title" x="40" y="103" font-size="26">评论定位：原路径匹配与跨文件唯一命中</text>
+  <text class="subtitle" x="40" y="126">定位只决定评论锚点；无论结果如何，评论都会进入 Collector。</text>
+  <g>
+    <rect x="1300" y="43" width="100" height="30" rx="15" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+    <text class="tiny center" x="1350" y="63">MAIN</text>
+    <rect x="1415" y="43" width="140" height="30" rx="15" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)"/>
+    <text class="tiny center" x="1485" y="63">RE_LOCATION</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="880" x2="1560" y2="880" stroke="var(--soft-line)" stroke-width="1"/>
+  <text class="section" x="40" y="916">主路径：原 path diff 匹配 → 跨文件搜索；只有唯一命中才同时修改 path 与行号。</text>
+  <text class="tiny" x="40" y="940">无 worker 时走同步小分支；定位成功或未定位都不会丢弃评论。</text>
+  <text class="kicker" x="1540" y="936" text-anchor="end">06 / 13</text>
+</svg>

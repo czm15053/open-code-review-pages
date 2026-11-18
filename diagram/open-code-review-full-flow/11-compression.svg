@@ -1,0 +1,251 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="42" width="64" height="34" rx="8" fill="var(--mask)"/>
+  <rect x="40" y="42" width="64" height="34" rx="8" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.5"/>
+  <text x="72" y="65" class="node-title center">11</text>
+  <text x="122" y="64" class="kicker">COMPRESSION / CURRENT ROUND</text>
+  <text x="40" y="110" class="title" style="font-size:26px">COMPRESSION：压缩旧历史，继续当前轮</text>
+
+  <rect x="1200" y="43" width="140" height="34" rx="17" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <polygon points="1217,50 1225,54 1225,64 1217,68 1209,64 1209,54" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="1275" y="65" class="node-sub center" fill="var(--main-stroke)">MAIN</text>
+  <rect x="1355" y="43" width="185" height="34" rx="17" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <polygon points="1372,50 1380,54 1380,64 1372,68 1364,64 1364,54" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <text x="1457" y="65" class="node-sub center" fill="var(--compression-stroke)">COMPRESSION</text>
+
+  <!-- Threshold gauge -->
+  <rect x="40" y="145" width="370" height="210" rx="12" fill="var(--mask)"/>
+  <rect x="40" y="145" width="370" height="210" rx="12" fill="var(--panel)" stroke="var(--soft-line)"/>
+  <text x="64" y="174" class="section">消息追加检查点</text>
+  <text x="64" y="197" class="node-sub">每次追加后检查上下文占用</text>
+  <path d="M 120 330 A 105 105 0 0 1 257.4 230.1" fill="none" stroke="var(--data-stroke)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 257.4 230.1 A 105 105 0 0 1 309.9 268.3" fill="none" stroke="var(--compression-stroke)" stroke-width="14"/>
+  <path d="M 309.9 268.3 A 105 105 0 0 1 330 330" fill="none" stroke="var(--danger)" stroke-width="14" stroke-linecap="round"/>
+  <line x1="253.4" y1="242.5" x2="260.9" y2="219.7" stroke="var(--text)" stroke-width="1.5"/>
+  <line x1="299.4" y1="275.9" x2="318.9" y2="261.8" stroke="var(--text)" stroke-width="1.5"/>
+  <text x="278" y="222" class="node-sub center" fill="var(--compression-stroke)">60%</text>
+  <text x="342" y="259" class="node-sub center" fill="var(--danger)">80%</text>
+  <circle cx="225" cy="330" r="13" fill="var(--panel-2)" stroke="var(--compression-stroke)" stroke-width="2"/>
+  <path d="M 225 330 L 277.3 266.8" fill="none" stroke="var(--compression-stroke)" stroke-width="2.5"/>
+  <circle cx="225" cy="330" r="4" fill="var(--compression-stroke)"/>
+  <text x="115" y="347" class="tiny center">0</text>
+  <text x="335" y="347" class="tiny center">100%</text>
+
+  <!-- Threshold outcomes -->
+  <rect x="440" y="145" width="340" height="210" rx="12" fill="var(--mask)"/>
+  <rect x="440" y="145" width="340" height="210" rx="12" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.4"/>
+  <path d="M 475 181 A 18 18 0 1 1 483 208" fill="none" stroke="var(--compression-stroke)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-compression)"/>
+  <text x="610" y="191" font-size="21" font-weight="800" class="center">&gt;60% 且 &lt;80%</text>
+  <text x="610" y="232" class="section center">后台异步压缩</text>
+  <text x="610" y="260" class="node-sub center">主循环可以继续</text>
+  <rect x="525" y="292" width="170" height="34" rx="17" fill="var(--mask)"/>
+  <rect x="525" y="292" width="170" height="34" rx="17" fill="var(--panel-2)" stroke="var(--compression-stroke)" stroke-dasharray="6 4"/>
+  <text x="610" y="315" class="node-sub center" fill="var(--compression-stroke)">ASYNC · 不阻塞</text>
+
+  <rect x="800" y="145" width="340" height="210" rx="12" fill="var(--mask)"/>
+  <rect x="800" y="145" width="340" height="210" rx="12" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.4"/>
+  <circle cx="840" cy="190" r="20" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="2"/>
+  <path d="M 840 177 V 191 L 850 197" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+  <text x="970" y="191" font-size="21" font-weight="800" class="center">&gt;80%</text>
+  <text x="970" y="232" class="section center">同步压缩</text>
+  <text x="970" y="260" class="node-sub center">等待压缩结果后再继续</text>
+  <rect x="885" y="292" width="170" height="34" rx="17" fill="var(--mask)"/>
+  <rect x="885" y="292" width="170" height="34" rx="17" fill="var(--panel-2)" stroke="var(--danger)"/>
+  <text x="970" y="315" class="node-sub center" fill="var(--danger)">SYNC · 等待</text>
+
+  <rect x="1160" y="145" width="400" height="210" rx="12" fill="var(--mask)"/>
+  <rect x="1160" y="145" width="400" height="210" rx="12" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.4"/>
+  <polygon points="1192,169 1212,169 1224,181 1224,201 1212,213 1192,213 1180,201 1180,181" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="2"/>
+  <line x1="1191" y1="191" x2="1213" y2="191" stroke="var(--danger)" stroke-width="3"/>
+  <text x="1380" y="191" font-size="21" font-weight="800" class="center">同步后仍 ≥80%</text>
+  <text x="1360" y="232" class="section center">停止本轮</text>
+  <text x="1360" y="260" class="node-sub center">不再继续当前 MAIN 工具循环</text>
+  <path d="M 1275 309 H 1445" fill="none" stroke="var(--danger)" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M 1348 298 L 1362 312 M 1362 298 L 1348 312" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+
+  <!-- Lower section containers -->
+  <rect x="40" y="385" width="650" height="390" rx="12" fill="var(--mask)"/>
+  <rect x="40" y="385" width="650" height="390" rx="12" fill="var(--panel)" stroke="var(--soft-line)"/>
+  <rect x="720" y="385" width="360" height="390" rx="12" fill="var(--mask)"/>
+  <rect x="720" y="385" width="360" height="390" rx="12" fill="var(--panel)" stroke="var(--compression-stroke)" stroke-width="1.4"/>
+  <rect x="1110" y="385" width="450" height="390" rx="12" fill="var(--mask)"/>
+  <rect x="1110" y="385" width="450" height="390" rx="12" fill="var(--panel)" stroke="var(--soft-line)"/>
+
+  <!-- Connections in clear gaps -->
+  <path d="M 665 602 H 718" fill="none" stroke="var(--compression-stroke)" stroke-width="2.5" marker-end="url(#arrow-compression)"/>
+  <text x="692" y="586" class="tiny center" fill="var(--compression-stroke)">旧轮次</text>
+  <path d="M 1080 580 H 1133" fill="none" stroke="var(--compression-stroke)" stroke-width="2.5" marker-end="url(#arrow-compression)"/>
+  <text x="1107" y="564" class="tiny center" fill="var(--compression-stroke)">摘要</text>
+  <path d="M 1335 690 V 708" class="flow-main" marker-end="url(#arrow-main)"/>
+
+  <!-- Three message zones -->
+  <text x="64" y="416" class="section">当前 MAIN 消息 · 按完整工具轮次分三区</text>
+  <text x="64" y="439" class="node-sub">frozen / compress / active</text>
+
+  <rect x="65" y="455" width="600" height="75" rx="8" fill="var(--mask)"/>
+  <rect x="65" y="455" width="600" height="75" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.3"/>
+  <text x="86" y="482" class="node-title" fill="var(--file-stroke)">frozen</text>
+  <text x="176" y="482" class="node-sub">system + 初始 user · 保留</text>
+  <rect x="86" y="495" width="100" height="23" rx="5" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+  <text x="136" y="511" class="tiny center">system</text>
+  <rect x="198" y="495" width="120" height="23" rx="5" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+  <text x="258" y="511" class="tiny center">初始 user</text>
+  <polyline points="616,486 623,493 637,477" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+
+  <rect x="65" y="545" width="600" height="115" rx="8" fill="var(--mask)"/>
+  <rect x="65" y="545" width="600" height="115" rx="8" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.3"/>
+  <text x="86" y="572" class="node-title" fill="var(--compression-stroke)">compress</text>
+  <text x="190" y="572" class="node-sub">较旧的完整工具轮次 · 交给 COMPRESSION</text>
+  <g>
+    <rect x="86" y="592" width="145" height="46" rx="5" fill="var(--panel-2)" stroke="var(--compression-stroke)"/>
+    <text x="158" y="612" class="tiny center">assistant</text>
+    <text x="158" y="630" class="tiny center">tool_call</text>
+    <rect x="244" y="592" width="145" height="46" rx="5" fill="var(--panel-2)" stroke="var(--compression-stroke)"/>
+    <text x="316" y="612" class="tiny center">tool</text>
+    <text x="316" y="630" class="tiny center">result</text>
+    <rect x="402" y="592" width="145" height="46" rx="5" fill="var(--panel-2)" stroke="var(--compression-stroke)"/>
+    <text x="474" y="612" class="tiny center">assistant</text>
+    <text x="474" y="630" class="tiny center">下一轮</text>
+    <path d="M 565 615 H 632" fill="none" stroke="var(--compression-stroke)" stroke-width="2" stroke-dasharray="5 4"/>
+  </g>
+
+  <rect x="65" y="675" width="600" height="75" rx="8" fill="var(--mask)"/>
+  <rect x="65" y="675" width="600" height="75" rx="8" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.3"/>
+  <text x="86" y="703" class="node-title" fill="var(--main-stroke)">active</text>
+  <text x="166" y="703" class="node-sub">最近的完整轮次 · 原样保留</text>
+  <text x="86" y="729" class="tiny">assistant / tool 消息仍保持完整</text>
+  <polyline points="616,706 623,713 637,697" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+
+  <!-- COMPRESSION five-dimension summary -->
+  <text x="900" y="418" class="section center" fill="var(--compression-stroke)">COMPRESSION</text>
+  <text x="900" y="442" class="node-sub center">只接收 compress 区 · 输出五维摘要</text>
+  <rect x="745" y="460" width="310" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="745" y="460" width="310" height="42" rx="7" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <circle cx="768" cy="481" r="7" fill="var(--compression-stroke)"/>
+  <text x="790" y="486" class="node-sub">Identified Code Issues</text>
+
+  <rect x="745" y="510" width="310" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="745" y="510" width="310" height="42" rx="7" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <circle cx="768" cy="531" r="7" fill="var(--compression-stroke)"/>
+  <text x="790" y="536" class="node-sub">Tool Call Conclusions</text>
+
+  <rect x="745" y="560" width="310" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="745" y="560" width="310" height="42" rx="7" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <circle cx="768" cy="581" r="7" fill="var(--compression-stroke)"/>
+  <text x="790" y="586" class="node-sub">Completed Tasks</text>
+
+  <rect x="745" y="610" width="310" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="745" y="610" width="310" height="42" rx="7" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <circle cx="768" cy="631" r="7" fill="var(--compression-stroke)"/>
+  <text x="790" y="636" class="node-sub">Pending Tasks</text>
+
+  <rect x="745" y="660" width="310" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="745" y="660" width="310" height="42" rx="7" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <circle cx="768" cy="681" r="7" fill="var(--compression-stroke)"/>
+  <text x="790" y="686" class="node-sub">Current Focus</text>
+  <text x="900" y="737" class="tiny center">没有内容的维度可以省略</text>
+
+  <!-- Reassembled current conversation -->
+  <text x="1335" y="418" class="section center">重组后的当前对话</text>
+  <text x="1335" y="442" class="node-sub center">保留开头 + 嵌回摘要 + 接上最近轮次</text>
+
+  <rect x="1135" y="455" width="400" height="170" rx="8" fill="var(--mask)"/>
+  <rect x="1135" y="455" width="400" height="170" rx="8" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.3"/>
+  <text x="1155" y="480" class="node-title" fill="var(--file-stroke)">frozen</text>
+  <rect x="1155" y="492" width="360" height="32" rx="5" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+  <text x="1170" y="513" class="tiny">system · 原样保留</text>
+
+  <rect x="1155" y="534" width="360" height="74" rx="5" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+  <text x="1170" y="554" class="tiny">初始 user 原有文本</text>
+  <rect x="1168" y="563" width="334" height="32" rx="5" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <text x="1335" y="584" class="tiny center" fill="var(--compression-stroke)">+ &lt;previous_review_summary&gt;</text>
+
+  <rect x="1135" y="640" width="400" height="50" rx="8" fill="var(--mask)"/>
+  <rect x="1135" y="640" width="400" height="50" rx="8" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.3"/>
+  <text x="1335" y="671" class="node-title center">active · 最近完整轮次原样接上</text>
+
+  <rect x="1180" y="710" width="310" height="45" rx="22" fill="var(--mask)"/>
+  <rect x="1180" y="710" width="310" height="45" rx="22" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.4"/>
+  <text x="1335" y="739" class="node-title center">继续当前 MAIN 工具循环</text>
+
+  <!-- Failure and lifetime scope -->
+  <rect x="40" y="805" width="460" height="70" rx="10" fill="var(--mask)"/>
+  <rect x="40" y="805" width="460" height="70" rx="10" fill="var(--color-alert-fill)" stroke="var(--danger)"/>
+  <path d="M 63 827 L 77 841 M 77 827 L 63 841" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+  <text x="94" y="833" class="node-title">失败 / 空摘要</text>
+  <text x="94" y="857" class="node-sub">保留原对话，不直接丢掉上下文</text>
+
+  <rect x="520" y="805" width="540" height="70" rx="10" fill="var(--mask)"/>
+  <rect x="520" y="805" width="540" height="70" rx="10" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/>
+  <text x="790" y="833" class="node-title center">previous_review_summary</text>
+  <text x="790" y="857" class="node-sub center">仅当前 MAIN 轮有效 · 不跨轮</text>
+
+  <rect x="1080" y="805" width="480" height="70" rx="10" fill="var(--mask)"/>
+  <rect x="1080" y="805" width="480" height="70" rx="10" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <text x="1320" y="833" class="node-title center">跨轮传递：confirmed_findings</text>
+  <text x="1320" y="857" class="node-sub center">下一次 MAIN 仍重新构造对话</text>
+
+  <!-- Footer -->
+  <line x1="40" y1="905" x2="1560" y2="905" stroke="var(--soft-line)" stroke-width="1"/>
+  <circle cx="52" cy="930" r="6" fill="var(--compression-stroke)"/>
+  <text x="70" y="936" class="subtitle">压缩的是本轮旧工具轮次：frozen 与 active 保留，摘要追加到初始 user；这份摘要只服务当前轮。</text>
+  <text x="1535" y="936" class="kicker" text-anchor="end">11 / 13</text>
+</svg>

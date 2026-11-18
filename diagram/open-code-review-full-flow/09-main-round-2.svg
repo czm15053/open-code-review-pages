@@ -1,0 +1,280 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="42" width="64" height="34" rx="8" fill="var(--mask)"/>
+  <rect x="40" y="42" width="64" height="34" rx="8" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <text x="72" y="65" class="node-title center">09</text>
+  <text x="122" y="64" class="kicker">MAIN / SECOND PASS</text>
+  <text x="40" y="110" class="title" style="font-size:26px">MAIN 第 2 轮：继承结论，不继承对话</text>
+
+  <g>
+    <rect x="1080" y="43" width="130" height="34" rx="17" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/>
+    <polygon points="1097,50 1105,54 1105,64 1097,68 1089,64 1089,54" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/>
+    <text x="1152" y="65" class="node-sub center" fill="var(--plan-stroke)">PLAN</text>
+    <rect x="1225" y="43" width="130" height="34" rx="17" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+    <polygon points="1242,50 1250,54 1250,64 1242,68 1234,64 1234,54" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+    <text x="1297" y="65" class="node-sub center" fill="var(--main-stroke)">MAIN</text>
+    <rect x="1370" y="43" width="170" height="34" rx="17" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+    <polygon points="1387,50 1395,54 1395,64 1387,68 1379,64 1379,54" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+    <text x="1460" y="65" class="node-sub center" fill="var(--filter-stroke)">FILTER</text>
+  </g>
+
+  <!-- Connections behind the nodes -->
+  <path d="M 400 245 L 400 288" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 1200 245 L 1200 288" class="flow-main" marker-end="url(#arrow-main)"/>
+  <text x="420" y="272" class="tiny">重新渲染</text>
+  <text x="1220" y="272" class="tiny">重新渲染</text>
+  <path d="M 740 324 L 858 324" class="flow-main" marker-end="url(#arrow-main)"/>
+  <text x="800" y="307" class="node-sub center" fill="var(--main-stroke)">全新对话</text>
+  <path d="M 740 394 L 858 394" class="exception" marker-end="url(#arrow-open)"/>
+  <text x="800" y="377" class="tiny center" fill="var(--danger)">不继承完整工具历史</text>
+  <path d="M 715 652 L 858 652" fill="none" stroke="var(--data-stroke)" stroke-width="2.5" marker-end="url(#arrow-data)"/>
+  <text x="800" y="637" class="tiny center" fill="var(--data-stroke)">confirmed</text>
+
+  <!-- Shared prompt ingredients -->
+  <rect x="40" y="140" width="1520" height="105" rx="14" fill="var(--mask)"/>
+  <rect x="40" y="140" width="1520" height="105" rx="14" fill="var(--panel)" stroke="var(--soft-line)" stroke-width="1.2"/>
+  <text x="64" y="171" class="section">两轮都重新渲染的共同材料</text>
+  <text x="64" y="197" class="node-sub">相同输入 ≠ 相同消息历史</text>
+  <text x="64" y="221" class="tiny">medium 默认最多 2 轮 · R1 正常且有评论通过 FILTER</text>
+
+  <rect x="450" y="157" width="230" height="64" rx="9" fill="var(--mask)"/>
+  <rect x="450" y="157" width="230" height="64" rx="9" fill="var(--file-fill)" stroke="var(--file-stroke)"/>
+  <text x="565" y="183" class="node-title center">本组完整 diff</text>
+  <text x="565" y="205" class="node-sub center">login.go + login_test.go</text>
+
+  <rect x="700" y="157" width="200" height="64" rx="9" fill="var(--mask)"/>
+  <rect x="700" y="157" width="200" height="64" rx="9" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)"/>
+  <text x="800" y="183" class="node-title center">审查规则</text>
+  <text x="800" y="205" class="node-sub center">相同</text>
+
+  <rect x="920" y="157" width="200" height="64" rx="9" fill="var(--mask)"/>
+  <rect x="920" y="157" width="200" height="64" rx="9" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)"/>
+  <text x="1020" y="183" class="node-title center">需求背景</text>
+  <text x="1020" y="205" class="node-sub center">会话过期处理</text>
+
+  <rect x="1140" y="157" width="330" height="64" rx="9" fill="var(--mask)"/>
+  <rect x="1140" y="157" width="330" height="64" rx="9" fill="var(--file-fill)" stroke="var(--file-stroke)"/>
+  <text x="1305" y="183" class="node-title center">其他变更文件</text>
+  <text x="1305" y="205" class="node-sub center">同一份文件清单</text>
+
+  <!-- R1 conversation -->
+  <rect x="40" y="290" width="700" height="420" rx="14" fill="var(--mask)"/>
+  <rect x="40" y="290" width="700" height="420" rx="14" fill="var(--panel)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <circle cx="70" cy="316" r="5" fill="var(--danger)"/>
+  <circle cx="87" cy="316" r="5" fill="var(--warning)"/>
+  <circle cx="104" cy="316" r="5" fill="var(--success)"/>
+  <text x="126" y="322" class="section">R1 · 对话 A</text>
+  <rect x="622" y="303" width="90" height="28" rx="14" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="667" y="322" class="tiny center" fill="var(--main-stroke)">独立会话</text>
+
+  <!-- R1 message film -->
+  <rect x="65" y="350" width="430" height="330" rx="9" fill="var(--mask)"/>
+  <rect x="65" y="350" width="430" height="330" rx="9" fill="var(--color-neutral-fill)" stroke="var(--main-stroke)" stroke-width="1.2"/>
+  <g fill="var(--panel-2)" stroke="var(--soft-line)">
+    <rect x="75" y="370" width="16" height="12" rx="2"/><rect x="75" y="410" width="16" height="12" rx="2"/>
+    <rect x="75" y="450" width="16" height="12" rx="2"/><rect x="75" y="490" width="16" height="12" rx="2"/>
+    <rect x="75" y="530" width="16" height="12" rx="2"/><rect x="75" y="570" width="16" height="12" rx="2"/>
+    <rect x="75" y="610" width="16" height="12" rx="2"/><rect x="75" y="650" width="16" height="12" rx="2"/>
+  </g>
+  <text x="112" y="382" class="node-title">完整消息历史</text>
+  <text x="112" y="405" class="node-sub">system + 初始 user + 工具轮次</text>
+
+  <rect x="110" y="425" width="360" height="54" rx="7" fill="var(--mask)"/>
+  <rect x="110" y="425" width="360" height="54" rx="7" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/>
+  <text x="126" y="447" class="node-title">Review Plan</text>
+  <text x="126" y="468" class="node-sub">planResult 原样注入</text>
+
+  <rect x="110" y="493" width="360" height="60" rx="7" fill="var(--mask)"/>
+  <rect x="110" y="493" width="360" height="60" rx="7" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="126" y="516" class="node-title">file_read / code_search</text>
+  <text x="126" y="539" class="node-sub">程序执行 → 结果追加 → 再请求模型</text>
+
+  <rect x="110" y="567" width="360" height="54" rx="7" fill="var(--mask)"/>
+  <rect x="110" y="567" width="360" height="54" rx="7" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="126" y="590" class="node-title">code_comment · task_done</text>
+  <text x="126" y="611" class="node-sub">评论异步处理，MAIN 继续</text>
+  <text x="112" y="655" class="node-sub" fill="var(--danger)">这些完整工具消息不会进入 R2</text>
+
+  <!-- R1 FILTER and confirmed -->
+  <rect x="520" y="360" width="195" height="180" rx="9" fill="var(--mask)"/>
+  <rect x="520" y="360" width="195" height="180" rx="9" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="1.4"/>
+  <text x="617" y="394" class="node-title center">FILTER R1</text>
+  <text x="617" y="419" class="node-sub center">仅本轮新增评论</text>
+  <rect x="545" y="443" width="144" height="38" rx="19" fill="var(--mask)"/>
+  <rect x="545" y="443" width="144" height="38" rx="19" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <polyline points="560,462 567,469 579,454" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+  <text x="627" y="468" class="node-sub center" fill="var(--data-stroke)">c-0 存活</text>
+  <text x="617" y="514" class="tiny center">c-1 / c-2 被删除</text>
+
+  <rect x="520" y="560" width="195" height="120" rx="8" fill="var(--mask)"/>
+  <path d="M 528 560 H 687 L 715 588 V 672 Q 715 680 707 680 H 528 Q 520 680 520 672 V 568 Q 520 560 528 560 Z" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.4"/>
+  <path d="M 687 560 V 588 H 715" fill="none" stroke="var(--data-stroke)" stroke-width="1.2"/>
+  <text x="540" y="594" class="node-title">confirmed</text>
+  <text x="540" y="620" class="node-sub">c-0 · 过滤后存活</text>
+  <text x="540" y="644" class="node-sub">供 R2 参考</text>
+
+  <!-- Center: removed PLAN -->
+  <rect x="745" y="475" width="110" height="72" rx="8" fill="var(--mask)"/>
+  <rect x="745" y="475" width="110" height="72" rx="8" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-dasharray="5 4"/>
+  <text x="800" y="504" class="node-title center" fill="var(--plan-stroke)">PLAN</text>
+  <text x="800" y="529" class="tiny center">R2 整段移除</text>
+  <path d="M 825 482 L 847 504 M 847 482 L 825 504" fill="none" stroke="var(--danger)" stroke-width="2.5"/>
+
+  <!-- R2 conversation -->
+  <rect x="860" y="290" width="700" height="420" rx="14" fill="var(--mask)"/>
+  <rect x="860" y="290" width="700" height="420" rx="14" fill="var(--panel)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <circle cx="890" cy="316" r="5" fill="var(--danger)"/>
+  <circle cx="907" cy="316" r="5" fill="var(--warning)"/>
+  <circle cx="924" cy="316" r="5" fill="var(--success)"/>
+  <text x="946" y="322" class="section">R2 · 对话 B</text>
+  <rect x="1442" y="303" width="90" height="28" rx="14" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="1487" y="322" class="tiny center" fill="var(--main-stroke)">独立会话</text>
+
+  <!-- Confirmed panel -->
+  <rect x="885" y="350" width="330" height="330" rx="9" fill="var(--mask)"/>
+  <rect x="885" y="350" width="330" height="330" rx="9" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.4"/>
+  <text x="1050" y="382" class="node-title center">confirmed_findings</text>
+  <text x="1050" y="406" class="tiny center">不要重复报告；继续寻找其他真实问题</text>
+
+  <rect x="910" y="425" width="280" height="64" rx="7" fill="var(--mask)"/>
+  <rect x="910" y="425" width="280" height="64" rx="7" fill="var(--panel-2)" stroke="var(--data-stroke)"/>
+  <text x="930" y="450" class="node-title">c-0 · login.go</text>
+  <text x="930" y="474" class="node-sub">code + issue 摘要</text>
+
+  <rect x="910" y="510" width="280" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="910" y="510" width="280" height="42" rx="7" fill="var(--color-neutral-fill)" stroke="var(--data-stroke)"/>
+  <rect x="925" y="527" width="22" height="8" rx="4" fill="var(--panel-2)" stroke="var(--data-stroke)"/>
+  <rect x="925" y="527" width="14" height="8" rx="4" fill="var(--data-stroke)"/>
+  <text x="960" y="537" class="node-sub">existing_code ≤ 200 字符</text>
+
+  <rect x="910" y="562" width="280" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="910" y="562" width="280" height="42" rx="7" fill="var(--color-neutral-fill)" stroke="var(--data-stroke)"/>
+  <rect x="925" y="579" width="22" height="8" rx="4" fill="var(--panel-2)" stroke="var(--data-stroke)"/>
+  <rect x="925" y="579" width="18" height="8" rx="4" fill="var(--data-stroke)"/>
+  <text x="960" y="589" class="node-sub">评论正文 ≤ 300 字符</text>
+
+  <rect x="910" y="614" width="280" height="42" rx="7" fill="var(--mask)"/>
+  <rect x="910" y="614" width="280" height="42" rx="7" fill="var(--color-neutral-fill)" stroke="var(--data-stroke)"/>
+  <circle cx="936" cy="635" r="9" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <text x="936" y="639" class="tiny center" fill="var(--data-stroke)">30</text>
+  <text x="960" y="641" class="node-sub">confirmed 总数 ≤ 30 条</text>
+
+  <!-- R2 new message film -->
+  <rect x="1240" y="350" width="295" height="330" rx="9" fill="var(--mask)"/>
+  <rect x="1240" y="350" width="295" height="330" rx="9" fill="var(--color-neutral-fill)" stroke="var(--main-stroke)" stroke-width="1.2"/>
+  <g fill="var(--panel-2)" stroke="var(--soft-line)">
+    <rect x="1250" y="370" width="14" height="12" rx="2"/><rect x="1250" y="410" width="14" height="12" rx="2"/>
+    <rect x="1250" y="450" width="14" height="12" rx="2"/><rect x="1250" y="490" width="14" height="12" rx="2"/>
+    <rect x="1250" y="530" width="14" height="12" rx="2"/><rect x="1250" y="570" width="14" height="12" rx="2"/>
+    <rect x="1250" y="610" width="14" height="12" rx="2"/><rect x="1250" y="650" width="14" height="12" rx="2"/>
+  </g>
+  <text x="1280" y="382" class="node-title">新消息历史</text>
+  <text x="1280" y="405" class="tiny">重新构造 system + 初始 user</text>
+
+  <rect x="1280" y="425" width="230" height="58" rx="7" fill="var(--mask)"/>
+  <rect x="1280" y="425" width="230" height="58" rx="7" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="1395" y="449" class="node-title center">新一轮工具循环</text>
+  <text x="1395" y="471" class="tiny center">读取 / 搜索 / 评论</text>
+
+  <rect x="1280" y="500" width="230" height="58" rx="7" fill="var(--mask)"/>
+  <rect x="1280" y="500" width="230" height="58" rx="7" fill="var(--output-fill)" stroke="var(--output-stroke)"/>
+  <text x="1395" y="524" class="node-title center">c-new · 缺少测试</text>
+  <text x="1395" y="546" class="tiny center">R2 新增评论</text>
+
+  <rect x="1280" y="575" width="230" height="50" rx="7" fill="var(--mask)"/>
+  <rect x="1280" y="575" width="230" height="50" rx="7" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+  <text x="1395" y="606" class="node-title center">task_done</text>
+  <text x="1280" y="655" class="tiny" fill="var(--danger)">不带 R1 完整工具历史</text>
+
+  <!-- R2 FILTER boundary -->
+  <rect x="40" y="760" width="1520" height="105" rx="12" fill="var(--mask)"/>
+  <rect x="40" y="760" width="1520" height="105" rx="12" fill="var(--panel)" stroke="var(--soft-line)"/>
+  <text x="64" y="787" class="section">第 2 轮 FILTER 的边界</text>
+
+  <rect x="280" y="799" width="220" height="46" rx="8" fill="var(--mask)"/>
+  <rect x="280" y="799" width="220" height="46" rx="8" fill="var(--output-fill)" stroke="var(--output-stroke)"/>
+  <text x="390" y="828" class="node-title center">R2 新评论</text>
+
+  <rect x="580" y="799" width="330" height="46" rx="8" fill="var(--mask)"/>
+  <rect x="580" y="799" width="330" height="46" rx="8" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+  <text x="745" y="828" class="node-title center">FILTER R2 · baseline 之后</text>
+
+  <rect x="990" y="799" width="250" height="46" rx="8" fill="var(--mask)"/>
+  <rect x="990" y="799" width="250" height="46" rx="8" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+  <text x="1115" y="828" class="node-title center">只保留或删除新评论</text>
+
+  <rect x="1300" y="785" width="220" height="68" rx="9" fill="var(--mask)"/>
+  <rect x="1300" y="785" width="220" height="68" rx="9" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <text x="1410" y="812" class="node-title center">R1 confirmed</text>
+  <text x="1410" y="837" class="node-sub center">不再重新过滤</text>
+
+  <!-- Short connectors in the clear gaps between cards -->
+  <path d="M 495 450 L 518 450" class="flow" marker-end="url(#arrow-filter)"/>
+  <path d="M 617 540 L 617 558" class="flow" marker-end="url(#arrow-data)"/>
+  <path d="M 500 822 L 578 822" class="flow" marker-end="url(#arrow-filter)"/>
+  <path d="M 910 822 L 988 822" class="flow" marker-end="url(#arrow-filter)"/>
+
+  <!-- Footer -->
+  <line x1="40" y1="895" x2="1560" y2="895" stroke="var(--soft-line)" stroke-width="1"/>
+  <circle cx="52" cy="921" r="6" fill="var(--main-stroke)"/>
+  <text x="70" y="927" class="subtitle">新开对话，只继承经过筛选的 confirmed；共同材料重新渲染，旧工具历史留在 R1。</text>
+  <text x="1535" y="927" class="kicker" text-anchor="end">09 / 13</text>
+</svg>

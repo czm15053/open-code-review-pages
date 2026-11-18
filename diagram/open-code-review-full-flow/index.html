@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Code Review · 全流程 13 页</title>
+<style>
+  :root {
+    --bg: #f5f7fc; --panel: #ffffff; --text: #17213a; --muted: #52627e;
+    --line: #dfe6f2; --hover: #edf2fb;
+  }
+  html[data-theme="dark"] {
+    --bg: #0b1020; --panel: #121b31; --text: #f8fafc; --muted: #a6b3ca;
+    --line: #2b3a58; --hover: #18243d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; height: 100vh; display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, 'PingFang SC', 'Noto Sans SC', sans-serif;
+  }
+  header {
+    display: flex; align-items: center; gap: 16px; padding: 12px 20px;
+    border-bottom: 1px solid var(--line); background: var(--panel);
+  }
+  h1 { font-size: 14px; font-weight: 700; letter-spacing: .04em; margin: 0; flex: 1; }
+  h1 span { color: var(--muted); font-weight: 500; margin-left: 8px; }
+  button {
+    font: inherit; font-size: 12px; color: var(--text); background: transparent;
+    border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer;
+  }
+  button:hover { background: var(--hover); }
+  button:disabled { opacity: .35; cursor: default; }
+  .counter { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  main { flex: 1; display: flex; min-height: 0; }
+  nav {
+    width: 300px; overflow-y: auto; padding: 8px; border-right: 1px solid var(--line);
+    background: var(--panel); flex-shrink: 0;
+  }
+  nav a {
+    display: flex; gap: 10px; align-items: baseline; padding: 8px 10px; border-radius: 8px;
+    color: var(--text); text-decoration: none; font-size: 12px; line-height: 1.35;
+  }
+  nav a:hover { background: var(--hover); }
+  nav a.active { background: var(--hover); font-weight: 600; }
+  nav a .no { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+  nav a .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  figure { flex: 1; margin: 0; display: flex; align-items: center; justify-content: center; padding: 16px; min-width: 0; }
+  figure img { max-width: 100%; max-height: 100%; box-shadow: 0 1px 3px rgba(15,23,42,.12); border-radius: 8px; }
+  footer { padding: 8px 20px; border-top: 1px solid var(--line); background: var(--panel); font-size: 11px; color: var(--muted); display: flex; gap: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>OPEN CODE REVIEW<span>全流程 · 13 页</span></h1>
+  <span class="counter"><span id="cur">01</span> / 13</span>
+  <button id="prev">← 上一页</button>
+  <button id="next">下一页 →</button>
+  <button id="theme">深色</button>
+</header>
+<main>
+  <nav id="nav"></nav>
+  <figure><img id="page" alt=""></figure>
+</main>
+<footer>
+  <span>← → 翻页 · 点击左侧目录跳转 · 深链 #05 直达</span>
+  <span style="flex:1"></span>
+  <span>SVG 矢量，可无损放大</span>
+</footer>
+<script>
+const PAGES = [
+  ['总览：一次 PR 如何变成审查结果', '#0891b2'],
+  ['准备：冻结审查清单', '#64748b'],
+  ['GROUPING：8 个文件 → 5 组', '#9333ea'],
+  ['PLAN：只服务 R1 的检索计划', '#2563eb'],
+  ['MAIN R1：工具循环与评论闸门', '#0891b2'],
+  ['评论定位：path 匹配与跨文件命中', '#e11d48'],
+  ['RE_LOCATION：修锚点，不裁决', '#e11d48'],
+  ['FILTER：diff 证据对照', '#d97706'],
+  ['MAIN R2：继承结论，不继承对话', '#0891b2'],
+  ['轮次控制：六个停止条件', '#d97706'],
+  ['COMPRESSION：压缩旧历史', '#db2777'],
+  ['收尾：严格九步', '#ea580c'],
+  ['复盘：主链、六 Prompt 与数据寿命', '#ea580c'],
+];
+const FILES = ['01-overview','02-prepare','03-grouping','04-plan','05-main-round-1','06-comment-location',
+  '07-relocation','08-filter','09-main-round-2','10-round-control','11-compression','12-finalize','13-recap'];
+
+const hash = () => location.hash.replace('#', '').replace(/\//g, '');
+const img = document.getElementById('page');
+const cur = document.getElementById('cur');
+const nav = document.getElementById('nav');
+let theme = localStorage.getItem('ocr-theme') || 'light';
+let page = 1;
+
+PAGES.forEach(([title, color], i) => {
+  const a = document.createElement('a');
+  a.href = '#' + (i + 1).toString().padStart(2, '0');
+  a.innerHTML = `<span class="no">${(i + 1).toString().padStart(2, '0')}</span>
+    <span class="dot" style="background:${color}"></span><span>${title}</span>`;
+  a.onclick = e => { e.preventDefault(); show(i + 1); };
+  nav.append(a);
+});
+
+function show(n) {
+  page = Math.min(13, Math.max(1, n));
+  const suffix = theme === 'dark' ? '' : '.light';
+  img.src = `${FILES[page - 1]}${suffix}.svg`;
+  img.alt = PAGES[page - 1][0];
+  cur.textContent = page.toString().padStart(2, '0');
+  [...nav.children].forEach((a, i) => a.classList.toggle('active', i === page - 1));
+  location.hash = '#' + page.toString().padStart(2, '0');
+  document.getElementById('prev').disabled = page === 1;
+  document.getElementById('next').disabled = page === 13;
+  document.title = `${page.toString().padStart(2, '0')} · ${PAGES[page - 1][0]}`;
+}
+
+function applyTheme() {
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme').textContent = theme === 'dark' ? '浅色' : '深色';
+  localStorage.setItem('ocr-theme', theme);
+}
+
+document.getElementById('prev').onclick = () => show(page - 1);
+document.getElementById('next').onclick = () => show(page + 1);
+document.getElementById('theme').onclick = () => { theme = theme === 'dark' ? 'light' : 'dark'; applyTheme(); show(page); };
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft') show(page - 1);
+  if (e.key === 'ArrowRight') show(page + 1);
+  if (e.key === 'Home') show(1);
+  if (e.key === 'End') show(13);
+});
+addEventListener('hashchange', () => {
+  const n = parseInt(hash(), 10);
+  if (n && n !== page) show(n);
+});
+
+const start = parseInt(hash(), 10) || 1;
+applyTheme();
+show(start);
+</script>
+</body>
+</html>

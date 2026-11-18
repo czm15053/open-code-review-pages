@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--output-fill)" stroke="var(--output-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700">12 / 13</text>
+  <text x="140" y="54" class="kicker">FINALIZE · STRICT NINE-STEP SEQUENCE</text>
+  <text x="40" y="98" class="title" style="font-size:26px">收尾：严格九步，最后才渲染结果</text>
+  <text x="40" y="121" class="subtitle">先等待所有工作收尾并落盘追踪数据，再解析最终行号，最后写出三种格式。</text>
+  <rect x="1330" y="38" width="210" height="38" rx="19" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.5"/>
+  <text x="1435" y="62" class="center" font-size="13" font-weight="700" fill="var(--compression-stroke)">COMPRESSION 收尾</text>
+
+  <rect x="40" y="145" width="1520" height="700" rx="16" class="region"/>
+  <text x="60" y="170" class="kicker">真实执行顺序 · 沿粗青线阅读</text>
+  <text x="1535" y="170" class="tiny" text-anchor="end">第一行 1→2→3 · 第二行从右向左 4→5→6 · 第三行 7→8→9</text>
+
+  <!-- Nine-step primary timeline connectors -->
+  <path d="M460 260 H588" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1000 260 H1128" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1340 330 V398" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1140 480 H1012" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M600 480 H472" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M260 550 V678" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M460 760 H588" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1000 760 H1128" class="flow-main" marker-end="url(#arrow-main)"/>
+
+  <!-- Step 1 -->
+  <rect x="60" y="190" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="60" y="190" width="400" height="140" rx="14" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="2"/>
+  <circle cx="91" cy="220" r="18" fill="var(--main-stroke)"/><text x="91" y="226" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">1</text>
+  <text x="122" y="226" class="node-title">等所有组完成</text>
+  <text x="122" y="251" class="node-sub">A / B / C / D / E 全部结束审查</text>
+  <g class="center" font-size="11" font-weight="800">
+    <circle cx="142" cy="287" r="16" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="142" y="292">A</text>
+    <circle cx="190" cy="287" r="16" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="190" y="292">B</text>
+    <circle cx="238" cy="287" r="16" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="238" y="292">C</text>
+    <circle cx="286" cy="287" r="16" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="286" y="292">D</text>
+    <circle cx="334" cy="287" r="16" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="334" y="292">E</text>
+  </g>
+  <path d="M384 280 l8 8 16 -19" fill="none" stroke="var(--success)" stroke-width="3"/>
+
+  <!-- Step 2 -->
+  <rect x="600" y="190" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="600" y="190" width="400" height="140" rx="14" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="2"/>
+  <circle cx="631" cy="220" r="18" fill="var(--relocation-stroke)"/><text x="631" y="226" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">2</text>
+  <text x="662" y="226" class="node-title">等全部评论 worker 完成</text>
+  <text x="662" y="251" class="node-sub">定位 / 重定位 / Collector 写入全部排空</text>
+  <g>
+    <rect x="662" y="270" width="64" height="40" rx="6" fill="var(--panel-2)" stroke="var(--relocation-stroke)"/><line x1="674" y1="282" x2="714" y2="282" stroke="var(--relocation-stroke)"/><line x1="674" y1="294" x2="704" y2="294" stroke="var(--soft-line)"/>
+    <rect x="742" y="270" width="64" height="40" rx="6" fill="var(--panel-2)" stroke="var(--relocation-stroke)"/><line x1="754" y1="282" x2="794" y2="282" stroke="var(--relocation-stroke)"/><line x1="754" y1="294" x2="784" y2="294" stroke="var(--soft-line)"/>
+    <rect x="822" y="270" width="64" height="40" rx="6" fill="var(--panel-2)" stroke="var(--relocation-stroke)"/><line x1="834" y1="282" x2="874" y2="282" stroke="var(--relocation-stroke)"/><line x1="834" y1="294" x2="864" y2="294" stroke="var(--soft-line)"/>
+    <path d="M922 283 l8 8 16 -19" fill="none" stroke="var(--success)" stroke-width="3"/>
+  </g>
+
+  <!-- Step 3 -->
+  <rect x="1140" y="190" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="1140" y="190" width="400" height="140" rx="14" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="2"/>
+  <circle cx="1171" cy="220" r="18" fill="var(--compression-stroke)"/><text x="1171" y="226" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">3</text>
+  <text x="1202" y="226" class="node-title">收尾后台压缩任务</text>
+  <text x="1202" y="251" class="node-sub">等待仍在运行的异步 COMPRESSION</text>
+  <rect x="1202" y="272" width="168" height="38" rx="8" fill="var(--panel-2)" stroke="var(--compression-stroke)"/>
+  <line x1="1216" y1="284" x2="1348" y2="284" stroke="var(--compression-stroke)" stroke-dasharray="5 4"/>
+  <line x1="1216" y1="297" x2="1308" y2="297" stroke="var(--soft-line)"/>
+  <rect x="1390" y="272" width="100" height="38" rx="19" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <text x="1440" y="296" class="center" font-size="11" font-weight="700" fill="var(--data-stroke)">已收尾</text>
+
+  <!-- Step 6, left on second row -->
+  <rect x="60" y="410" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="60" y="410" width="400" height="140" rx="14" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="2"/>
+  <circle cx="91" cy="440" r="18" fill="var(--program-stroke)"/><text x="91" y="446" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">6</text>
+  <text x="122" y="446" class="node-title mono">Agent.Run 返回</text>
+  <text x="122" y="471" class="node-sub">模型代理运行到此返回</text>
+  <text x="122" y="499" font-size="11">后续步骤由外层程序继续</text>
+  <path d="M390 490 V530 H132" fill="none" stroke="var(--program-stroke)" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="260" y="540" class="center tiny">RETURN</text>
+
+  <!-- Step 5, middle on second row -->
+  <rect x="600" y="410" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="600" y="410" width="400" height="140" rx="14" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+  <circle cx="631" cy="440" r="18" fill="var(--data-stroke)"/><text x="631" y="446" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">5</text>
+  <text x="662" y="446" class="node-title mono">session.Finalize</text>
+  <text x="662" y="471" class="node-sub">写入 session_end · session JSONL</text>
+  <text x="662" y="499" font-size="11">追踪每次请求 / 工具调用 / 评论 / 事件</text>
+  <g>
+    <rect x="662" y="514" width="230" height="22" rx="4" fill="var(--panel-2)" stroke="var(--data-stroke)"/>
+    <circle cx="675" cy="525" r="4" fill="var(--data-stroke)"/><line x1="688" y1="525" x2="873" y2="525" stroke="var(--data-stroke)" stroke-dasharray="8 5"/>
+    <text x="980" y="531" class="mono" font-size="10" fill="var(--data-stroke)" text-anchor="end">session_end</text>
+  </g>
+
+  <!-- Step 4, right on second row -->
+  <path d="M1140 410 H1480 L1540 470 V550 H1140 Z" fill="var(--mask)"/>
+  <path d="M1140 410 H1480 L1540 470 V550 H1140 Z" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+  <path d="M1480 410 V470 H1540" fill="var(--panel-2)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <circle cx="1171" cy="440" r="18" fill="var(--data-stroke)"/><text x="1171" y="446" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">4</text>
+  <text x="1202" y="446" class="node-title">生成最终 manifest</text>
+  <text x="1202" y="471" class="node-sub">最终审查清单 · 在最终行号解析前完成</text>
+  <text x="1202" y="500" font-size="11">计划审什么 / 完成 / 复用 / 失败 / 排除</text>
+  <g font-size="10" font-weight="700">
+    <rect x="1202" y="515" width="62" height="23" rx="5" fill="var(--panel-2)"/><text x="1233" y="531" class="center">selected</text>
+    <rect x="1274" y="515" width="62" height="23" rx="5" fill="var(--panel-2)"/><text x="1305" y="531" class="center">done</text>
+    <rect x="1346" y="515" width="62" height="23" rx="5" fill="var(--panel-2)"/><text x="1377" y="531" class="center">resume</text>
+    <rect x="1418" y="515" width="62" height="23" rx="5" fill="var(--panel-2)"/><text x="1449" y="531" class="center">excluded</text>
+  </g>
+
+  <!-- Order gate between finalize and rendering -->
+  <text x="360" y="585" font-size="11" font-weight="700" fill="var(--color-accent-stroke)">顺序闸口 · 不可交换</text>
+  <rect x="360" y="600" width="360" height="48" rx="24" fill="var(--mask)"/>
+  <rect x="360" y="600" width="360" height="48" rx="24" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <text x="540" y="629" class="center" font-size="12" font-weight="700">4–5 · manifest + session_end</text>
+  <path d="M730 624 H778" fill="none" stroke="var(--color-accent-stroke)" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="790" y="600" width="350" height="48" rx="24" fill="var(--mask)"/>
+  <rect x="790" y="600" width="350" height="48" rx="24" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="1.5"/>
+  <text x="965" y="629" class="center" font-size="12" font-weight="700">8 · 最终全量行号解析</text>
+  <path d="M1150 624 H1198" fill="none" stroke="var(--color-accent-stroke)" stroke-width="2" marker-end="url(#arrow)"/>
+  <rect x="1210" y="600" width="330" height="48" rx="24" fill="var(--mask)"/>
+  <rect x="1210" y="600" width="330" height="48" rx="24" fill="var(--output-fill)" stroke="var(--output-stroke)" stroke-width="1.5"/>
+  <text x="1375" y="629" class="center" font-size="12" font-weight="700">9 · 渲染输出在最后</text>
+
+  <!-- Step 7 -->
+  <rect x="60" y="690" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="60" y="690" width="400" height="140" rx="14" fill="var(--output-fill)" stroke="var(--output-stroke)" stroke-width="2"/>
+  <circle cx="91" cy="720" r="18" fill="var(--output-stroke)"/><text x="91" y="726" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">7</text>
+  <text x="122" y="726" class="node-title">冻结 retry report</text>
+  <text x="122" y="751" class="node-sub">固定重试报告，供最终结果与追踪使用</text>
+  <path d="M122 772 H205 L225 792 V816 H122 Z" fill="var(--panel-2)" stroke="var(--output-stroke)"/>
+  <path d="M205 772 V792 H225" fill="none" stroke="var(--output-stroke)"/>
+  <rect x="267" y="778" width="40" height="32" rx="5" fill="var(--panel-2)" stroke="var(--output-stroke)" stroke-width="1.5"/>
+  <path d="M275 778 V768 A12 12 0 0 1 299 768 V778" fill="none" stroke="var(--output-stroke)" stroke-width="2"/>
+  <circle cx="287" cy="793" r="3" fill="var(--output-stroke)"/>
+  <text x="333" y="800" font-size="11" fill="var(--output-stroke)">FROZEN</text>
+
+  <!-- Step 8 -->
+  <rect x="600" y="690" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="600" y="690" width="400" height="140" rx="14" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="2"/>
+  <circle cx="631" cy="720" r="18" fill="var(--relocation-stroke)"/><text x="631" y="726" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">8</text>
+  <text x="662" y="726" class="node-title">最终未定位行号解析</text>
+  <text x="662" y="751" class="node-sub">仅仍未定位 且带 existing_code 的评论</text>
+  <text x="662" y="779" font-size="11" font-weight="700">再尝试一次行号解析</text>
+  <circle cx="913" cy="786" r="27" fill="var(--panel-2)" stroke="var(--relocation-stroke)" stroke-width="1.5"/>
+  <circle cx="913" cy="786" r="11" fill="none" stroke="var(--relocation-stroke)"/>
+  <path d="M913 752 V770 M913 802 V820 M879 786 H897 M929 786 H947" stroke="var(--relocation-stroke)" stroke-width="1.5"/>
+  <text x="662" y="811" class="mono" font-size="10" fill="var(--text-muted)">unresolved → start_line / end_line</text>
+
+  <!-- Step 9 -->
+  <rect x="1140" y="690" width="400" height="140" rx="14" fill="var(--mask)"/>
+  <rect x="1140" y="690" width="400" height="140" rx="14" fill="var(--output-fill)" stroke="var(--output-stroke)" stroke-width="2.5"/>
+  <circle cx="1171" cy="720" r="18" fill="var(--output-stroke)"/><text x="1171" y="726" class="center mono" font-size="15" font-weight="800" fill="var(--bg)">9</text>
+  <text x="1202" y="726" class="node-title">渲染并写出结果</text>
+  <text x="1202" y="751" class="node-sub">最终行号解析已经完成</text>
+  <g>
+    <path d="M1202 772 H1270 L1288 790 V816 H1202 Z" fill="var(--panel-2)" stroke="var(--output-stroke)"/><path d="M1270 772 V790 H1288" fill="none" stroke="var(--output-stroke)"/><text x="1245" y="806" class="center" font-size="11" font-weight="700">text</text>
+    <path d="M1310 772 H1378 L1396 790 V816 H1310 Z" fill="var(--panel-2)" stroke="var(--output-stroke)"/><path d="M1378 772 V790 H1396" fill="none" stroke="var(--output-stroke)"/><text x="1353" y="806" class="center" font-size="11" font-weight="700">JSON</text>
+    <path d="M1418 772 H1486 L1504 790 V816 H1418 Z" fill="var(--panel-2)" stroke="var(--output-stroke)"/><path d="M1486 772 V790 H1504" fill="none" stroke="var(--output-stroke)"/><text x="1461" y="806" class="center" font-size="11" font-weight="700">SARIF</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="875" x2="1560" y2="875" stroke="var(--soft-line)"/>
+  <text x="60" y="910" font-size="13" font-weight="700" fill="var(--output-stroke)">关键顺序：manifest 与 session_end 早于最终全量行号解析；第 8 步行号解析早于第 9 步 text / JSON / SARIF 渲染。</text>
+  <text x="60" y="936" class="tiny">manifest = 审查计划与结果清单 · session JSONL = 运行过程事件追踪 · retry report = 冻结的重试记录</text>
+  <text x="1535" y="936" class="tiny mono" text-anchor="end">OPEN CODE REVIEW · 12</text>
+</svg>

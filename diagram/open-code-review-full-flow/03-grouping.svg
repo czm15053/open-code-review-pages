@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700">03 / 13</text>
+  <text x="140" y="54" class="kicker">GROUPING · METADATA TO PARALLEL GROUPS</text>
+  <text x="40" y="98" class="title" style="font-size:26px">GROUPING：8 个文件，还原为 5 个审查组</text>
+  <text x="40" y="121" class="subtitle">模型只看文件元数据，不看 diff；程序负责校验、兜底与并行分发。</text>
+  <rect x="1350" y="38" width="190" height="38" rx="19" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+  <polygon points="1372,48 1384,48 1390,57 1384,66 1372,66 1366,57" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)"/>
+  <text x="1458" y="62" class="center" font-size="13" font-weight="700" fill="var(--grouping-stroke)">GROUPING</text>
+
+  <rect x="40" y="145" width="1520" height="700" rx="16" class="region"/>
+
+  <!-- Primary connectors -->
+  <path d="M415 370 H443" fill="none" stroke="var(--grouping-stroke)" stroke-width="3" marker-end="url(#arrow-grouping)"/>
+  <path d="M785 370 H818" fill="none" stroke="var(--grouping-stroke)" stroke-width="3" marker-end="url(#arrow-grouping)"/>
+  <path d="M1180 595 V613" fill="none" stroke="var(--grouping-stroke)" stroke-width="3" marker-end="url(#arrow-grouping)"/>
+  <rect x="408" y="329" width="54" height="26" rx="13" fill="var(--mask)"/>
+  <text x="435" y="347" class="center" font-size="10" fill="var(--grouping-stroke)">8 项</text>
+  <rect x="780" y="329" width="66" height="26" rx="13" fill="var(--mask)"/>
+  <text x="813" y="347" class="center" font-size="10" fill="var(--grouping-stroke)">JSON</text>
+
+  <!-- Input metadata region -->
+  <rect x="55" y="170" width="360" height="525" rx="12" fill="var(--mask)"/>
+  <rect x="55" y="170" width="360" height="525" rx="12" fill="var(--file-fill)" stroke="var(--soft-line)" stroke-width="1.2"/>
+  <text x="75" y="198" class="section">输入 · 仅文件元数据</text>
+  <rect x="292" y="179" width="105" height="26" rx="13" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)"/>
+  <text x="344" y="197" class="center" font-size="10" font-weight="700" fill="var(--color-alert-stroke)">无 diff 内容</text>
+
+  <g>
+    <path d="M75 220 H370 L395 245 V267 H75 Z" fill="var(--mask)"/><path d="M75 220 H370 L395 245 V267 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 220 V245 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="244" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="248" class="center mono" font-size="10" font-weight="700">0</text>
+    <text x="114" y="240" class="mono" font-size="10">internal/auth/login.go</text><text x="114" y="258" class="tiny mono">MODIFIED · +120/-20</text>
+  </g>
+  <g>
+    <path d="M75 275 H370 L395 300 V322 H75 Z" fill="var(--mask)"/><path d="M75 275 H370 L395 300 V322 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 275 V300 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="299" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="303" class="center mono" font-size="10" font-weight="700">1</text>
+    <text x="114" y="295" class="mono" font-size="10">internal/auth/session.go</text><text x="114" y="313" class="tiny mono">MODIFIED · +45/-10</text>
+  </g>
+  <g>
+    <path d="M75 330 H370 L395 355 V377 H75 Z" fill="var(--mask)"/><path d="M75 330 H370 L395 355 V377 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 330 V355 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="354" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="358" class="center mono" font-size="10" font-weight="700">2</text>
+    <text x="114" y="350" class="mono" font-size="10">internal/auth/login_test.go</text><text x="114" y="368" class="tiny mono">MODIFIED · +80/-0</text>
+  </g>
+  <g>
+    <path d="M75 385 H370 L395 410 V432 H75 Z" fill="var(--mask)"/><path d="M75 385 H370 L395 410 V432 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 385 V410 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="409" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="413" class="center mono" font-size="10" font-weight="700">3</text>
+    <text x="114" y="405" class="mono" font-size="10">internal/auth/session_test.go</text><text x="114" y="423" class="tiny mono">MODIFIED · +30/-0</text>
+  </g>
+  <g>
+    <path d="M75 440 H370 L395 465 V487 H75 Z" fill="var(--mask)"/><path d="M75 440 H370 L395 465 V487 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 440 V465 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="464" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="468" class="center mono" font-size="10" font-weight="700">4</text>
+    <text x="114" y="460" class="mono" font-size="10">internal/i18n/messages_en.properties</text><text x="114" y="478" class="tiny mono">MODIFIED · +3/-1</text>
+  </g>
+  <g>
+    <path d="M75 495 H370 L395 520 V542 H75 Z" fill="var(--mask)"/><path d="M75 495 H370 L395 520 V542 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 495 V520 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="519" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="523" class="center mono" font-size="10" font-weight="700">5</text>
+    <text x="114" y="515" class="mono" font-size="10">internal/i18n/messages_zh.properties</text><text x="114" y="533" class="tiny mono">MODIFIED · +3/-1</text>
+  </g>
+  <g>
+    <path d="M75 550 H370 L395 575 V597 H75 Z" fill="var(--mask)"/><path d="M75 550 H370 L395 575 V597 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 550 V575 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="574" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="578" class="center mono" font-size="10" font-weight="700">6</text>
+    <text x="114" y="570" class="mono" font-size="10">config/auth.yaml</text><text x="114" y="588" class="tiny mono">MODIFIED · +10/-2</text>
+  </g>
+  <g>
+    <path d="M75 605 H370 L395 630 V652 H75 Z" fill="var(--mask)"/><path d="M75 605 H370 L395 630 V652 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M370 605 V630 H395" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <circle cx="94" cy="629" r="12" fill="var(--panel-2)" stroke="var(--file-stroke)"/><text x="94" y="633" class="center mono" font-size="10" font-weight="700">7</text>
+    <text x="114" y="625" class="mono" font-size="10">docs/auth.md</text><text x="114" y="643" class="tiny mono">MODIFIED · +20/-0</text>
+  </g>
+  <text x="235" y="679" class="center tiny">索引 / path / 状态 / 增删行数</text>
+
+  <!-- GROUPING model -->
+  <rect x="475" y="185" width="290" height="40" rx="20" fill="var(--mask)"/>
+  <rect x="475" y="185" width="290" height="40" rx="20" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.5"/>
+  <text x="620" y="211" class="center" font-size="12" font-weight="700" fill="var(--color-accent-stroke)">调用门槛：待分发 ≥ 4 · 本例 8</text>
+  <polygon points="520,240 700,240 785,370 700,500 520,500 455,370" fill="var(--mask)"/>
+  <polygon points="520,240 700,240 785,370 700,500 520,500 455,370" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="2.5"/>
+  <text x="620" y="321" class="center kicker" fill="var(--grouping-stroke)">MODEL REQUEST</text>
+  <text x="620" y="362" class="center" font-size="24" font-weight="800" fill="var(--grouping-stroke)">GROUPING</text>
+  <text x="620" y="392" class="center" font-size="13" font-weight="700">只根据文件关系分堆</text>
+  <text x="620" y="420" class="center node-sub">实现 / 测试 / 配置 / 文案 / 文档</text>
+  <text x="620" y="454" class="center" font-size="11" fill="var(--text-muted)">不产生计划 · 不产生评论</text>
+
+  <rect x="465" y="520" width="310" height="40" rx="8" fill="var(--mask)"/><rect x="465" y="520" width="310" height="40" rx="8" fill="var(--program-fill)" stroke="var(--grouping-stroke)"/>
+  <text x="620" y="545" class="center" font-size="11">用索引引用 · 不重复完整路径</text>
+  <rect x="465" y="570" width="310" height="40" rx="8" fill="var(--mask)"/><rect x="465" y="570" width="310" height="40" rx="8" fill="var(--program-fill)" stroke="var(--grouping-stroke)"/>
+  <text x="620" y="595" class="center" font-size="11">每文件仅 1 组 · 每组最多 10 个</text>
+  <rect x="465" y="620" width="310" height="40" rx="8" fill="var(--mask)"/><rect x="465" y="620" width="310" height="40" rx="8" fill="var(--program-fill)" stroke="var(--grouping-stroke)"/>
+  <text x="620" y="645" class="center" font-size="11" font-weight="700">只输出 JSON 数组</text>
+
+  <!-- Output groups -->
+  <rect x="830" y="170" width="710" height="540" rx="12" fill="var(--mask)"/>
+  <rect x="830" y="170" width="710" height="540" rx="12" fill="var(--grouping-fill)" stroke="var(--soft-line)" stroke-width="1.2"/>
+  <text x="850" y="199" class="section">程序还原索引 · JSON → 5 个审查组</text>
+  <text x="1518" y="198" class="tiny" text-anchor="end">每个索引恰好出现一次</text>
+
+  <g>
+    <rect x="850" y="220" width="210" height="155" rx="12" fill="var(--mask)"/><rect x="850" y="220" width="210" height="155" rx="12" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+    <circle cx="877" cy="248" r="16" fill="var(--grouping-stroke)"/><text x="877" y="253" class="center" font-size="13" font-weight="800" fill="var(--bg)">A</text>
+    <text x="903" y="253" font-size="13" font-weight="700">login flow</text><text x="870" y="281" class="mono" font-size="11" fill="var(--grouping-stroke)">files: [0, 2]</text>
+    <rect x="870" y="296" width="170" height="26" rx="6" fill="var(--panel-2)"/><text x="955" y="314" class="center" font-size="10.5">0 · login.go</text>
+    <rect x="870" y="332" width="170" height="26" rx="6" fill="var(--panel-2)"/><text x="955" y="350" class="center" font-size="10.5">2 · login_test.go</text>
+  </g>
+  <g>
+    <rect x="1090" y="220" width="210" height="155" rx="12" fill="var(--mask)"/><rect x="1090" y="220" width="210" height="155" rx="12" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+    <circle cx="1117" cy="248" r="16" fill="var(--grouping-stroke)"/><text x="1117" y="253" class="center" font-size="13" font-weight="800" fill="var(--bg)">B</text>
+    <text x="1143" y="253" font-size="12" font-weight="700">session handling</text><text x="1110" y="281" class="mono" font-size="11" fill="var(--grouping-stroke)">files: [1, 3]</text>
+    <rect x="1110" y="296" width="170" height="26" rx="6" fill="var(--panel-2)"/><text x="1195" y="314" class="center" font-size="10.5">1 · session.go</text>
+    <rect x="1110" y="332" width="170" height="26" rx="6" fill="var(--panel-2)"/><text x="1195" y="350" class="center" font-size="10.5">3 · session_test.go</text>
+  </g>
+  <g>
+    <rect x="1330" y="220" width="190" height="155" rx="12" fill="var(--mask)"/><rect x="1330" y="220" width="190" height="155" rx="12" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+    <circle cx="1357" cy="248" r="16" fill="var(--grouping-stroke)"/><text x="1357" y="253" class="center" font-size="13" font-weight="800" fill="var(--bg)">C</text>
+    <text x="1383" y="253" font-size="12" font-weight="700">i18n messages</text><text x="1350" y="281" class="mono" font-size="11" fill="var(--grouping-stroke)">files: [4, 5]</text>
+    <rect x="1348" y="296" width="154" height="26" rx="6" fill="var(--panel-2)"/><text x="1425" y="314" class="center" font-size="10">4 · messages_en</text>
+    <rect x="1348" y="332" width="154" height="26" rx="6" fill="var(--panel-2)"/><text x="1425" y="350" class="center" font-size="10">5 · messages_zh</text>
+  </g>
+  <g>
+    <rect x="970" y="420" width="210" height="155" rx="12" fill="var(--mask)"/><rect x="970" y="420" width="210" height="155" rx="12" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+    <circle cx="997" cy="448" r="16" fill="var(--grouping-stroke)"/><text x="997" y="453" class="center" font-size="13" font-weight="800" fill="var(--bg)">D</text>
+    <text x="1023" y="453" font-size="13" font-weight="700">auth config</text><text x="990" y="481" class="mono" font-size="11" fill="var(--grouping-stroke)">files: [6]</text>
+    <path d="M1000 502 H1130 L1150 522 V552 H1000 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M1130 502 V522 H1150" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="1075" y="535" class="center" font-size="11" font-weight="700">6 · auth.yaml</text>
+  </g>
+  <g>
+    <rect x="1210" y="420" width="210" height="155" rx="12" fill="var(--mask)"/><rect x="1210" y="420" width="210" height="155" rx="12" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+    <circle cx="1237" cy="448" r="16" fill="var(--grouping-stroke)"/><text x="1237" y="453" class="center" font-size="13" font-weight="800" fill="var(--bg)">E</text>
+    <text x="1263" y="453" font-size="13" font-weight="700">docs</text><text x="1230" y="481" class="mono" font-size="11" fill="var(--grouping-stroke)">files: [7]</text>
+    <path d="M1240 502 H1370 L1390 522 V552 H1240 Z" fill="var(--file-fill)" stroke="var(--file-stroke)"/><path d="M1370 502 V522 H1390" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="1315" y="535" class="center" font-size="11" font-weight="700">7 · auth.md</text>
+  </g>
+
+  <!-- Parallel dispatch -->
+  <rect x="850" y="625" width="670" height="70" rx="12" fill="var(--mask)"/>
+  <rect x="850" y="625" width="670" height="70" rx="12" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <g class="center" font-size="11" font-weight="800">
+    <circle cx="882" cy="660" r="15" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="882" y="665">A</text>
+    <circle cx="926" cy="660" r="15" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="926" y="665">B</text>
+    <circle cx="970" cy="660" r="15" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="970" y="665">C</text>
+    <circle cx="1014" cy="660" r="15" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="1014" y="665">D</text>
+    <circle cx="1058" cy="660" r="15" fill="var(--panel-2)" stroke="var(--main-stroke)"/><text x="1058" y="665">E</text>
+  </g>
+  <path d="M1080 660 H1110" class="flow-main" marker-end="url(#arrow-main)"/>
+  <text x="1130" y="653" font-size="12" font-weight="700">每组启动独立子任务</text>
+  <text x="1130" y="678" font-size="11" fill="var(--main-stroke)">默认并发 8 · --concurrency 可调</text>
+
+  <!-- Program fallback auxiliary band -->
+  <rect x="55" y="735" width="1485" height="100" rx="12" fill="var(--mask)"/>
+  <rect x="55" y="735" width="1485" height="100" rx="12" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.2" stroke-dasharray="6 5"/>
+  <text x="75" y="758" font-size="11" font-weight="700" fill="var(--color-alert-stroke)">程序兜底 · 异常降级辅助带</text>
+  <g>
+    <rect x="75" y="770" width="340" height="50" rx="8" fill="var(--panel)"/><text x="92" y="791" font-size="11" font-weight="700">漏分文件</text><text x="92" y="811" class="tiny">自动补成单文件组</text>
+    <rect x="445" y="770" width="340" height="50" rx="8" fill="var(--panel)"/><text x="462" y="791" font-size="11" font-weight="700">一组超过 10 个文件</text><text x="462" y="811" class="tiny">拆开，保证每组 ≤ 10</text>
+    <rect x="815" y="770" width="340" height="50" rx="8" fill="var(--panel)"/><text x="832" y="791" font-size="11" font-weight="700">组内 diff 太大</text><text x="832" y="811" class="tiny">拆回单文件组</text>
+    <rect x="1185" y="770" width="335" height="50" rx="8" fill="var(--panel)"/><text x="1202" y="791" font-size="11" font-weight="700">分组失败 / JSON 无法解析</text><text x="1202" y="811" class="tiny">全部逐文件审查</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="875" x2="1560" y2="875" stroke="var(--soft-line)"/>
+  <text x="60" y="910" font-size="13" font-weight="700" fill="var(--grouping-stroke)">结果：A=[0,2]，B=[1,3]，C=[4,5]，D=[6]，E=[7]；5 组并行，GROUPING 不产生计划或评论。</text>
+  <text x="60" y="936" class="tiny">紫色粗线 = 正常分组主路径 · 玫瑰细虚线框 = 程序兜底</text>
+  <text x="1535" y="936" class="tiny mono" text-anchor="end">OPEN CODE REVIEW · 03</text>
+</svg>

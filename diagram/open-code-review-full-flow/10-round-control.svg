@@ -1,0 +1,227 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Round loop -->
+  <path class="flow-main" d="M260 205 H320" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M540 205 H600" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M820 205 H900" marker-end="url(#arrow-main)"/>
+  <path class="exception" d="M1140 205 H1300" marker-end="url(#arrow-relocation)"/>
+  <text class="tiny" x="1220" y="191" text-anchor="middle">是：停止</text>
+  <path class="flow-main" d="M1020 270 V310 H430 V240" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="728" y="295" text-anchor="middle">否：有新增存活评论 → 全新 MAIN 下一轮</text>
+
+  <g>
+    <rect x="40" y="165" width="220" height="75" rx="18" fill="var(--mask)"/>
+    <rect x="40" y="165" width="220" height="75" rx="18" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+    <text class="node-title center" x="150" y="195">当前 effort</text>
+    <text class="node-sub center" x="150" y="219">medium 默认最多 2 轮</text>
+  </g>
+  <g>
+    <rect x="320" y="165" width="220" height="75" rx="9" fill="var(--mask)"/>
+    <rect x="320" y="165" width="220" height="75" rx="9" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="430" y="195">MAIN 本轮</text>
+    <text class="node-sub center" x="430" y="219">全新对话，独立构造</text>
+  </g>
+  <g>
+    <rect x="600" y="165" width="220" height="75" rx="9" fill="var(--mask)"/>
+    <rect x="600" y="165" width="220" height="75" rx="9" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="710" y="195">FILTER</text>
+    <text class="node-sub center" x="710" y="219">有本轮候选时执行</text>
+  </g>
+  <g>
+    <polygon points="1020,140 1140,205 1020,270 900,205" fill="var(--mask)"/>
+    <polygon points="1020,140 1140,205 1020,270 900,205" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.8"/>
+    <text class="node-title center" x="1020" y="199">任一停止条件</text>
+    <text class="node-sub center" x="1020" y="222">成立？</text>
+  </g>
+  <g>
+    <rect x="1300" y="165" width="240" height="75" rx="9" fill="var(--mask)"/>
+    <rect x="1300" y="165" width="240" height="75" rx="9" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.8"/>
+    <polygon points="1320,187 1330,177 1345,177 1355,187 1355,202 1345,212 1330,212 1320,202" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <rect x="1327" y="187" width="21" height="15" rx="2" fill="var(--danger)"/>
+    <text class="node-title" x="1375" y="195">停止该组轮询</text>
+    <text class="node-sub" x="1375" y="219">不再开启新 MAIN 轮</text>
+  </g>
+
+  <!-- Six stop conditions -->
+  <text class="section" x="40" y="346">六个停止条件 · 任一成立即停止</text>
+  <text class="tiny" x="1560" y="346" text-anchor="end">达到上限、异常、无新增、容量与上下文约束</text>
+
+  <g>
+    <rect x="40" y="370" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="40" y="370" width="468" height="95" rx="9" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+    <polygon points="62,392 72,382 88,382 98,392 98,408 88,418 72,418 62,408" fill="var(--plan-fill)" stroke="var(--plan-stroke)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="80" y="405">1</text>
+    <text class="node-title" x="120" y="402">达到当前 effort 最大轮数</text>
+    <text class="node-sub" x="120" y="430">medium 默认每组最多 2 轮</text>
+  </g>
+  <g>
+    <rect x="566" y="370" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="566" y="370" width="468" height="95" rx="9" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.5"/>
+    <polygon points="588,392 598,382 614,382 624,392 624,408 614,418 598,418 588,408" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="606" y="405">2</text>
+    <text class="node-title" x="646" y="402">MAIN 未正常完成</text>
+    <text class="node-sub" x="646" y="430">本轮异常，不再进入下一轮</text>
+  </g>
+  <g>
+    <rect x="1092" y="370" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="1092" y="370" width="468" height="95" rx="9" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)" stroke-width="1.5"/>
+    <polygon points="1114,392 1124,382 1140,382 1150,392 1150,408 1140,418 1124,418 1114,408" fill="var(--color-neutral-fill)" stroke="var(--color-neutral-stroke)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="1132" y="405">3</text>
+    <text class="node-title" x="1172" y="402">无新增且存活的评论</text>
+    <text class="node-sub" x="1172" y="430">FILTER 后没有新的幸存候选</text>
+  </g>
+
+  <g>
+    <rect x="40" y="495" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="40" y="495" width="468" height="95" rx="9" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+    <polygon points="62,517 72,507 88,507 98,517 98,533 88,543 72,543 62,533" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="80" y="530">4</text>
+    <text class="node-title" x="120" y="527">confirmed 达到 30 条</text>
+    <text class="node-sub" x="120" y="555">达到 confirmed 总数上限</text>
+  </g>
+  <g>
+    <rect x="566" y="495" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="566" y="495" width="468" height="95" rx="9" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.5"/>
+    <polygon points="588,517 598,507 614,507 624,517 624,533 614,543 598,543 588,533" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="606" y="530">5</text>
+    <text class="node-title" x="646" y="527">聚合 token 预算耗尽</text>
+    <text class="node-sub" x="646" y="555">停止继续审查；可先进 grace round</text>
+  </g>
+  <g>
+    <rect x="1092" y="495" width="468" height="95" rx="9" fill="var(--mask)"/>
+    <rect x="1092" y="495" width="468" height="95" rx="9" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.5"/>
+    <polygon points="1114,517 1124,507 1140,507 1150,517 1150,533 1140,543 1124,543 1114,533" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.5"/>
+    <text class="node-title center mono" x="1132" y="530">6</text>
+    <text class="node-title" x="1172" y="527">prompt / 上下文超过限制</text>
+    <text class="node-sub" x="1172" y="555">无法继续构造下一轮审查</text>
+  </g>
+
+  <!-- Grace round -->
+  <rect x="40" y="650" width="1510" height="200" rx="12" fill="none" stroke="var(--color-accent-stroke)" stroke-width="1.3" stroke-dasharray="8 6"/>
+  <text class="section" x="60" y="677">grace round · 最后补交，不是全面再审</text>
+  <text class="tiny" x="1530" y="677" text-anchor="end">仅工具请求次数或聚合 token 预算耗尽时才可能进入</text>
+
+  <path class="flow-main" d="M490 760 H580" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M770 757 H830 V728 H880" marker-end="url(#arrow-main)"/>
+  <path class="flow-main" d="M830 757 V812 H880" marker-end="url(#arrow-main)"/>
+  <text class="tiny" x="825" y="700" text-anchor="end">只允许</text>
+
+  <g>
+    <rect x="70" y="705" width="420" height="110" rx="8" fill="var(--mask)"/>
+    <rect x="70" y="705" width="420" height="110" rx="8" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.5"/>
+    <text class="node-title" x="92" y="738">可能进入 grace 的两种触发</text>
+    <text class="node-sub" x="92" y="768">工具请求次数达到上限</text>
+    <text class="node-sub" x="92" y="794">或聚合 token 预算耗尽</text>
+  </g>
+  <g>
+    <rect x="580" y="720" width="190" height="75" rx="9" fill="var(--mask)"/>
+    <rect x="580" y="720" width="190" height="75" rx="9" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="2"/>
+    <path d="M602 754 V743 C602 727 626 727 626 743 V754" fill="none" stroke="var(--color-accent-stroke)" stroke-width="2.5"/>
+    <rect x="597" y="752" width="34" height="24" rx="4" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.7"/>
+    <text class="node-title" x="648" y="749">GRACE</text>
+    <text class="node-sub" x="648" y="773">最后补交一次</text>
+  </g>
+  <g>
+    <rect x="880" y="695" width="260" height="65" rx="8" fill="var(--mask)"/>
+    <rect x="880" y="695" width="260" height="65" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.7"/>
+    <circle cx="908" cy="727" r="13" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.4"/>
+    <path d="M901 727 L906 732 L915 721" fill="none" stroke="var(--success)" stroke-width="2.4"/>
+    <text class="node-title mono" x="935" y="724">code_comment</text>
+    <text class="tiny" x="935" y="745">补交已发现问题</text>
+  </g>
+  <g>
+    <rect x="880" y="780" width="260" height="65" rx="8" fill="var(--mask)"/>
+    <rect x="880" y="780" width="260" height="65" rx="8" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.7"/>
+    <circle cx="908" cy="812" r="13" fill="var(--data-fill)" stroke="var(--success)" stroke-width="1.4"/>
+    <path d="M901 812 L906 817 L915 806" fill="none" stroke="var(--success)" stroke-width="2.4"/>
+    <text class="node-title mono" x="935" y="809">task_done</text>
+    <text class="tiny" x="935" y="830">结束本次补交</text>
+  </g>
+  <g>
+    <rect x="1260" y="695" width="250" height="150" rx="8" fill="var(--mask)"/>
+    <rect x="1260" y="695" width="250" height="150" rx="8" fill="var(--color-alert-fill)" stroke="var(--color-alert-stroke)" stroke-width="1.7"/>
+    <text class="node-title center" x="1385" y="726">禁止继续读取 / 搜索</text>
+    <circle cx="1292" cy="765" r="12" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.4"/>
+    <path d="M1287 760 L1297 770 M1297 760 L1287 770" fill="none" stroke="var(--danger)" stroke-width="2.2"/>
+    <text class="node-title mono" x="1318" y="770">file_read</text>
+    <circle cx="1292" cy="810" r="12" fill="var(--color-alert-fill)" stroke="var(--danger)" stroke-width="1.4"/>
+    <path d="M1287 805 L1297 815 M1297 805 L1287 815" fill="none" stroke="var(--danger)" stroke-width="2.2"/>
+    <text class="node-title mono" x="1318" y="815">code_search</text>
+  </g>
+
+  <!-- Header -->
+  <rect x="40" y="38" width="58" height="34" rx="8" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="1.5"/>
+  <text class="node-title center mono" x="69" y="61">10</text>
+  <text class="kicker" x="116" y="60">ROUND CONTROL · GRACE ROUND</text>
+  <text class="title" x="40" y="103" font-size="26">轮次控制：六个停止条件与受限补交</text>
+  <text class="subtitle" x="40" y="126">轮控检查 MAIN 状态、新增存活评论、轮数与预算 / 上下文限制。</text>
+  <g>
+    <rect x="1300" y="43" width="100" height="30" rx="15" fill="var(--main-fill)" stroke="var(--main-stroke)"/>
+    <text class="tiny center" x="1350" y="63">MAIN</text>
+    <rect x="1415" y="43" width="125" height="30" rx="15" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/>
+    <text class="tiny center" x="1477" y="63">FILTER</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="880" x2="1560" y2="880" stroke="var(--soft-line)" stroke-width="1"/>
+  <text class="section" x="40" y="916">六个条件任一成立即停止；工具请求次数或聚合 token 耗尽时，才可能先进入 grace round。</text>
+  <text class="tiny" x="40" y="940">grace 只允许 code_comment / task_done，禁止 file_read / code_search。</text>
+  <text class="kicker" x="1540" y="936" text-anchor="end">10 / 13</text>
+</svg>

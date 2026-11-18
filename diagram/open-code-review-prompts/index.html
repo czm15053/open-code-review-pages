@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Code Review · 提示词全览 6 页</title>
+<style>
+  :root { --bg:#f5f7fc; --panel:#ffffff; --text:#17213a; --muted:#52627e; --line:#dfe6f2; --hover:#edf2fb; }
+  * { box-sizing:border-box; }
+  body { margin:0; height:100vh; display:flex; flex-direction:column; background:var(--bg); color:var(--text);
+         font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif; }
+  header { display:flex; align-items:center; gap:16px; padding:12px 20px; border-bottom:1px solid var(--line); background:var(--panel); }
+  h1 { font-size:14px; font-weight:700; margin:0; flex:1; }
+  h1 span { color:var(--muted); font-weight:500; margin-left:8px; }
+  a.deck { font-size:12px; color:#1d4ed8; text-decoration:none; margin-right:12px; }
+  button { font:inherit; font-size:12px; color:var(--text); background:transparent; border:1px solid var(--line);
+           border-radius:8px; padding:6px 12px; cursor:pointer; }
+  button:hover { background:var(--hover); }
+  button:disabled { opacity:.35; cursor:default; }
+  .counter { font-size:12px; color:var(--muted); font-variant-numeric:tabular-nums; }
+  main { flex:1; display:flex; min-height:0; }
+  nav { width:300px; overflow-y:auto; padding:8px; border-right:1px solid var(--line); background:var(--panel); flex-shrink:0; }
+  nav a { display:flex; gap:10px; align-items:baseline; padding:8px 10px; border-radius:8px; color:var(--text);
+          text-decoration:none; font-size:12px; line-height:1.35; }
+  nav a:hover { background:var(--hover); }
+  nav a.active { background:var(--hover); font-weight:600; }
+  nav a .no { color:var(--muted); font-size:11px; font-variant-numeric:tabular-nums; }
+  nav a .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+  figure { flex:1; margin:0; display:flex; align-items:center; justify-content:center; padding:16px; min-width:0; }
+  figure img { max-width:100%; max-height:100%; box-shadow:0 1px 3px rgba(15,23,42,.12); border-radius:8px; }
+  footer { padding:8px 20px; border-top:1px solid var(--line); background:var(--panel); font-size:11px; color:var(--muted); display:flex; gap:16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>提示词全览<span>六类 Prompt · 全量提示词图解</span></h1>
+  <a class="deck" href="../open-code-review-full-flow/index.html">← 流程图 13 页</a>
+  <span class="counter"><span id="cur">01</span> / 06</span>
+  <button id="prev">← 上一页</button>
+  <button id="next">下一页 →</button>
+</header>
+<main>
+  <nav id="nav"></nav>
+  <figure><img id="page" alt=""></figure>
+</main>
+<footer>
+  <span>← → 翻页 · 点击左侧目录跳转 · 深链 #03 直达</span>
+  <span style="flex:1"></span>
+  <span>alibaba/open-code-review · internal/config/template/prompts/</span>
+</footer>
+<script>
+const PAGES = [
+  ['GROUPING 文件分组', '#7e22ce'],
+  ['PLAN 审查计划', '#1d4ed8'],
+  ['MAIN 主审查', '#0e7490'],
+  ['FILTER 误报过滤', '#b45309'],
+  ['COMPRESSION 记忆压缩', '#be185d'],
+  ['RE_LOCATION 锚点修复', '#be123c'],
+];
+const FILES = ['01-grouping-prompt','02-plan-prompt','03-main-prompt','04-review-filter-prompt',
+  '05-memory-compression-prompt','06-re-location-prompt'];
+const hash = () => location.hash.replace('#','').replace(/\//g,'');
+const img = document.getElementById('page'), cur = document.getElementById('cur'), nav = document.getElementById('nav');
+let page = 1;
+PAGES.forEach(([title,color],i)=>{
+  const a = document.createElement('a');
+  a.href = '#' + (i+1).toString().padStart(2,'0');
+  a.innerHTML = `<span class="no">${(i+1).toString().padStart(2,'0')}</span>
+    <span class="dot" style="background:${color}"></span><span>${title}</span>`;
+  a.onclick = e => { e.preventDefault(); show(i+1); };
+  nav.append(a);
+});
+function show(n){
+  page = Math.min(6, Math.max(1, n));
+  img.src = `${FILES[page-1]}.light.svg`;
+  img.alt = PAGES[page-1][0];
+  cur.textContent = page.toString().padStart(2,'0');
+  [...nav.children].forEach((a,i)=>a.classList.toggle('active', i===page-1));
+  location.hash = '#' + page.toString().padStart(2,'0');
+  document.getElementById('prev').disabled = page===1;
+  document.getElementById('next').disabled = page===6;
+  document.title = `${page.toString().padStart(2,'0')} · ${PAGES[page-1][0]}`;
+}
+document.getElementById('prev').onclick = () => show(page-1);
+document.getElementById('next').onclick = () => show(page+1);
+addEventListener('keydown', e => {
+  if (e.key==='ArrowLeft') show(page-1);
+  if (e.key==='ArrowRight') show(page+1);
+});
+addEventListener('hashchange', () => { const n = parseInt(hash(),10); if (n && n!==page) show(n); });
+const start = parseInt(hash(),10) || 1;
+show(start);
+</script>
+</body>
+</html>

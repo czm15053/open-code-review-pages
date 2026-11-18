@@ -1,0 +1,239 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+    --bg: #f5f7fc;
+    --bg-grid: #dfe6f2;
+    --mask: #f5f7fc;
+    --panel: #ffffff;
+    --panel-2: #edf2fb;
+    --text: #17213a;
+    --text-muted: var(--main-text);
+    --arrow: #71809e;
+    --soft-line: #cbd5e5;
+    --color-primary-fill: rgba(8,145,178,0.10);
+    --color-primary-stroke: #0891b2;
+    --color-secondary-fill: rgba(5,150,105,0.10);
+    --color-secondary-stroke: #059669;
+    --color-tertiary-fill: rgba(147,51,234,0.09);
+    --color-tertiary-stroke: #9333ea;
+    --color-accent-fill: rgba(217,119,6,0.10);
+    --color-accent-stroke: #d97706;
+    --color-alert-fill: rgba(225,29,72,0.09);
+    --color-alert-stroke: #e11d48;
+    --color-connector-fill: rgba(234,88,12,0.10);
+    --color-connector-stroke: #ea580c;
+    --color-neutral-fill: rgba(100,116,139,0.09);
+    --color-neutral-stroke: #64748b;
+    --color-highlight-fill: rgba(59,130,246,0.10);
+    --color-highlight-stroke: #3b82f6;
+    --program-fill: rgba(71,85,105,0.08);
+    --program-stroke: #64748b;
+    --grouping-fill: rgba(147,51,234,0.10);
+    --grouping-stroke: #9333ea;
+    --plan-fill: rgba(37,99,235,0.10);
+    --plan-stroke: #2563eb;
+    --main-fill: rgba(8,145,178,0.10);
+    --main-stroke: #0891b2;
+    --filter-fill: rgba(217,119,6,0.11);
+    --filter-stroke: #d97706;
+    --compression-fill: rgba(219,39,119,0.09);
+    --compression-stroke: #db2777;
+    --relocation-fill: rgba(225,29,72,0.09);
+    --relocation-stroke: #e11d48;
+    --data-fill: rgba(5,150,105,0.10);
+    --data-stroke: #059669;
+    --success: #16a34a;
+    --danger: #e11d48;
+    --warning: #d97706;
+    --file-fill: rgba(79,70,229,0.09);
+    --file-stroke: #4f46e5;
+    --output-fill: rgba(234,88,12,0.10);
+    --output-stroke: #ea580c;
+    --white: #ffffff;
+    --color-primary-text: #0e7490;
+    --color-secondary-text: #047857;
+    --color-tertiary-text: #7e22ce;
+    --color-accent-text: #b45309;
+    --color-alert-text: #be123c;
+    --color-connector-text: #c2410c;
+    --color-neutral-text: #1f4e79;
+    --color-highlight-text: #1d4ed8;
+    --program-text: #1f4e79;
+    --grouping-text: #7e22ce;
+    --plan-text: #1d4ed8;
+    --main-text: #0e7490;
+    --filter-text: #b45309;
+    --compression-text: #be185d;
+    --relocation-text: #be123c;
+    --data-text: #047857;
+    --output-text: #c2410c;
+    --file-text: #4338ca;
+}
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; }
+    .tiny { font-size: 11px; }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+    .title, .kicker, .section { fill: var(--main-text); }
+    .title { fill: var(--main-stroke); }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+  
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700" fill="var(--main-text)">01 / 13</text>
+  <text x="140" y="54" class="kicker" fill="var(--main-text)">OPEN CODE REVIEW · 总览</text>
+  <text x="40" y="98" class="title" style="font-size:26px" fill="var(--main-text)">一次 PR，如何变成可执行的审查结果</text>
+  <text x="40" y="121" class="subtitle" fill="var(--main-text)">六类 Prompt 是彩色工作站；程序负责连接、执行与保存</text>
+  <g>
+    <rect x="1050" y="42" width="90" height="30" rx="15" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)"/><text x="1095" y="62" class="tiny center" fill="var(--grouping-text)">GROUPING</text>
+    <rect x="1150" y="42" width="70" height="30" rx="15" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/><text x="1185" y="62" class="tiny center" fill="var(--plan-text)">PLAN</text>
+    <rect x="1230" y="42" width="70" height="30" rx="15" fill="var(--main-fill)" stroke="var(--main-stroke)"/><text x="1265" y="62" class="tiny center" fill="var(--main-text)">MAIN</text>
+    <rect x="1310" y="42" width="70" height="30" rx="15" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/><text x="1345" y="62" class="tiny center" fill="var(--filter-text)">FILTER</text>
+    <rect x="1390" y="42" width="150" height="30" rx="15" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/><text x="1465" y="62" class="tiny center" fill="var(--compression-text)">COMPRESSION</text>
+    <rect x="1390" y="82" width="150" height="30" rx="15" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)"/><text x="1465" y="102" class="tiny center" fill="var(--relocation-text)">RE_LOCATION</text>
+  </g>
+
+  <!-- Main arrows -->
+  <path d="M210 340 H270" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M450 340 H510" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M700 340 H760" stroke="var(--grouping-stroke)" stroke-width="3" fill="none" marker-end="url(#arrow-grouping)"/>
+  <path d="M1010 340 H1080" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M1330 340 H1390" stroke="var(--output-stroke)" stroke-width="3" fill="none" marker-end="url(#arrow-output)"/>
+
+  <!-- PR input: folded document -->
+  <path d="M55 235 H165 L195 265 V420 H55 Z" fill="var(--mask)"/>
+  <path d="M55 235 H165 L195 265 V420 H55 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="2"/>
+  <path d="M165 235 V265 H195" fill="none" stroke="var(--file-stroke)" stroke-width="2"/>
+  <text x="75" y="275" class="kicker" fill="var(--file-text)">INPUT</text>
+  <text x="75" y="310" class="section" fill="var(--file-text)">登录流程 PR</text>
+  <text x="75" y="335" class="node-sub" fill="var(--file-text)">会话过期处理</text>
+  <g fill="var(--file-stroke)">
+    <circle cx="82" cy="374" r="10"/><circle cx="112" cy="374" r="10"/><circle cx="142" cy="374" r="10"/>
+  </g>
+  <text x="166" y="379" class="node-title" fill="var(--file-text)">8 文件</text>
+
+  <!-- Program preparation -->
+  <rect x="270" y="250" width="180" height="180" rx="16" fill="var(--mask)"/>
+  <rect x="270" y="250" width="180" height="180" rx="16" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.8"/>
+  <circle cx="360" cy="286" r="20" fill="var(--program-stroke)"/>
+  <path d="M350 286 H370 M360 276 V296" stroke="var(--bg)" stroke-width="3"/>
+  <text x="360" y="329" class="section center" fill="var(--program-text)">程序准备</text>
+  <text x="360" y="358" class="node-sub center" fill="var(--program-text)">读取 diff · 筛选文件</text>
+  <rect x="296" y="378" width="128" height="28" rx="14" fill="var(--data-fill)" stroke="var(--data-stroke)"/>
+  <text x="360" y="397" class="tiny center" fill="var(--data-text)">manifest.selected</text>
+
+  <!-- Grouping station -->
+  <rect x="510" y="250" width="190" height="180" rx="18" fill="var(--mask)"/>
+  <rect x="510" y="250" width="190" height="180" rx="18" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="2"/>
+  <polygon points="605,264 627,277 627,303 605,316 583,303 583,277" fill="var(--grouping-stroke)"/>
+  <text x="605" y="296" class="section center" fill="var(--bg)">G</text>
+  <text x="605" y="346" class="section center" fill="var(--grouping-text)">GROUPING</text>
+  <text x="605" y="372" class="node-sub center" fill="var(--grouping-text)">按关系分成审查组</text>
+  <rect x="548" y="390" width="114" height="25" rx="12" fill="var(--mask)" stroke="var(--grouping-stroke)"/>
+  <text x="605" y="407" class="tiny center" fill="var(--grouping-text)">只看文件元数据</text>
+
+  <!-- Five parallel groups -->
+  <rect x="760" y="180" width="250" height="330" rx="18" fill="var(--mask)"/>
+  <rect x="760" y="180" width="250" height="330" rx="18" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <text x="885" y="214" class="section center" fill="var(--grouping-text)">5 个审查组 · 组间并行</text>
+  <g>
+    <rect x="785" y="238" width="200" height="42" rx="10" fill="var(--file-fill)" stroke="var(--file-stroke)"/><circle cx="810" cy="259" r="13" fill="var(--file-stroke)"/><text x="810" y="264" class="tiny center" fill="var(--file-text)">A</text><text x="837" y="264" class="node-sub" fill="var(--file-text)">login flow</text>
+    <rect x="785" y="290" width="200" height="42" rx="10" fill="var(--main-fill)" stroke="var(--main-stroke)"/><circle cx="810" cy="311" r="13" fill="var(--main-stroke)"/><text x="810" y="316" class="tiny center" fill="var(--main-text)">B</text><text x="837" y="316" class="node-sub" fill="var(--main-text)">session handling</text>
+    <rect x="785" y="342" width="200" height="42" rx="10" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/><circle cx="810" cy="363" r="13" fill="var(--filter-stroke)"/><text x="810" y="368" class="tiny center" fill="var(--filter-text)">C</text><text x="837" y="368" class="node-sub" fill="var(--filter-text)">i18n messages</text>
+    <rect x="785" y="394" width="200" height="42" rx="10" fill="var(--output-fill)" stroke="var(--output-stroke)"/><circle cx="810" cy="415" r="13" fill="var(--output-stroke)"/><text x="810" y="420" class="tiny center" fill="var(--output-text)">D</text><text x="837" y="420" class="node-sub" fill="var(--output-text)">auth config</text>
+    <rect x="785" y="446" width="200" height="42" rx="10" fill="var(--program-fill)" stroke="var(--program-stroke)"/><circle cx="810" cy="467" r="13" fill="var(--program-stroke)"/><text x="810" y="472" class="tiny center" fill="var(--program-text)">E</text><text x="837" y="472" class="node-sub" fill="var(--program-text)">docs</text>
+  </g>
+
+  <!-- In-group review -->
+  <rect x="1080" y="180" width="250" height="330" rx="18" fill="var(--mask)"/>
+  <rect x="1080" y="180" width="250" height="330" rx="18" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.8"/>
+  <text x="1205" y="214" class="section center" fill="var(--main-text)">每一组内部</text>
+  <path d="M1205 275 V294 M1205 353 V372" class="flow" marker-end="url(#arrow)"/>
+  <text x="1220" y="369" class="tiny" fill="var(--main-text)">AwaitKey</text>
+  <rect x="1120" y="236" width="170" height="40" rx="20" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/><text x="1205" y="262" class="node-title center" fill="var(--plan-text)">PLAN？</text>
+  <rect x="1120" y="296" width="170" height="58" rx="14" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="2"/><text x="1205" y="322" class="section center" fill="var(--main-text)">MAIN</text><text x="1205" y="342" class="tiny center" fill="var(--main-text)">读代码 · 找问题</text>
+  <rect x="1120" y="374" width="170" height="52" rx="14" fill="var(--filter-fill)" stroke="var(--filter-stroke)"/><text x="1205" y="405" class="section center" fill="var(--filter-text)">FILTER</text>
+  <path d="M1290 400 H1310 V460 H1100 V325 H1118" fill="none" stroke="var(--data-stroke)" stroke-width="1.8" stroke-dasharray="6 4" marker-end="url(#arrow-data)"/>
+  <text x="1205" y="454" class="tiny center" fill="var(--main-text)">confirmed → 新一轮 MAIN</text>
+  <text x="1205" y="486" class="node-sub center" fill="var(--main-text)">多轮发现，而非重复报告</text>
+
+  <!-- Outputs -->
+  <rect x="1390" y="235" width="170" height="200" rx="18" fill="var(--mask)"/>
+  <rect x="1390" y="235" width="170" height="200" rx="18" fill="var(--output-fill)" stroke="var(--output-stroke)" stroke-width="2"/>
+  <text x="1475" y="273" class="kicker center" fill="var(--output-text)">OUTPUT</text>
+  <g>
+    <rect x="1420" y="296" width="110" height="30" rx="8" fill="var(--mask)" stroke="var(--output-stroke)"/><text x="1475" y="316" class="node-sub center" fill="var(--output-text)">TEXT</text>
+    <rect x="1420" y="337" width="110" height="30" rx="8" fill="var(--mask)" stroke="var(--output-stroke)"/><text x="1475" y="357" class="node-sub center" fill="var(--output-text)">JSON</text>
+    <rect x="1420" y="378" width="110" height="30" rx="8" fill="var(--mask)" stroke="var(--output-stroke)"/><text x="1475" y="398" class="node-sub center" fill="var(--output-text)">SARIF</text>
+  </g>
+
+  <!-- Satellite cards -->
+  <rect x="40" y="585" width="480" height="250" rx="20" fill="var(--mask)"/>
+  <rect x="40" y="585" width="480" height="250" rx="20" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)" stroke-width="1.5"/>
+  <text x="70" y="625" class="section" fill="var(--relocation-text)">评论的异步支线</text>
+  <text x="70" y="650" class="node-sub" fill="var(--relocation-text)">MAIN 不停下，worker 负责把评论落到代码行</text>
+  <path d="M115 728 H195 M275 728 H355" class="async" marker-end="url(#arrow-open)"/>
+  <rect x="70" y="690" width="90" height="76" rx="14" fill="var(--main-fill)" stroke="var(--main-stroke)"/><text x="115" y="722" class="tiny center" fill="var(--main-text)">code</text><text x="115" y="740" class="tiny center" fill="var(--main-text)">comment</text>
+  <rect x="197" y="690" width="110" height="76" rx="14" fill="var(--relocation-fill)" stroke="var(--relocation-stroke)"/><text x="252" y="720" class="node-title center" fill="var(--relocation-text)">worker</text><text x="252" y="743" class="tiny center" fill="var(--relocation-text)">定位 / 重定位</text>
+  <rect x="357" y="690" width="120" height="76" rx="14" fill="var(--data-fill)" stroke="var(--data-stroke)"/><text x="417" y="720" class="node-title center" fill="var(--data-text)">Collector</text><text x="417" y="743" class="tiny center" fill="var(--data-text)">已定位 / 0:0</text>
+  <rect x="70" y="790" width="407" height="25" rx="12" fill="var(--mask)"/><text x="273" y="807" class="tiny center" fill="var(--relocation-text)">FILTER 前等待本组 worker 排空</text>
+
+  <rect x="560" y="585" width="480" height="250" rx="20" fill="var(--mask)"/>
+  <rect x="560" y="585" width="480" height="250" rx="20" fill="var(--compression-fill)" stroke="var(--compression-stroke)" stroke-width="1.5"/>
+  <text x="590" y="625" class="section" fill="var(--compression-text)">长对话的续航线</text>
+  <text x="590" y="650" class="node-sub" fill="var(--compression-text)">旧工具轮次压缩，近期现场与开头指令继续保留</text>
+  <g>
+    <rect x="590" y="692" width="115" height="72" rx="12" fill="var(--program-fill)" stroke="var(--program-stroke)"/><text x="647" y="721" class="node-title center" fill="var(--program-text)">frozen</text><text x="647" y="744" class="tiny center" fill="var(--program-text)">开头指令</text>
+    <rect x="720" y="692" width="115" height="72" rx="12" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/><text x="777" y="721" class="node-title center" fill="var(--compression-text)">compress</text><text x="777" y="744" class="tiny center" fill="var(--compression-text)">旧工具轮</text>
+    <rect x="850" y="692" width="115" height="72" rx="12" fill="var(--main-fill)" stroke="var(--main-stroke)"/><text x="907" y="721" class="node-title center" fill="var(--main-text)">active</text><text x="907" y="744" class="tiny center" fill="var(--main-text)">近期现场</text>
+  </g>
+  <path d="M777 779 V804" stroke="var(--compression-stroke)" stroke-width="2" marker-end="url(#arrow-compression)"/>
+  <text x="800" y="812" class="node-title" fill="var(--compression-text)">COMPRESSION → 继续当前 MAIN</text>
+
+  <rect x="1080" y="585" width="480" height="250" rx="20" fill="var(--mask)"/>
+  <rect x="1080" y="585" width="480" height="250" rx="20" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <text x="1110" y="625" class="section" fill="var(--data-text)">跨轮与跨阶段的数据桥</text>
+  <text x="1110" y="650" class="node-sub" fill="var(--data-text)">模型对话会重建，关键结果由程序显式传递</text>
+  <g>
+    <rect x="1110" y="690" width="190" height="54" rx="12" fill="var(--plan-fill)" stroke="var(--plan-stroke)"/><text x="1205" y="714" class="node-title center" fill="var(--plan-text)">planResult</text><text x="1205" y="734" class="tiny center" fill="var(--plan-text)">只进入第 1 轮</text>
+    <rect x="1320" y="690" width="190" height="54" rx="12" fill="var(--data-fill)" stroke="var(--data-stroke)"/><text x="1415" y="714" class="node-title center" fill="var(--data-text)">confirmed</text><text x="1415" y="734" class="tiny center" fill="var(--data-text)">跨 MAIN 轮次</text>
+    <rect x="1110" y="762" width="190" height="54" rx="12" fill="var(--compression-fill)" stroke="var(--compression-stroke)"/><text x="1205" y="786" class="node-title center" fill="var(--compression-text)">summary</text><text x="1205" y="806" class="tiny center" fill="var(--compression-text)">只服务当前轮</text>
+    <rect x="1320" y="762" width="190" height="54" rx="12" fill="var(--output-fill)" stroke="var(--output-stroke)"/><text x="1415" y="786" class="node-title center" fill="var(--output-text)">manifest / session</text><text x="1415" y="806" class="tiny center" fill="var(--output-text)">收尾 · 追踪 · resume</text>
+  </g>
+
+  <!-- Footer -->
+  <line x1="40" y1="886" x2="1560" y2="886" stroke="var(--soft-line)" stroke-width="1"/>
+  <text x="40" y="918" font-size="13" font-weight="700" fill="var(--main-text)">程序组织流程；六类 Prompt 各自只做一件事</text>
+  <circle cx="55" cy="937" r="7" fill="var(--grouping-stroke)"/><text x="72" y="942" class="tiny" fill="var(--main-text)">模型判断</text>
+  <rect x="164" y="930" width="14" height="14" rx="3" fill="var(--program-fill)" stroke="var(--program-stroke)"/><text x="190" y="942" class="tiny" fill="var(--main-text)">程序执行</text>
+  <ellipse cx="302" cy="937" rx="9" ry="6" fill="var(--data-fill)" stroke="var(--data-stroke)"/><text x="322" y="942" class="tiny" fill="var(--main-text)">数据产物</text>
+  <line x1="438" y1="937" x2="475" y2="937" class="async"/><text x="488" y="942" class="tiny" fill="var(--main-text)">异步处理</text>
+  <text x="1540" y="940" class="kicker" text-anchor="end" fill="var(--main-text)">01 / 13</text>
+</svg>

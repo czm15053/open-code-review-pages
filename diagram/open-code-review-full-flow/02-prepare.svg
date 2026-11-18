@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000">
+  <style>
+    :root {
+      --bg: #0b1020; --bg-grid: #18243d; --mask: #0b1020; --panel: #121b31; --panel-2: #18243d;
+      --text: #f8fafc; --text-muted: #a6b3ca; --arrow: #71809e; --soft-line: #2b3a58;
+      --color-primary-fill: rgba(34,211,238,0.12); --color-primary-stroke: #22d3ee;
+      --color-secondary-fill: rgba(52,211,153,0.12); --color-secondary-stroke: #34d399;
+      --color-tertiary-fill: rgba(192,132,252,0.12); --color-tertiary-stroke: #c084fc;
+      --color-accent-fill: rgba(251,191,36,0.12); --color-accent-stroke: #fbbf24;
+      --color-alert-fill: rgba(251,113,133,0.12); --color-alert-stroke: #fb7185;
+      --color-connector-fill: rgba(251,146,60,0.12); --color-connector-stroke: #fb923c;
+      --color-neutral-fill: rgba(148,163,184,0.10); --color-neutral-stroke: #94a3b8;
+      --color-highlight-fill: rgba(96,165,250,0.14); --color-highlight-stroke: #60a5fa;
+      --program-fill: rgba(148,163,184,0.10); --program-stroke: #94a3b8;
+      --grouping-fill: rgba(192,132,252,0.14); --grouping-stroke: #c084fc;
+      --plan-fill: rgba(96,165,250,0.14); --plan-stroke: #60a5fa;
+      --main-fill: rgba(34,211,238,0.14); --main-stroke: #22d3ee;
+      --filter-fill: rgba(251,191,36,0.14); --filter-stroke: #fbbf24;
+      --compression-fill: rgba(244,114,182,0.14); --compression-stroke: #f472b6;
+      --relocation-fill: rgba(251,113,133,0.14); --relocation-stroke: #fb7185;
+      --data-fill: rgba(52,211,153,0.14); --data-stroke: #34d399;
+      --success: #4ade80; --danger: #fb7185; --warning: #fbbf24;
+      --file-fill: rgba(129,140,248,0.12); --file-stroke: #818cf8;
+      --output-fill: rgba(251,146,60,0.14); --output-stroke: #fb923c; --white: #ffffff;
+    }
+    text { font-family: 'JetBrains Mono', 'Noto Sans SC', 'PingFang SC', sans-serif; fill: var(--text); }
+    .kicker { font-size: 12px; font-weight: 700; letter-spacing: 2px; fill: var(--text-muted); }
+    .title { font-size: 28px; font-weight: 800; }
+    .subtitle { font-size: 13px; fill: var(--text-muted); }
+    .section { font-size: 15px; font-weight: 700; }
+    .node-title { font-size: 14px; font-weight: 700; }
+    .node-sub { font-size: 11px; fill: var(--text-muted); }
+    .tiny { font-size: 10px; fill: var(--text-muted); }
+    .mono { font-family: 'JetBrains Mono', 'SF Mono', monospace; }
+    .center { text-anchor: middle; }
+    .region { fill: none; stroke: var(--soft-line); stroke-width: 1.2; stroke-dasharray: 8 6; }
+    .flow { fill: none; stroke: var(--arrow); stroke-width: 2.2; }
+    .flow-main { fill: none; stroke: var(--main-stroke); stroke-width: 3; }
+    .async { fill: none; stroke: var(--relocation-stroke); stroke-width: 2; stroke-dasharray: 8 6; }
+    .exception { fill: none; stroke: var(--danger); stroke-width: 1.5; stroke-dasharray: 5 5; }
+  </style>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--bg-grid)" stroke-width="0.6"/>
+    </pattern>
+    <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--arrow)"/></marker>
+    <marker id="arrow-main" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--main-stroke)"/></marker>
+    <marker id="arrow-grouping" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--grouping-stroke)"/></marker>
+    <marker id="arrow-plan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--plan-stroke)"/></marker>
+    <marker id="arrow-filter" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--filter-stroke)"/></marker>
+    <marker id="arrow-relocation" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--relocation-stroke)"/></marker>
+    <marker id="arrow-compression" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--compression-stroke)"/></marker>
+    <marker id="arrow-data" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--data-stroke)"/></marker>
+    <marker id="arrow-output" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="var(--output-stroke)"/></marker>
+    <marker id="arrow-open" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto"><polyline points="0 0, 10 3.5, 0 7" fill="none" stroke="var(--relocation-stroke)" stroke-width="1.5"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="var(--bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+
+  <!-- Header -->
+  <rect x="40" y="32" width="82" height="34" rx="17" fill="var(--main-fill)" stroke="var(--main-stroke)" stroke-width="1.5"/>
+  <text x="81" y="55" class="center mono" font-size="13" font-weight="700">02 / 13</text>
+  <text x="140" y="54" class="kicker">PREPARE · PROGRAM ONLY</text>
+  <text x="40" y="98" class="title" style="font-size:26px">准备：冻结审查清单，再决定是否分组</text>
+  <text x="40" y="121" class="subtitle">先由程序完成真实文件操作；本例 8 个文件全通过，无 resume。</text>
+  <rect x="1350" y="38" width="190" height="38" rx="19" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="1.5"/>
+  <polygon points="1372,48 1384,48 1390,57 1384,66 1372,66 1366,57" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)"/>
+  <text x="1458" y="62" class="center" font-size="13" font-weight="700" fill="var(--grouping-stroke)">GROUPING</text>
+
+  <rect x="40" y="145" width="1520" height="700" rx="16" class="region"/>
+  <text x="60" y="170" class="kicker">PROGRAM PREPARATION · 7 个顺序动作</text>
+
+  <!-- Main and optional connectors, drawn before nodes -->
+  <path d="M 410 330 H 455" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 690 330 H 745" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 1050 330 H 1085" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 1210 430 V 500 H 1175 V 525" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 1305 640 H 1355" class="flow-main" marker-end="url(#arrow-main)"/>
+  <path d="M 905 450 V 488" class="flow" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <path d="M 1050 550 H 1070 V 385 H 1085" class="flow" stroke-dasharray="6 5" marker-end="url(#arrow)"/>
+  <path d="M 1175 740 V 758" class="flow" marker-end="url(#arrow)"/>
+
+  <!-- Connector labels -->
+  <rect x="690" y="294" width="56" height="24" rx="12" fill="var(--mask)"/>
+  <text x="718" y="311" class="center" font-size="11" font-weight="700" fill="var(--data-stroke)">8 / 8</text>
+  <rect x="1038" y="294" width="74" height="24" rx="12" fill="var(--mask)"/>
+  <text x="1075" y="311" class="center" font-size="10" fill="var(--text-muted)">无 resume</text>
+  <text x="1224" y="478" font-size="11" fill="var(--main-stroke)">待分发 8</text>
+  <text x="1322" y="622" font-size="11" font-weight="700" fill="var(--data-stroke)">是</text>
+  <text x="1188" y="754" font-size="10" fill="var(--text-muted)">否</text>
+
+  <!-- 1. Eight folded file cards -->
+  <rect x="60" y="185" width="350" height="305" rx="12" fill="var(--mask)"/>
+  <rect x="60" y="185" width="350" height="305" rx="12" fill="var(--program-fill)" stroke="var(--soft-line)" stroke-width="1.2"/>
+  <text x="78" y="210" class="section">1 · 读取 Git diff</text>
+  <text x="390" y="209" class="tiny" text-anchor="end">8 个变更文件</text>
+
+  <g>
+    <path d="M75 224 H202 L222 244 V280 H75 Z" fill="var(--mask)"/>
+    <path d="M75 224 H202 L222 244 V280 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M202 224 V244 H222" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="86" y="248" font-size="11" font-weight="700">0 · login.go</text>
+    <text x="86" y="267" class="tiny mono">+120 / -20</text>
+  </g>
+  <g>
+    <path d="M238 224 H365 L385 244 V280 H238 Z" fill="var(--mask)"/>
+    <path d="M238 224 H365 L385 244 V280 H238 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M365 224 V244 H385" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="249" y="248" font-size="11" font-weight="700">1 · session.go</text>
+    <text x="249" y="267" class="tiny mono">+45 / -10</text>
+  </g>
+  <g>
+    <path d="M75 289 H202 L222 309 V345 H75 Z" fill="var(--mask)"/>
+    <path d="M75 289 H202 L222 309 V345 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M202 289 V309 H222" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="86" y="313" font-size="10.5" font-weight="700">2 · login_test.go</text>
+    <text x="86" y="332" class="tiny mono">+80 / -0</text>
+  </g>
+  <g>
+    <path d="M238 289 H365 L385 309 V345 H238 Z" fill="var(--mask)"/>
+    <path d="M238 289 H365 L385 309 V345 H238 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M365 289 V309 H385" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="249" y="313" font-size="10" font-weight="700">3 · session_test.go</text>
+    <text x="249" y="332" class="tiny mono">+30 / -0</text>
+  </g>
+  <g>
+    <path d="M75 354 H202 L222 374 V410 H75 Z" fill="var(--mask)"/>
+    <path d="M75 354 H202 L222 374 V410 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M202 354 V374 H222" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="86" y="378" font-size="10.5" font-weight="700">4 · messages_en</text>
+    <text x="86" y="397" class="tiny">.properties · +3/-1</text>
+  </g>
+  <g>
+    <path d="M238 354 H365 L385 374 V410 H238 Z" fill="var(--mask)"/>
+    <path d="M238 354 H365 L385 374 V410 H238 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M365 354 V374 H385" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="249" y="378" font-size="10.5" font-weight="700">5 · messages_zh</text>
+    <text x="249" y="397" class="tiny">.properties · +3/-1</text>
+  </g>
+  <g>
+    <path d="M75 419 H202 L222 439 V475 H75 Z" fill="var(--mask)"/>
+    <path d="M75 419 H202 L222 439 V475 H75 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M202 419 V439 H222" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="86" y="443" font-size="11" font-weight="700">6 · auth.yaml</text>
+    <text x="86" y="462" class="tiny mono">+10 / -2</text>
+  </g>
+  <g>
+    <path d="M238 419 H365 L385 439 V475 H238 Z" fill="var(--mask)"/>
+    <path d="M238 419 H365 L385 439 V475 H238 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.2"/>
+    <path d="M365 419 V439 H385" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+    <text x="249" y="443" font-size="11" font-weight="700">7 · auth.md</text>
+    <text x="249" y="462" class="tiny mono">+20 / -0</text>
+  </g>
+
+  <!-- 2. Horizontal filter funnel -->
+  <text x="580" y="210" class="section center">2 · 程序过滤</text>
+  <polygon points="470,225 620,295 690,295 690,365 620,365 470,435" fill="var(--mask)"/>
+  <polygon points="470,225 620,295 690,295 690,365 620,365 470,435" fill="var(--filter-fill)" stroke="var(--filter-stroke)" stroke-width="2"/>
+  <path d="M492 253 L610 308 M492 407 L610 352" fill="none" stroke="var(--filter-stroke)" stroke-width="1" stroke-dasharray="4 4"/>
+  <text x="530" y="294" class="center" font-size="13" font-weight="700" fill="var(--filter-stroke)">5 类排除</text>
+  <text x="530" y="319" class="center" font-size="11">二进制 · 密钥</text>
+  <text x="530" y="341" class="center" font-size="11">exclude · 扩展名</text>
+  <text x="530" y="363" class="center" font-size="11">过大文件</text>
+  <rect x="470" y="455" width="240" height="44" rx="22" fill="var(--mask)"/>
+  <rect x="470" y="455" width="240" height="44" rx="22" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <path d="M492 477 l7 7 13 -15" fill="none" stroke="var(--success)" stroke-width="2.5"/>
+  <text x="600" y="483" class="center" font-size="12" font-weight="700" fill="var(--data-stroke)">0 排除 · 8 全部通过</text>
+
+  <!-- 3-4. Frozen manifest document -->
+  <path d="M760 205 H1000 L1050 255 V450 H760 Z" fill="var(--mask)"/>
+  <path d="M760 205 H1000 L1050 255 V450 H760 Z" fill="var(--data-fill)" stroke="var(--data-stroke)" stroke-width="2"/>
+  <path d="M1000 205 V255 H1050" fill="var(--panel-2)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <text x="785" y="241" class="node-title mono">3–4 · manifest.selected</text>
+  <text x="785" y="265" class="node-sub">写入并冻结审查清单</text>
+  <g font-size="11" font-weight="700" class="mono center">
+    <rect x="790" y="288" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="812" y="308">0</text>
+    <rect x="850" y="288" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="872" y="308">1</text>
+    <rect x="910" y="288" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="932" y="308">2</text>
+    <rect x="970" y="288" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="992" y="308">3</text>
+    <rect x="790" y="330" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="812" y="350">4</text>
+    <rect x="850" y="330" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="872" y="350">5</text>
+    <rect x="910" y="330" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="932" y="350">6</text>
+    <rect x="970" y="330" width="45" height="30" rx="6" fill="var(--panel-2)" stroke="var(--data-stroke)"/><text x="992" y="350">7</text>
+  </g>
+  <line x1="785" y1="378" x2="1025" y2="378" stroke="var(--soft-line)"/>
+  <text x="785" y="402" class="node-sub">之后逐文件记录</text>
+  <text x="785" y="425" font-size="12" font-weight="700">完成 / 失败</text>
+  <rect x="985" y="394" width="34" height="28" rx="5" fill="var(--panel-2)" stroke="var(--data-stroke)" stroke-width="1.5"/>
+  <path d="M992 394 V386 A10 10 0 0 1 1012 386 V394" fill="none" stroke="var(--data-stroke)" stroke-width="2"/>
+  <circle cx="1002" cy="407" r="3" fill="var(--data-stroke)"/>
+
+  <!-- 5. Optional resume branch -->
+  <rect x="760" y="500" width="290" height="100" rx="10" fill="var(--mask)"/>
+  <rect x="760" y="500" width="290" height="100" rx="10" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2" stroke-dasharray="6 5"/>
+  <text x="782" y="528" class="node-title">5 · 可选 --resume</text>
+  <text x="782" y="552" class="node-sub">复用上次已经完成的结果</text>
+  <text x="782" y="578" font-size="11" fill="var(--text-muted)">本例未启用：复用 0 · 待分发 8</text>
+
+  <!-- 6. Deleted-file cleanup -->
+  <rect x="1100" y="220" width="220" height="210" rx="12" fill="var(--mask)"/>
+  <rect x="1100" y="220" width="220" height="210" rx="12" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.5"/>
+  <text x="1210" y="250" class="node-title center">6 · 清理删除文件</text>
+  <path d="M1130 275 H1170 L1190 295 V345 H1130 Z" fill="var(--file-fill)" stroke="var(--file-stroke)" stroke-width="1.5"/>
+  <path d="M1170 275 V295 H1190" fill="var(--panel-2)" stroke="var(--file-stroke)"/>
+  <path d="M1122 337 L1198 273" stroke="var(--danger)" stroke-width="3"/>
+  <text x="1235" y="294" font-size="11">不参与</text>
+  <text x="1235" y="314" font-size="11">实际审查</text>
+  <text x="1210" y="377" class="node-sub center">移除不参与审查的删除文件</text>
+  <text x="1210" y="406" class="center" font-size="12" font-weight="700" fill="var(--data-stroke)">本例移除 0 · 剩 8</text>
+
+  <!-- 7. Grouping threshold decision -->
+  <polygon points="1175,540 1305,640 1175,740 1045,640" fill="var(--mask)"/>
+  <polygon points="1175,540 1305,640 1175,740 1045,640" fill="var(--color-accent-fill)" stroke="var(--color-accent-stroke)" stroke-width="2"/>
+  <text x="1175" y="614" class="center" font-size="13" font-weight="700">7 · 判断如何分组</text>
+  <text x="1175" y="644" class="center" font-size="16" font-weight="800" fill="var(--color-accent-stroke)">待分发 ≥ 4？</text>
+  <text x="1175" y="674" class="center mono" font-size="14" font-weight="700">本例：8 ≥ 4</text>
+  <text x="1175" y="701" class="center tiny">达到门槛才调用模型</text>
+
+  <polygon points="1410,575 1495,575 1540,640 1495,705 1410,705 1370,640" fill="var(--mask)"/>
+  <polygon points="1410,575 1495,575 1540,640 1495,705 1410,705 1370,640" fill="var(--grouping-fill)" stroke="var(--grouping-stroke)" stroke-width="2.5"/>
+  <text x="1455" y="625" class="center" font-size="15" font-weight="800" fill="var(--grouping-stroke)">GROUPING</text>
+  <text x="1455" y="652" class="center node-sub">决定谁和谁一起审</text>
+  <text x="1455" y="678" class="center tiny">下一章 · 仅元数据</text>
+
+  <rect x="1040" y="770" width="270" height="60" rx="10" fill="var(--mask)"/>
+  <rect x="1040" y="770" width="270" height="60" rx="10" fill="var(--program-fill)" stroke="var(--program-stroke)" stroke-width="1.2"/>
+  <text x="1175" y="795" class="center" font-size="12" font-weight="700">否 · 直接逐文件审查</text>
+  <text x="1175" y="816" class="center tiny">不调用 GROUPING</text>
+
+  <!-- Footer -->
+  <line x1="40" y1="875" x2="1560" y2="875" stroke="var(--soft-line)"/>
+  <text x="60" y="910" font-size="13" font-weight="700" fill="var(--main-stroke)">结论：8 个文件全部冻结进 manifest.selected；无 resume、无过滤、无删除文件，8 ≥ 4，因此进入 GROUPING。</text>
+  <text x="60" y="936" class="tiny">粗青线 = 本例主路径 · 细灰虚线 = 可选 resume</text>
+  <text x="1535" y="936" class="tiny mono" text-anchor="end">OPEN CODE REVIEW · 02</text>
+</svg>
